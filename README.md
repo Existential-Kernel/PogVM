@@ -1,1 +1,3 @@
 # PogCPU
+
+- CISC CPU
