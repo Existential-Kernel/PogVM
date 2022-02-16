@@ -5,9 +5,11 @@
 #include <variant>
 #include <array>
 
+#ifndef FLAGS
+#define FLAGS
 struct EFLAGS_REGISTER {
-    std::array<Object> collection = { 
-        {"CF","lol"}   // carry
+    std::array<std::string, 32> collection = { 
+        "CF",   // carry
         "1",  
         "PF",   //parity
         "0",
@@ -35,3 +37,4 @@ struct EFLAGS_REGISTER {
         
 
 } FLAGS;
+#endif
