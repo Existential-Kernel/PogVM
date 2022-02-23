@@ -1,8 +1,10 @@
 #include <iostream>
-#include "flags.hpp"
-#include "memory.hpp"
-#include "opcodes.hpp"
-#include "registers.hpp"
+#include <cstdlib>
+#include <stdint.h>
+
+//#include "CPU/registers.hpp"
+//#include "CPU/memory.hpp"
+#include "audit.hpp"
 
 namespace POGCPU
 {
@@ -19,10 +21,6 @@ namespace POGCPU
 }
 
 int main(void) {
-
-    void Reset() {
-
-    }
-
+	AUDIT.AuditCheck();
     return 0;
 }
