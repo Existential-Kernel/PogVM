@@ -6,6 +6,7 @@
 
 #include "CPU/registers.hpp"
 #include "CPU/memory.hpp"
+#include "tests/assembly.hpp"
 
 namespace ANSI {
     static const char *BLACK_BG = "\x1B[48;2;0;0;0m";
@@ -16,7 +17,7 @@ namespace ANSI {
 
 class AUDIT {
     private:
-        std::tuple<bool, std::string> static AuditLog(bool result, std::string message) {
+        static void AuditLog(bool result, std::string message) {
             if (result) { 
                 std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::TERMINATE << "] " << message << std::endl;
             } else {
@@ -28,5 +29,7 @@ class AUDIT {
         void AuditCheck(void) {
             AuditLog(REGISTER.ResetAll(), "All registers have been reset");
             AuditLog(MEMORY.Initialise(), "2^32 memory space allocated");
+            AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
+
         }
 } AUDIT;

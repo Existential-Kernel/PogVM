@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cstdint>
 
+#ifndef MEM
+#define MEM
+
 using u32 = unsigned int;
 
 class MEMORY {
@@ -20,3 +23,5 @@ class MEMORY {
             }
         }
 } MEMORY;
+
+#endif

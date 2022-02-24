@@ -20,6 +20,7 @@ namespace POGCPU
 	struct StatusFlags;
 }
 
+//int main(int argc, char *argv[]) {
 int main(void) {
 	AUDIT.AuditCheck();
     return 0;

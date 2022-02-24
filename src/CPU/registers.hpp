@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cstdlib>
 
+#ifndef REG
+#define REG
+
 class REGISTERS {
     public:
 
@@ -57,6 +60,17 @@ class REGISTERS {
             uint8_t DIL;
         } R8;
 
+        // Segment registers
+        struct SEGR {
+            uint16_t SS; // stack
+            uint16_t CS; // code
+            uint16_t DS; // data
+            uint16_t ES; // extra data
+            uint16_t FS; // more extra data
+            uint16_t GS; // still more extra data lol
+        } SREG;
+
+        // Reset all registers to 0
         bool ResetAll(void) {
             try {
                 R64.RAX = R64.RBX = R64.RCX = R64.RDX = R64.RBP = R64.RSP = R64.RSI = R64.RDI = \
@@ -71,11 +85,4 @@ class REGISTERS {
 
 } REGISTER;
 
-struct SEGMENT_REGISTERS {
-    uint16_t SS; // stack
-    uint16_t CS; // code
-    uint16_t DS; // data
-    uint16_t ES; // extra data
-    uint16_t FS; // more extra data
-    uint16_t GS; // still more extra data lol
-} SREG;
+#endif
