@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # There is NO WARRANTY, to the extent permitted by law.
  
 
-# Make data base, printed on Wed Feb 23 18:47:57 2022
+# Make data base, printed on Sat Feb 26 04:04:47 2022
 
 # Variables
 
@@ -22,7 +22,7 @@ LMOD_SETTARG_FULL_SUPPORT = no
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f4cbf288-9cbf-459c-a5ae-d59323450d1b.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-abe4c8db-ccd3-4660-bb90-e30cb199afd5.sock
 # environment
 VSCODE_CWD = /home/nonce
 # environment
@@ -121,7 +121,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 3953
+VSCODE_PID = 4447
 # environment
 SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS = 0
 # environment
@@ -129,7 +129,7 @@ XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/unix:@/tmp/.ICE-unix/2835,unix/unix:/tmp/.ICE-unix/2835
+SESSION_MANAGER = local/unix:@/tmp/.ICE-unix/2907,unix/unix:/tmp/.ICE-unix/2907
 # automatic
 *F = $(notdir $*)
 # environment
@@ -182,7 +182,7 @@ MODULESHOME = /usr/share/lmod/lmod
 # environment
 LMOD_sys = Linux
 # environment
-INVOCATION_ID = 9f5f65510e9c4892b33d771e02b8eba9
+INVOCATION_ID = 5bdc2ae38f40469099c6c8a5d97ebfe4
 # environment
 VSCODE_LOG_NATIVE = false
 # environment
@@ -208,8 +208,7 @@ BASH_ENV = /usr/share/lmod/lmod/init/bash
 # makefile
 .DEFAULT_GOAL := all
 # environment
-SYSTEMD_EXEC_PID = 2860
- 
+SYSTEMD_EXEC_PID = 2931
 # environment
 MODULEPATH_ROOT = /usr/share/modulefiles
 # environment
@@ -223,13 +222,13 @@ USER = nonce
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 1865
+MANAGERPID = 2001
 # environment
 which_declare = declare -f
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3953
+GIO_LAUNCHED_DESKTOP_FILE_PID = 4447
 # environment
-SSH_AGENT_PID = 2422
+SSH_AGENT_PID = 2649
 # environment
 _ = /usr/bin/make
 # environment
@@ -237,7 +236,7 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 NVM_CD_FLAGS = 
 # environment
-JOURNAL_STREAM = 8:61790
+JOURNAL_STREAM = 8:41747
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -312,12 +311,12 @@ compile:
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
 #  recipe to execute (from 'Makefile', line 4):
-	g++ -Wall -Wextra -Werror src/mainframe.cpp src/CPU/registers.hpp src/audit.hpp -o src/PogCPU
+	@g++ -Wall -Wextra -Werror src/mainframe.cpp src/CPU/registers.hpp src/audit.hpp -o src/PogCPU
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-23 18:47:54.185748694
+#  Last modified 2022-02-26 04:04:44.409404706
 #  File has been updated.
 #  Successfully updated.
 
@@ -363,6 +362,6 @@ run:
 # strcache performance: lookups = 30 / hit rate = 36%
 # hash-table stats:
 # Load=19/8192=0%, Rehash=0, Collisions=0/30=0%
-# Finished Make data base on Wed Feb 23 18:47:57 2022
+# Finished Make data base on Sat Feb 26 04:04:47 2022
 
  

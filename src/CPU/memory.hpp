@@ -1,5 +1,9 @@
 #include <iostream>
 #include <cstdint>
+#include <cmath>
+#include <math.h>
+
+#define a 1
 
 #ifndef MEM
 #define MEM
@@ -8,7 +12,7 @@ using u32 = unsigned int;
 
 class MEMORY {
     private:
-        static constexpr u32 MAX_MEM = 1024 * 64;
+        static constexpr u32 MAX_MEM = 1024 * 64; // 2^32 bytes of memory
         unsigned char memory[MAX_MEM];
 
     public:

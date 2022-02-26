@@ -5,6 +5,11 @@
 //#include "CPU/registers.hpp"
 //#include "CPU/memory.hpp"
 #include "audit.hpp"
+#include "cycle/fetch.cpp"
+
+#define major 1
+#define minor 0
+#define version major.minor
 
 namespace POGCPU
 {
@@ -20,8 +25,11 @@ namespace POGCPU
 	struct StatusFlags;
 }
 
-//int main(int argc, char *argv[]) {
-int main(void) {
-	AUDIT.AuditCheck();
+int main(int argc, char *argv[]) {  
+	if (argc == 1 && argv[0] == "--audit") {
+		AUDIT.AuditCheck();	
+	}
+
+	FETCH.FetchLine();
     return 0;
 }

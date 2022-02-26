@@ -12,7 +12,9 @@ namespace ANSI {
     static const char *BLACK_BG = "\x1B[48;2;0;0;0m";
     static const char *RED = "\x1B[38;2;255;0;0m";
     static const char *GREEN = "\x1B[38;2;0;255;0m";
-    static const char *TERMINATE = "\x1B[0m";
+    static const std::string TERMINATE = "\x1B[0m";
+    //static const char *BOLD = "\e[1m";
+    //static const char *NOTBOLD = "\e[0m";
 }
 
 class AUDIT {
@@ -27,9 +29,8 @@ class AUDIT {
 
     public:
         void AuditCheck(void) {
-            AuditLog(REGISTER.ResetAll(), "All registers have been reset");
-            AuditLog(MEMORY.Initialise(), "2^32 memory space allocated");
-            AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
-
+            AuditLog(REGISTER.ResetAll(), "\e[1mAll registers have been reset\e[0m");
+            AuditLog(MEMORY.Initialise(), "\e[1m2^32 memory space allocated\e[0m");
+            //AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
         }
 } AUDIT;
