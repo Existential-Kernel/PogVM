@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <stdint.h>
+#include <string>
+#include <cstring>
 
 //#include "CPU/registers.hpp"
 //#include "CPU/memory.hpp"
@@ -25,9 +27,16 @@ namespace POGCPU
 	struct StatusFlags;
 }
 
-int main(int argc, char *argv[]) {  
-	if (argc == 1 && argv[0] == "--audit") {
-		AUDIT.AuditCheck();	
+int main(int argc, char *argv[]) {
+	if (argc == 2) {
+		// TODO: make the arguments into a switch statement
+		if (!strcmp(argv[1], "--audit")) {
+			AUDIT.AuditCheck();
+		}
+
+		if (!strcmp(argv[1], "--test")) {
+			AUDIT.AuditCheck();
+		}
 	}
 
 	FETCH.FetchLine();

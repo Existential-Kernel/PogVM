@@ -1,33 +1,47 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
 #include <cstring>
-
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <array>
 #define prefix ";"
 
 class FETCH {
     private:
-        // Get the first character in a string mainly to check for comments
-        static char GetFirstChar(std::string s) {
-            char *letter = &s[0];
-            return *letter;
-        }
     
     public:
         // Get the line of code
         void FetchLine(void) {
             std::fstream file;
 
+            // Open the file
             file.open("src/cycle/test.asm", std::ios::in);
             if (file.is_open()) {
                 std::string line;
                 while(getline(file, line)) {
-
-                    // Check if the line is a comment and skip
-                    if (GetFirstChar(line) == *prefix) {
-                        continue;
+                    if (line[0] == ';') { continue; }
+                    if ((int)line[0] == 0) { continue; }
+                    if (line[0] == ' ') {
+                        int length = line.length();
+                        int spaceCount;
+                        std::cout << "length: " << length << std::endl;
+                        for (int i = 0; i < length; i++) {
+                            if ((int)line[i] == 32) {
+                                spaceCount++;
+                            } else {
+                                break;
+                            }
+                            std::cout << "spacecount: " << spaceCount << std::endl;
+                        }
+                        remove(line.begin(), line.begin() + spaceCount, ' ');
                     }
+
+                    std::cout << line << std::endl;
+                    //std::cout << (int)line[0] << std::endl;
+
+                    //std::cout << line << std::endl;
                 }
                 file.close();
             }

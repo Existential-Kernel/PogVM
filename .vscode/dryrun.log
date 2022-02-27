@@ -1,6 +1,6 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/nonce/Documents/Repositories/PogCPU'
 g++ -Wall -Wextra -Werror src/mainframe.cpp src/CPU/registers.hpp src/audit.hpp -o src/PogCPU
-./src/PogCPU
+./src/PogCPU --audit
 make: Leaving directory '/home/nonce/Documents/Repositories/PogCPU'
  

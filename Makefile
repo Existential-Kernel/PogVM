@@ -1,7 +1,13 @@
-all: compile run
+CC=g++
+CPPFLAGS=-Wall -Wextra -Werror
+
+all: compile audit
 
 compile: 
-	@g++ -Wall -Wextra -Werror src/mainframe.cpp src/CPU/registers.hpp src/audit.hpp -o src/PogCPU
+	@$(CC) $(CPPFLAGS) src/mainframe.cpp src/CPU/registers.hpp src/audit.hpp -o src/PogCPU
 
 run:
 	@./src/PogCPU
+
+audit:
+	@./src/PogCPU --audit

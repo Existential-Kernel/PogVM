@@ -3,8 +3,6 @@
 #include <cmath>
 #include <math.h>
 
-#define a 1
-
 #ifndef MEM
 #define MEM
 
