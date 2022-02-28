@@ -11,11 +11,11 @@
 struct EFLAGS_REGISTER {
     enum collection { 
         CF,   // carry
-        nullflag = 0,  
+        RESERVED,  
         PF,   //parity
-        nullflag = 0,
+        RESERVED,
         AF,   // adjust
-        nullflag = 0, 
+        RESERVED, 
         ZF,   // zero
         SF,   // sign
         TF,   // trap
@@ -25,16 +25,20 @@ struct EFLAGS_REGISTER {
         IOPL, // I/O priviledge level field
         IOPL, 
         NT,   // nested
-        nullflag = 0,
+        RESERVED,
         RF,   // resume
         VM,   // virtual 8086 mode
         AC,   // alignment check
         VIF,  // virtual interrupt
         VIP,  // virtual interrupt pending
         ID,   // identification
-        nullflag = 0, nullflag = 0, nullflag = 0, nullflag = 0, nullflag = 0,  
-        nullflag = 0, nullflag = 0, nullflag = 0, nullflag = 0, nullflag = 0
+        RESERVED, RESERVED, RESERVED, RESERVED, RESERVED,  
+        RESERVED, RESERVED, RESERVED, RESERVED, RESERVED
     };
 } FLAGS;
+
+
+
+
 
 #endif

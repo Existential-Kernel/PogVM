@@ -8,7 +8,7 @@ class DECODE {
     private:
 
     public:
-        void thingy(std::string instruction, std::string arg1, std::string arg2) {
+        void Decode(std::string instruction, std::string arg1, std::string arg2) {
             
         }
 } DECODE;

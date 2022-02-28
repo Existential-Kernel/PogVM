@@ -13,7 +13,7 @@
 #define minor 0
 #define version major.minor
 
-namespace POGCPU
+namespace CPU
 {
 	using SByte = char;
 	using Byte = unsigned char;
@@ -34,8 +34,8 @@ int main(int argc, char *argv[]) {
 			AUDIT.AuditCheck();
 		}
 
-		if (!strcmp(argv[1], "--test")) {
-			AUDIT.AuditCheck();
+		if (!strcmp(argv[1], "--tobeadded")) {
+			
 		}
 	}
 

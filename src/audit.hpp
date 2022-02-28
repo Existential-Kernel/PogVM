@@ -12,7 +12,7 @@ namespace ANSI {
     static const char *BLACK_BG = "\x1B[48;2;0;0;0m";
     static const char *RED = "\x1B[38;2;255;0;0m";
     static const char *GREEN = "\x1B[38;2;0;255;0m";
-    static const std::string TERMINATE = "\x1B[0m";
+    static const char *TERMINATE = "\x1B[0m";
     //static const char *BOLD = "\e[1m";
     //static const char *NOTBOLD = "\e[0m";
 }

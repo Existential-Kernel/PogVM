@@ -11,19 +11,19 @@
 
 class FETCH {
     private:
-        size_t Split(const std::string &txt, std::vector<std::string> &code, unsigned char ch) {
-            size_t pos = txt.find(ch);
+        size_t Split(const std::string &text, std::vector<std::string> &code, unsigned char ch) {
+            size_t pos = text.find(ch);
             size_t start = 0;
             code.clear();
 
             while (pos != std::string::npos) {
-                code.push_back(txt.substr(start, pos - start));
+                code.push_back(text.substr(start, pos - start));
                 start = pos + 1;
 
-                pos = txt.find(ch, start);\
+                pos = text.find(ch, start);
             }
 
-            code.push_back(txt.substr(start, std::min(pos, txt.size()) - start + 1));
+            code.push_back(text.substr(start, std::min(pos, text.size()) - start + 1));
             return code.size();
         }
 
@@ -50,7 +50,7 @@ class FETCH {
 
 
                 // more preprocessing to be added...
-
+                // - Add comment remover if written after instruction code
 
                 std::istringstream iss(line);
 
@@ -74,7 +74,6 @@ class FETCH {
                 std::vector<std::string> assemblyArray;
 
                 Split(line, assemblyArray, ' ');
-
 
                 line = Preprocess(file, line, true);
                 std::cout << "test: " << line << std::endl;
