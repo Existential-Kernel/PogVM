@@ -27,7 +27,7 @@ class FETCH {
             return code.size();
         }
 
-        std::string Preprocess(std::fstream &filestream, std::string line, bool verbose) {
+        std::string Preprocess(std::fstream &filestream, std::string &line, bool verbose) {
             while(getline(filestream, line)) {
                 if (line[0] == ';') { continue; }
                 if ((int)line[0] == 0) { continue; }
