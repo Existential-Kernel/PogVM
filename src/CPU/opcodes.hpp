@@ -25,6 +25,7 @@ namespace OPCODE {
     };
 }
 
+/*
 class CODE {
     public:
         
@@ -32,3 +33,4 @@ class CODE {
     private:
 
 }
+*/
