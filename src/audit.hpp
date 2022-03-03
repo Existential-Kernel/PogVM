@@ -13,18 +13,14 @@ namespace ANSI {
     static const char *RED = "\x1B[38;2;255;0;0m";
     static const char *GREEN = "\x1B[38;2;0;255;0m";
     static const char *TERMINATE = "\x1B[0m";
-    //static const char *BOLD = "\e[1m";
-    //static const char *NOTBOLD = "\e[0m";
 }
 
 class AUDIT {
     private:
         static void AuditLog(bool result, std::string message) {
-            if (result) { 
-                std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::TERMINATE << "] " << message << std::endl;
-            } else {
-                std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::TERMINATE << "] " << message << std::endl;
-            }
+            result
+                ? std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::TERMINATE << "] " << message << std::endl;
+                : std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::TERMINATE << "] " << message << std::endl;
         }
 
     public:
