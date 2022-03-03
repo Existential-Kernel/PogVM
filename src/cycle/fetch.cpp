@@ -19,7 +19,7 @@ class FETCH {
 
             while (std::getline(codestream, s, prefix)) { 
                 codeVector.push_back(s);
-            } 
+            }
         } 
 
         static std::string Preprocess(std::fstream &filestream, std::string &line, bool verbose) {
@@ -60,9 +60,13 @@ class FETCH {
                 std::vector<std::string> codeVector;
                 Split(line, ' ', codeVector);
 
+<<<<<<< HEAD
                 //REGISTER::CUSREG.IR = line;
 
                 if (verbose == true) {
+=======
+                if (verbose) {
+>>>>>>> 77e842bdab1931f36fd3e2e0d1499966016427f2
                     std::cout << line << "\n";
                     for (auto &string: codeVector) {
                         std::cout << "element: " << string << '\n';

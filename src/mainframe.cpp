@@ -27,9 +27,18 @@ namespace CPU
 	struct StatusFlags;
 }
 
+static bool Compare(std::string arg) {
+	return (!strcmp(argv[1], arg))
+		? return true;
+		: return false;
+}
+
 int main(int argc, char *argv[]) {
+
+
 	if (argc == 2) {
 		// TODO: make the arguments into a switch statement
+		switch (true)
 		if (!strcmp(argv[1], "--audit")) {
 			AUDIT.AuditCheck();
 		}
