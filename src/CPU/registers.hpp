@@ -12,9 +12,9 @@ namespace REGISTER {
         // 64-bit
         struct R64 {
             uint64_t RAX; // accumulator
+            uint64_t RBX; // base
             uint64_t RCX; // counter
             uint64_t RDX; // data
-            uint64_t RBX; // base
             uint64_t RSP; // stack pointer
             uint64_t RBP; // stack base pointer
             uint64_t RSI; // source index
@@ -24,9 +24,9 @@ namespace REGISTER {
         // 32-bit
         struct R32 {
             uint32_t EAX;
+            uint32_t EBX;
             uint32_t ECX;
             uint32_t EDX;
-            uint32_t EBX;
             uint32_t ESP;
             uint32_t EBP;
             uint32_t ESI;
@@ -36,9 +36,9 @@ namespace REGISTER {
         // 16-bit
         struct R16 {
             uint16_t AX;
+            uint16_t BX;
             uint16_t CX;
             uint16_t DX;
-            uint16_t BX;
             uint16_t SP;
             uint16_t BP;
             uint16_t SI;
@@ -80,8 +80,10 @@ namespace REGISTER {
         uint16_t IP;
     } PREG;
 
-
-
+    // Custom (added for now)
+    struct CUSREG {
+        uint16_t IR;
+    } CUSREG;
 
 
 

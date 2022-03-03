@@ -29,8 +29,8 @@ class AUDIT {
 
     public:
         void AuditCheck(void) {
-            AuditLog(REGISTER.ResetAll(), "\e[1mAll registers have been reset\e[0m");
-            AuditLog(MEMORY.Initialise(), "\e[1m2^32 memory space allocated\e[0m");
+            AuditLog(REGISTER::ResetAll(), "\e[1mAll registers have been reset\e[0m");
+            AuditLog(MEMORY.Initialise(), "\e[1m2^32 bits of memory space allocated\e[0m");
             //AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
         }
 } AUDIT;

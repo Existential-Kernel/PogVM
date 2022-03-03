@@ -4,7 +4,7 @@ CPPFLAGS=-Wall -Wextra -Werror
 all: compile run
 
 compile: 
-	@$(CC) $(CPPFLAGS) src/mainframe.cpp src/CPU/registers.hpp src/audit.hpp -o src/PogCPU
+	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o src/PogCPU
 
 run:
 	@./src/PogCPU
