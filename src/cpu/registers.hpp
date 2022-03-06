@@ -6,6 +6,7 @@
 #define REG
 
 // https://wiki.osdev.org/CPU_Registers_x86
+// https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
 
 namespace REGISTER {
     struct GPR {

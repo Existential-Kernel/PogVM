@@ -1,13 +1,22 @@
 CC=g++
 CPPFLAGS=-Wall -Wextra -Werror
 
-all: compile run
+.PHONY: all clear compile run audit
 
-compile: 
-	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o src/PogCPU
+
+all: clearscr compile run
+
+clearscr:
+	@clear
+
+clear:
+	rm -rf *.o
+
+compile:
+	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o PogCPU
 
 run:
-	@./src/PogCPU
+	@./PogCPU
 
-audit:
-	@./src/PogCPU --audit
+audit: compile
+	@./PogCPU --audit

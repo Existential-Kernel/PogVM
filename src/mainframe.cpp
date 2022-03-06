@@ -27,27 +27,25 @@ namespace CPU
 	struct StatusFlags;
 }
 
-static bool Compare(std::string arg) {
-	return (!strcmp(argv[1], arg))
-		? return true;
-		: return false;
-}
-
 int main(int argc, char *argv[]) {
-
-
-	if (argc == 2) {
+	if (argc >= 2) {
 		// TODO: make the arguments into a switch statement
-		switch (true)
-		if (!strcmp(argv[1], "--audit")) {
-			AUDIT.AuditCheck();
-		}
 
-		if (!strcmp(argv[1], "--tobeadded")) {
-			
-		}
+		if (!strcmp(argv[1], "--audit")) { AUDIT.AuditCheck(); }
+		if (!strcmp(argv[1], "--tobeadded")) { }
 	}
 
 	FETCH.FetchLine();
     return 0;
 }
+
+// TODO: Fix this shit
+/*
+static bool Compare(const char *argv, const char *arg) {
+	if (!strcmp(&argv[1], arg)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+*/

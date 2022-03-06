@@ -10,7 +10,7 @@ using u32 = unsigned int;
 
 class MEMORY {
     private:
-        static constexpr u32 MAX_MEM = 1024 * 64; // 2^32 bytes of memory
+        static constexpr u32 MAX_MEM = 1024 * 64; // 2^32 bits of memory
         unsigned char memory[MAX_MEM];
 
     public:
