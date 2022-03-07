@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <string>
 #include <cstring>
+#include <thread>
 
 //#include "CPU/registers.hpp"
 //#include "CPU/memory.hpp"

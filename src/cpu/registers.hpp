@@ -9,81 +9,84 @@
 // https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
 
 namespace REGISTER {
+
+    bool ResetAll();
+
     struct GPR {
         // 64-bit
         struct R64 {
-            uint64_t RAX; // accumulator
-            uint64_t RBX; // base
-            uint64_t RCX; // counter
-            uint64_t RDX; // data
-            uint64_t RSP; // stack pointer
-            uint64_t RBP; // stack base pointer
-            uint64_t RSI; // source index
-            uint64_t RDI; // destination index
+            uint64_t RAX = 0; // accumulator
+            uint64_t RBX = 0; // base
+            uint64_t RCX = 0; // counter
+            uint64_t RDX = 0; // data
+            uint64_t RSP = 0; // stack pointer
+            uint64_t RBP = 0; // stack base pointer
+            uint64_t RSI = 0; // source index
+            uint64_t RDI = 0; // destination index
         } R64;
 
         // 32-bit
         struct R32 {
-            uint32_t EAX;
-            uint32_t EBX;
-            uint32_t ECX;
-            uint32_t EDX;
-            uint32_t ESP;
-            uint32_t EBP;
-            uint32_t ESI;
-            uint32_t EDI;
+            uint32_t EAX = 0;
+            uint32_t EBX = 0;
+            uint32_t ECX = 0;
+            uint32_t EDX = 0;
+            uint32_t ESP = 0;
+            uint32_t EBP = 0;
+            uint32_t ESI = 0;
+            uint32_t EDI = 0;
         } R32;
 
         // 16-bit
         struct R16 {
-            uint16_t AX;
-            uint16_t BX;
-            uint16_t CX;
-            uint16_t DX;
-            uint16_t SP;
-            uint16_t BP;
-            uint16_t SI;
-            uint16_t DI;
+            uint16_t AX = 0;
+            uint16_t BX = 0;
+            uint16_t CX = 0;
+            uint16_t DX = 0;
+            uint16_t SP = 0;
+            uint16_t BP = 0;
+            uint16_t SI = 0;
+            uint16_t DI = 0;
         } R16;
 
         // 8-bit
         struct R8 {
-            uint8_t AH;
-            uint8_t BH;
-            uint8_t CH;
-            uint8_t DH;
-            uint8_t AL;
-            uint8_t BL;
-            uint8_t CL;
-            uint8_t DL;
+            uint8_t AH = 0;
+            uint8_t BH = 0;
+            uint8_t CH = 0;
+            uint8_t DH = 0;
+            uint8_t AL = 0;
+            uint8_t BL = 0;
+            uint8_t CL = 0;
+            uint8_t DL = 0;
 
-            uint8_t SPL;
-            uint8_t BPL;
-            uint8_t SIL;
-            uint8_t DIL;
+            uint8_t SPL = 0;
+            uint8_t BPL = 0;
+            uint8_t SIL = 0;
+            uint8_t DIL = 0;
         } R8;
     } GPR;
 
     // Segment registers
     struct SREG {
-        uint16_t SS; // stack
-        uint16_t CS; // code
-        uint16_t DS; // data
-        uint16_t ES; // extra data
-        uint16_t FS; // more extra data
-        uint16_t GS; // still more extra data lol
+        uint16_t SS = 0; // stack
+        uint16_t CS = 0; // code
+        uint16_t DS = 0; // data
+        uint16_t ES = 0; // extra data
+        uint16_t FS = 0; // more extra data
+        uint16_t GS = 0; // still more extra data lol
     } SREG;
 
     // Pointer registers
     struct PREG {
-        uint64_t RIP;
-        uint32_t EIP;
-        uint16_t IP;
+        uint64_t RIP = 0;
+        uint32_t EIP = 0;
+        uint16_t IP = 0;
     } PREG;
 
     // Custom (added for now)
     struct CUSREG {
-        uint16_t IR;
+        uint16_t IR = 0;
     } CUSREG;
 
 
@@ -91,7 +94,7 @@ namespace REGISTER {
 
     // EFLAGS register
     struct EFLAGS {
-        std::bitset<32> flagcode;
+        static std::bitset<32> flagcode;
 
         enum collection { 
             CF = 0,   // carry
@@ -118,7 +121,7 @@ namespace REGISTER {
     // Control registers
     struct CREG {
         struct CR0 {
-            std::bitset<32> flagcode;
+            static std::bitset<32> flagcode;
             enum collection {
                 PE = 0,  // protected mode enable
                 MP,      // monitor co-processor
@@ -189,22 +192,6 @@ namespace REGISTER {
             };
         } DR7;
     } DREG;
-
-    // Reset all registers to 0
-    bool ResetAll(void) {
-        try {
-            GPR.R64.RAX = GPR.R64.RBX = GPR.R64.RCX = GPR.R64.RDX = GPR.R64.RBP = GPR.R64.RSP = GPR.R64.RSI = GPR.R64.RDI = \
-            GPR.R32.EAX = GPR.R32.EBX = GPR.R32.ECX = GPR.R32.EDX = GPR.R32.EBP = GPR.R32.ESP = GPR.R32.ESI = GPR.R32.EDI = \
-            GPR.R16.AX = GPR.R16.BX = GPR.R16.CX = GPR.R16.DX = GPR.R16.BP = GPR.R16.SP = GPR.R16.SI = GPR.R16.DI = \
-            GPR.R8.AH = GPR.R8.AL = GPR.R8.BH = GPR.R8.BL = GPR.R8.CH = GPR.R8.CL = GPR.R8.DH = GPR.R8.DL = GPR.R8.SPL = GPR.R8.BPL = GPR.R8.SIL = GPR.R8.DIL = \
-            SREG.SS = SREG.CS = SREG.DS = SREG.ES = SREG.FS = SREG.GS = \
-            PREG.RIP = PREG.EIP = PREG.IP = 0;
-
-            return true;
-        } catch (...) {
-            return false;
-        }
-    }
 };
 
 #endif
