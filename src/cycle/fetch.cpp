@@ -10,9 +10,8 @@
 #include <regex>
 #include <thread>
 
-#define NULLVECTOR std::vector<std::string>()
-
-//#include "src/CPU/registers.hpp"
+#include "../cpu/registers.hpp"
+//#include "src/cpu/registers.hpp"
 
 class FETCH {
     private:
@@ -30,13 +29,14 @@ class FETCH {
 
             while (std::getline(codestream, s, ' ')) {
                 if (s.length() != 0) {
-
+                    /*
                     if (s.find(',') != std::string::npos) {
                         int index = s.find(',');
                         if (s[index + 1] == ' ') {
                             
                         }
                     }
+                    */
     
                     if (s[s.length() - 1] == ',') {
                         s.resize(s.size() - 1);

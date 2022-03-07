@@ -19,18 +19,16 @@ namespace ANSI {
     static std::ostream &NOBOLD(std::ostream& log) { return log << "\e[0m"; }
 }
 
-class AUDIT {
-    private:
-        static void AuditLog(bool result, std::string message) {
-            result \
-                ? std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl
-                : std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl;
-        }
+namespace AUDIT {
+    static void AuditLog(bool result, std::string message) {
+        result \
+            ? std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl
+            : std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl;
+    }
 
-    public:
-        void AuditCheck(void) {
-            AuditLog(REGISTER::ResetAll(), "All registers have been reset");
-            AuditLog(MEMORY.Initialise(), "2^32 bits of memory space allocated");
-            //AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
-        }
-} AUDIT;
+    void AuditCheck(void) {
+        AuditLog(REGISTER::ResetAll(), "All registers have been reset");
+        AuditLog(MEMORY::Initialise(), "2^32 bits of memory space allocated");
+        //AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
+    }
+};

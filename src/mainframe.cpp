@@ -8,30 +8,24 @@
 //#include "CPU/memory.hpp"
 #include "audit.hpp"
 #include "cycle/fetch.cpp"
+#include "defs.hpp"
 
-#define major 1
-#define minor 0
-#define version major.minor
-
-namespace CPU
-{
-	using SByte = char;
-	using Byte = unsigned char;
-	using Word = unsigned short;
-
-	using u32 = unsigned int;
-	using s32 = signed int;
-
-	struct Mem;
-	struct CPU;
-	struct StatusFlags;
-}
 
 int main(int argc, char *argv[]) {
-	if (argc >= 2) {
-		// TODO: make the arguments into a switch statement
+	// TODO: make argv into a switch statement
 
-		if (!strcmp(argv[1], "--audit")) { AUDIT.AuditCheck(); }
+	if (argc == 1) {
+		OUTPUT::HelpMenu();
+	}
+
+	if (argc == 2) {
+		if (!strcmp(argv[1], "--help")) { OUTPUT::HelpMenu(); }
+		if (!strcmp(argv[1], "--v")) { OUTPUT::Version(false); }
+		if (!strcmp(argv[1], "--version")) { OUTPUT::Version(false); }
+	}
+
+	if (argc > 2) {
+		if (!strcmp(argv[1], "--audit")) { AUDIT::AuditCheck(); }
 		if (!strcmp(argv[1], "--tobeadded")) { }
 	}
 
