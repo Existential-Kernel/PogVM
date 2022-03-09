@@ -1,7 +1,7 @@
 # PogCPU
 
-- CISC CPU
 - x86-64 assembly interpreter
+- Hybrid CISC and RISC processor
 
 
 # Prerequesites

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <bitset>
+#include <cstring>
 
 #ifndef REG
 #define REG
@@ -8,13 +9,10 @@
 // https://wiki.osdev.org/CPU_Registers_x86
 // https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
 
-namespace REGISTER {
-
-    bool ResetAll();
-
-    struct GPR {
+class REGISTER {
+    public:
         // 64-bit
-        struct R64 {
+        struct R64_STRUCT{
             uint64_t RAX = 0; // accumulator
             uint64_t RBX = 0; // base
             uint64_t RCX = 0; // counter
@@ -26,7 +24,7 @@ namespace REGISTER {
         } R64;
 
         // 32-bit
-        struct R32 {
+        struct R32_STRUCT {
             uint32_t EAX = 0;
             uint32_t EBX = 0;
             uint32_t ECX = 0;
@@ -38,7 +36,7 @@ namespace REGISTER {
         } R32;
 
         // 16-bit
-        struct R16 {
+        struct R16_STRUCT {
             uint16_t AX = 0;
             uint16_t BX = 0;
             uint16_t CX = 0;
@@ -65,133 +63,146 @@ namespace REGISTER {
             uint8_t SIL = 0;
             uint8_t DIL = 0;
         } R8;
-    } GPR;
 
-    // Segment registers
-    struct SREG {
-        uint16_t SS = 0; // stack
-        uint16_t CS = 0; // code
-        uint16_t DS = 0; // data
-        uint16_t ES = 0; // extra data
-        uint16_t FS = 0; // more extra data
-        uint16_t GS = 0; // still more extra data lol
-    } SREG;
+        // Segment registers
+        struct SREG {
+            uint16_t SS = 0; // stack
+            uint16_t CS = 0; // code
+            uint16_t DS = 0; // data
+            uint16_t ES = 0; // extra data
+            uint16_t FS = 0; // more extra data
+            uint16_t GS = 0; // still more extra data lol
+        } SREG;
 
-    // Pointer registers
-    struct PREG {
-        uint64_t RIP = 0;
-        uint32_t EIP = 0;
-        uint16_t IP = 0;
-    } PREG;
+        // Pointer registers
+        struct PREG {
+            uint64_t RIP = 0;
+            uint32_t EIP = 0;
+            uint16_t IP = 0;
+        } PREG;
 
-    // Custom (added for now)
-    struct CUSREG {
-        uint16_t IR = 0;
-    } CUSREG;
-
+        // Custom (added for now)
+        struct CUSREG {
+            uint16_t IR = 0;
+        } CUSREG;
 
 
 
-    // EFLAGS register
-    struct EFLAGS {
-        static std::bitset<32> flagcode;
 
-        enum collection { 
-            CF = 0,   // carry
-            PF = 2,   // parity
-            AF = 4,   // adjust
-            ZF = 6,   // zero
-            SF,       // sign
-            TF,       // trap
-            IF,       // interupt
-            DF,       // direction
-            OF,       // overflow
-            IOPL,     // I/O priviledge level field
-            //IOPL, 
-            NT = 14,  // nested
-            RF = 16,  // resume
-            VM,       // virtual 8086 mode
-            AC,       // alignment check
-            VIF,      // virtual interrupt
-            VIP,      // virtual interrupt pending
-            ID,       // identification
-        };
-    } EFLAGS;
-
-    // Control registers
-    struct CREG {
-        struct CR0 {
+        // EFLAGS register
+        struct EFLAGS {
             static std::bitset<32> flagcode;
-            enum collection {
-                PE = 0,  // protected mode enable
-                MP,      // monitor co-processor
-                EM,      // x87 FPU emulation
-                TS,      // task switched
-                ET,      // extention type
-                NE,      // numeric error
-                WP = 16, // write protect
-                AM = 18, // alignment mask
-                NW = 29, // not-write through
-                CD,      // cache disabled
-                PG,      // paging
+
+            enum collection { 
+                CF = 0,   // carry
+                PF = 2,   // parity
+                AF = 4,   // adjust
+                ZF = 6,   // zero
+                SF,       // sign
+                TF,       // trap
+                IF,       // interupt
+                DF,       // direction
+                OF,       // overflow
+                IOPL,     // I/O priviledge level field
+                //IOPL, 
+                NT = 14,  // nested
+                RF = 16,  // resume
+                VM,       // virtual 8086 mode
+                AC,       // alignment check
+                VIF,      // virtual interrupt
+                VIP,      // virtual interrupt pending
+                ID,       // identification
             };
-        } CR0;
+        } EFLAGS;
 
-        struct CR4 {
-            enum collection {
-                VME = 0,       // Virtual 8086 Mode Extensions
-                PVI, 	       // Protected-mode Virtual Interrupts
-                TSD, 	       // Time Stamp Disable
-                DE,            // Debugging Extensions
-                PSE, 	       // Page Size Extension
-                PAE, 	       // Physical Address Extension
-                MCE, 	       // Machine Check Exception
-                PGE,	       // Page Global Enabled
-                PCE, 	       // Performance-Monitoring Counter enable
-                OSFXSR, 	   // Operating system support for FXSAVE and FXRSTOR instructions
-                OSXMMEXCPT,    // Operating System Support for Unmasked SIMD Floating-Point Exceptions
-                UMIP, 	       // User-Mode Instruction Prevention (if set, #GP on SGDT, SIDT, SLDT, SMSW, and STR instructions when CPL > 0)
-                VMXE = 13, 	   // Virtual Machine Extensions Enable
-                SMXE, 	       // Safer Mode Extensions Enable
-                FSGSBASE = 16, // Enables the instructions RDFSBASE, RDGSBASE, WRFSBASE, and WRGSBASE
-                PCIDE, 	       // PCID Enable
-                OSXSAVE, 	   // XSAVE and Processor Extended States Enable
-                SMEP = 20, 	   // Supervisor Mode Execution Protection Enable
-                SMAP,          // Supervisor Mode Access Prevention Enable
-                PKE, 	       // Protection Key Enable
-                CET, 	       // Control-flow Enforcement Technology
-                PKS, 	       // Enable Protection Keys for Supervisor-Mode Pages 
-            };
-        } CR4; 
-    } CREG;
+        // Control registers
+        struct CREG {
+            struct CR0 {
+                static std::bitset<32> flagcode;
+                enum collection {
+                    PE = 0,  // protected mode enable
+                    MP,      // monitor co-processor
+                    EM,      // x87 FPU emulation
+                    TS,      // task switched
+                    ET,      // extention type
+                    NE,      // numeric error
+                    WP = 16, // write protect
+                    AM = 18, // alignment mask
+                    NW = 29, // not-write through
+                    CD,      // cache disabled
+                    PG,      // paging
+                };
+            } CR0;
 
-    // Extended control registers
-    struct XCREG {
+            struct CR4 {
+                enum collection {
+                    VME = 0,       // Virtual 8086 Mode Extensions
+                    PVI, 	       // Protected-mode Virtual Interrupts
+                    TSD, 	       // Time Stamp Disable
+                    DE,            // Debugging Extensions
+                    PSE, 	       // Page Size Extension
+                    PAE, 	       // Physical Address Extension
+                    MCE, 	       // Machine Check Exception
+                    PGE,	       // Page Global Enabled
+                    PCE, 	       // Performance-Monitoring Counter enable
+                    OSFXSR, 	   // Operating system support for FXSAVE and FXRSTOR instructions
+                    OSXMMEXCPT,    // Operating System Support for Unmasked SIMD Floating-Point Exceptions
+                    UMIP, 	       // User-Mode Instruction Prevention (if set, #GP on SGDT, SIDT, SLDT, SMSW, and STR instructions when CPL > 0)
+                    VMXE = 13, 	   // Virtual Machine Extensions Enable
+                    SMXE, 	       // Safer Mode Extensions Enable
+                    FSGSBASE = 16, // Enables the instructions RDFSBASE, RDGSBASE, WRFSBASE, and WRGSBASE
+                    PCIDE, 	       // PCID Enable
+                    OSXSAVE, 	   // XSAVE and Processor Extended States Enable
+                    SMEP = 20, 	   // Supervisor Mode Execution Protection Enable
+                    SMAP,          // Supervisor Mode Access Prevention Enable
+                    PKE, 	       // Protection Key Enable
+                    CET, 	       // Control-flow Enforcement Technology
+                    PKS, 	       // Enable Protection Keys for Supervisor-Mode Pages 
+                };
+            } CR4; 
+        } CREG;
 
-        // NOTE: XCR0 can only be accessed if bit 18 of CR4 is set to 1. XGETBV and XSETBV instructions are used to access XCR0.
-        struct XCR0 {
-            enum collection {
-                X87 = 0,   // x87 FPU/MMX support (must be 1) 
-                SSE,       // XSAVE support for MXCSR and XMM registers 
-                AVX,       // AVX enabled and XSAVE support for upper halves of YMM registers
-                BNDREG,    // MPX enabled and XSAVE support for BND0-BND3 registers 
-                BNDCSR,    // MPX enabled and XSAVE support for BNDCFGU and BNDSTATUS registers 
-                opmask,    // AVX-512 enabled and XSAVE support for opmask registers k0-k7
-                ZMM_Hi256, // AVX-512 enabled and XSAVE support for upper halves of lower ZMM registers 
-                Hi16_ZMM,  // AVX-512 enabled and XSAVE support for upper ZMM registers 
-                PKRU = 9   // XSAVE support for PKRU register 
-            };
-        } XCR0;
-    } XCREG;
+        // Extended control registers
+        struct XCREG {
 
-    // Debug registers
-    struct DREG {
-        struct DR7 {
-            enum collection {
+            // NOTE: XCR0 can only be accessed if bit 18 of CR4 is set to 1. XGETBV and XSETBV instructions are used to access XCR0.
+            struct XCR0 {
+                enum collection {
+                    X87 = 0,   // x87 FPU/MMX support (must be 1) 
+                    SSE,       // XSAVE support for MXCSR and XMM registers 
+                    AVX,       // AVX enabled and XSAVE support for upper halves of YMM registers
+                    BNDREG,    // MPX enabled and XSAVE support for BND0-BND3 registers 
+                    BNDCSR,    // MPX enabled and XSAVE support for BNDCFGU and BNDSTATUS registers 
+                    opmask,    // AVX-512 enabled and XSAVE support for opmask registers k0-k7
+                    ZMM_Hi256, // AVX-512 enabled and XSAVE support for upper halves of lower ZMM registers 
+                    Hi16_ZMM,  // AVX-512 enabled and XSAVE support for upper ZMM registers 
+                    PKRU = 9   // XSAVE support for PKRU register 
+                };
+            } XCR0;
+        } XCREG;
 
-            };
-        } DR7;
-    } DREG;
-};
+        /*
+        // Debug registers
+        struct DREG {
+            struct DR7 {
+                enum collection {
+
+                };
+            } DR7;
+        } DREG;
+        */
+
+        bool ResetAll(void) {
+            try {
+                memset(&R64, 0, sizeof R64);
+                memset(&SREG, 0, sizeof SREG);
+                memset(&PREG, 0, sizeof PREG);
+
+                return true;
+            } catch (...) {
+                return false;
+            }
+        }
+} REGISTER;
 
 #endif

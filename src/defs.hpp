@@ -26,7 +26,7 @@ namespace OUTPUT {
     
     [[noreturn]] void Error(std::string error) {
         std::cerr << error << std::endl;
-        std::terminate;
+        std::exit(1);
     }
 
 };
