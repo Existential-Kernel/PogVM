@@ -117,22 +117,6 @@ class REGISTER {
 
         // Control registers
         struct CREG {
-            struct CR0 {
-                static std::bitset<32> flagcode;
-                enum collection {
-                    PE = 0,  // protected mode enable
-                    MP,      // monitor co-processor
-                    EM,      // x87 FPU emulation
-                    TS,      // task switched
-                    ET,      // extention type
-                    NE,      // numeric error
-                    WP = 16, // write protect
-                    AM = 18, // alignment mask
-                    NW = 29, // not-write through
-                    CD,      // cache disabled
-                    PG,      // paging
-                };
-            } CR0;
 
             struct CR4 {
                 enum collection {
@@ -181,7 +165,6 @@ class REGISTER {
             } XCR0;
         } XCREG;
 
-        /*
         // Debug registers
         struct DREG {
             struct DR7 {
@@ -190,19 +173,7 @@ class REGISTER {
                 };
             } DR7;
         } DREG;
-        */
-
-        bool ResetAll(void) {
-            try {
-                memset(&R64, 0, sizeof R64);
-                memset(&SREG, 0, sizeof SREG);
-                memset(&PREG, 0, sizeof PREG);
-
-                return true;
-            } catch (...) {
-                return false;
-            }
-        }
+        
 } REGISTER;
 
 #endif

@@ -10,9 +10,7 @@ class ASSEMBLY {
     public:
         bool AssemblyTest(void) {
             try {
-                __asm__ __volatile__ (
-                    "mov eax, ebx"
-                );
+                //ASSEMBLY::AssemblyTest
                 return true;
             } catch (...) {
                 return false;

@@ -1,10 +1,12 @@
 CC=g++
 CPPFLAGS=-Wall -Wextra -Werror
+FILE=./src/cycle/test2.asm
 
 .PHONY: all clear compile run audit
 
 
-all: clearscr compile run
+all: clearscr run
+#all: clearscr audit
 
 clearscr:
 	@clear
@@ -15,8 +17,8 @@ clear:
 compile:
 	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o PogCPU
 
-run:
-	@./PogCPU
+run: compile
+	@./PogCPU $(FILE)
 
 audit: compile
 	@./PogCPU --audit

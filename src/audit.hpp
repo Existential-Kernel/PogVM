@@ -21,7 +21,7 @@ namespace ANSI {
     static const char *EXIT = "\x1B[0m";
 }
 
-namespace CHECK {
+namespace CORE {
     // Check if there's at least 4 threads in the user's CPU for pipelining
     static bool ThreadCheck(void) {
         try {
@@ -50,23 +50,41 @@ namespace CHECK {
             return false;
         }
     }
+
+// TODO: Fix the ResetAll() function
+/*
+    // Reset all registers to 0
+    bool ResetAll(void) {
+        try {
+            memset(&R64, 0, sizeof R64);
+            memset(&SREG, 0, sizeof SREG);
+            memset(&PREG, 0, sizeof PREG);
+
+            return true;
+        } catch (...) {
+            return false;
+        }
+    }
+*/
 }
 
 namespace AUDIT {
 
     // Log the process if it succeeded or failed
-    static void AuditLog(bool result, std::string message) {
-        result \
-            ? std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl
-            : std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl;
+    static void AuditLog(bool result, const std::string &message) {
+        if (result) {
+            std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl;
+        } else {
+            std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::NOBOLD << std::endl;
+        }
     }
 
     // Checks all the necessary processes and data needed to run PogCPU
     void AuditCheck(void) {
-        AuditLog(REGISTER.ResetAll(), "All registers have been reset");
         AuditLog(MEMORY::Initialise(), "2^32 bits of memory space allocated");
-        AuditLog(CHECK::CoreCheck(), "CPU working as expected");
-        AuditLog(CHECK::ThreadCheck(), "Verified for necessary thread count for pipeline processing");
-        //AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
+        //AuditLog(REGISTER.ResetAll(), "All registers have been reset");
+        AuditLog(CORE::CoreCheck(), "CPU working as expected");
+        AuditLog(CORE::ThreadCheck(), "Verified for necessary thread count for pipeline processing");
+        AuditLog(ASSEMBLY.AssemblyTest(), "Tested x86 assembly code");
     }
 };

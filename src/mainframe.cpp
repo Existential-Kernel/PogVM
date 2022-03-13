@@ -4,33 +4,42 @@
 #include <string>
 #include <cstring>
 #include <thread>
+#include <regex>
 
-//#include "CPU/registers.hpp"
-//#include "CPU/memory.hpp"
+//#include "cpu/registers.hpp"
+//#include "cpu/memory.hpp"
 #include "audit.hpp"
 #include "cycle/fetch.cpp"
 #include "defs.hpp"
 
 
+
 int main(int argc, char *argv[]) {
 	// TODO: make argv into a switch statement
 
+	std::vector<std::vector<std::string>> program = FETCH.FetchCode(argv[1], true);
+/*
 	if (argc == 1) {
 		OUTPUT::HelpMenu();
 	}
-
+*/
 	if (argc == 2) {
 		if (!strcmp(argv[1], "--help")) { OUTPUT::HelpMenu(); }
 		if (!strcmp(argv[1], "--v")) { OUTPUT::Version(false); }
 		if (!strcmp(argv[1], "--version")) { OUTPUT::Version(false); }
-	}
-
-	if (argc > 2) {
 		if (!strcmp(argv[1], "--audit")) { AUDIT::AuditCheck(); }
-		if (!strcmp(argv[1], "--tobeadded")) { }
+		if (CHECK::FileExists(argv[1])) {
+			FETCH.FetchCode(argv[1], false);
+		}
+
 	}
 
-	FETCH.FetchLine();
+	if (argc == 3) {
+		if (!strcmp(argv[1], "--")) { }
+	}
+
+	//FETCH.FetchCode();
+	//MAIN::
     return 0;
 }
 
