@@ -1,10 +1,11 @@
-#include <bitset>
-#include "../cpu/registers.hpp"
+/*
+ * Instruction: CLD
+ * Description: Clear the direction flag
+ * Opcode:      0xFC
+ */
 
-// CLD
-// Clear direction flag
-// 0xFC
+#include "../cpu/flags.hpp"
 
-void toberenamed () {
-    REGISTER::EFLAGS.flagcode[11] = 0;
+void CLD(void) {
+    FLAGS::EFLAGS.DF(0);
 }

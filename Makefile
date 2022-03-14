@@ -1,6 +1,6 @@
 CC=g++
 CPPFLAGS=-Wall -Wextra -Werror
-FILE=./src/cycle/test2.asm
+FILE=./src/cycle/test.asm
 
 .PHONY: all clear compile run audit
 

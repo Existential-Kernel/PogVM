@@ -1,11 +1,11 @@
-#include <bitset>
+/*
+ * Instruction: CLC
+ * Description: Clear the carry flag
+ * Opcode:      0xF8
+ */
 
-#include "../cpu/registers.hpp"
+#include "../cpu/flags.hpp"
 
-// CLC
-// Clear carry flag
-// 0xF8
-
-void toberenamed () {
-    REGISTER::EFLAGS.flagcode[0] = 0; 
+void CLC(void) {
+    FLAGS::EFLAGS.CF(0);
 }

@@ -4,9 +4,6 @@
 #include <math.h>
 //#include <climits>
 
-#ifndef MEM
-#define MEM
-
 using u32 = unsigned int;
 
 namespace MEMORY {
@@ -26,5 +23,3 @@ namespace MEMORY {
         }
     }
 };
-
-#endif

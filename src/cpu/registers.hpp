@@ -3,11 +3,11 @@
 #include <bitset>
 #include <cstring>
 
-#ifndef REG
-#define REG
-
 // https://wiki.osdev.org/CPU_Registers_x86
 // https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
+
+#ifndef REG
+#define REG
 
 class REGISTER {
     public:
@@ -87,33 +87,6 @@ class REGISTER {
         } CUSREG;
 
 
-
-
-        // EFLAGS register
-        struct EFLAGS {
-            static std::bitset<32> flagcode;
-
-            enum collection { 
-                CF = 0,   // carry
-                PF = 2,   // parity
-                AF = 4,   // adjust
-                ZF = 6,   // zero
-                SF,       // sign
-                TF,       // trap
-                IF,       // interupt
-                DF,       // direction
-                OF,       // overflow
-                IOPL,     // I/O priviledge level field
-                //IOPL, 
-                NT = 14,  // nested
-                RF = 16,  // resume
-                VM,       // virtual 8086 mode
-                AC,       // alignment check
-                VIF,      // virtual interrupt
-                VIP,      // virtual interrupt pending
-                ID,       // identification
-            };
-        } EFLAGS;
 
         // Control registers
         struct CREG {

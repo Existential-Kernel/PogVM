@@ -1,10 +1,11 @@
-#include <bitset>
-#include "../cpu/registers.hpp"
+/*
+ * Instruction: CLI
+ * Description: Clear the interrupt flag
+ * Opcode:      0xFA
+ */
 
-// CLI
-// Clear interrupt flag
-// 0xFA
+#include "../cpu/flags.hpp"
 
-void toberenamed () {
-    REGISTER::EFLAGS.flagcode[10] = 0;
+void CLI(void) {
+    FLAGS::EFLAGS.IF(0);
 }

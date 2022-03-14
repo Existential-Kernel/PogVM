@@ -24,13 +24,3 @@ namespace OPCODE {
         TRAP    // execute trap
     };
 }
-
-/*
-class CODE {
-    public:
-        
-
-    private:
-
-}
-*/
