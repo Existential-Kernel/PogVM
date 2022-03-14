@@ -23,8 +23,10 @@ typedef std::vector<std::vector<std::string>> doublevec;
 class FETCH {
     private:
 
+        // Filter for things like comments and commas for simplicity
         static std::string Filter(std::string string) {
-            if (string.find(';') || string.find(',')) {
+            // TODO: also filter for '#' comments in certain assembly syntaxes
+            if (string.find(';') != std::string::npos || string.find(',') != std::string::npos || string.find('#') != std::string::npos) {
                 std::string filter(string.begin(), std::find(string.begin(), string.end(), ';'));
                 filter.erase(std::remove(filter.begin(), filter.end(), ','), filter.end());
                 string = filter;
@@ -51,7 +53,7 @@ class FETCH {
         }
 
         // Remove leading, trailing, and inbetween whitespace/spaces
-        static inline std::string Trim(const std::string &string) {
+        static std::string Trim(const std::string &string) {
             std::string trimstring;
             size_t start = string.find_first_not_of(WHITESPACE);
             size_t end = string.find_last_not_of(WHITESPACE);

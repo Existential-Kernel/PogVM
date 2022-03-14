@@ -7,5 +7,5 @@
 #include "../cpu/flags.hpp"
 
 void CLI(void) {
-    FLAGS::EFLAGS.IF(0);
+    FLAGS::EFLAGS.eflagcode[9] = 0;
 }

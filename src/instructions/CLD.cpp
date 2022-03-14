@@ -7,5 +7,5 @@
 #include "../cpu/flags.hpp"
 
 void CLD(void) {
-    FLAGS::EFLAGS.DF(0);
+    FLAGS::EFLAGS.eflagcode[10] = 0;
 }

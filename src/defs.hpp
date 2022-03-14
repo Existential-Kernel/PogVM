@@ -19,22 +19,21 @@ namespace OUTPUT {
     // Not sure if adding [[noreturn]] is helpful but I'll keep it anyway ¯\_(ツ)_/¯
 
     // Display the help menu
-    [[noreturn]] void HelpMenu(void) {
+    [[noreturn]] inline void HelpMenu(void) {
         Version(true);
         std::cout << "Usage: " << ANSI::BOLD << "lol" << ANSI::NOBOLD << std::endl;
         std::exit(0);
     }
 
     // Log errors
-    [[noreturn]] void Error(std::string error) {
-        std::cerr << error << std::endl;
+    [[noreturn]] inline void Error(std::string error) {
+        std::cerr << ANSI::RED << ANSI::BOLD << "FATAL: " << ANSI::NOBOLD << ANSI::EXIT << error << std::endl;
         std::exit(1);
     }
-
 };
 
 namespace FUNCTIONS {
-    void ClearConsole() {
+    inline void ClearConsole() {
         #ifdef _WIN32 
             std::system("cls");
         #else 

@@ -7,5 +7,5 @@
 #include "../cpu/flags.hpp"
 
 void CLC(void) {
-    FLAGS::EFLAGS.CF(0);
+    FLAGS::EFLAGS.eflagcode[0] = 0;
 }
