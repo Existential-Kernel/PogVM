@@ -33,6 +33,7 @@
 
 # Custom
 production/
-PogCPU.out
-PogCPU
+pogcpu.out
+pogcpu
 .vscode
+Makefile

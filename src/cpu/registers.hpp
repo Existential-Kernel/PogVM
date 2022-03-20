@@ -22,6 +22,7 @@ class REGISTER {
             uint64_t RSI = 0; // source index
             uint64_t RDI = 0; // destination index
         } R64;
+        R64_STRUCT *R64_PTR = &R64;
 
         // 32-bit
         struct R32_STRUCT {
@@ -34,6 +35,7 @@ class REGISTER {
             uint32_t ESI = 0;
             uint32_t EDI = 0;
         } R32;
+        R32_STRUCT *R32_PTR = &R32;
 
         // 16-bit
         struct R16_STRUCT {
@@ -46,9 +48,10 @@ class REGISTER {
             uint16_t SI = 0;
             uint16_t DI = 0;
         } R16;
+        R16_STRUCT *R16_PTR = &R16;
 
         // 8-bit
-        struct R8 {
+        struct R8_STRUCT {
             uint8_t AH = 0;
             uint8_t BH = 0;
             uint8_t CH = 0;
@@ -63,9 +66,10 @@ class REGISTER {
             uint8_t SIL = 0;
             uint8_t DIL = 0;
         } R8;
+        R8_STRUCT *R8_PTR = &R8;
 
         // Segment registers
-        struct SREG {
+        struct SREG_STRUCT {
             uint16_t SS = 0; // stack
             uint16_t CS = 0; // code
             uint16_t DS = 0; // data
@@ -73,19 +77,22 @@ class REGISTER {
             uint16_t FS = 0; // more extra data
             uint16_t GS = 0; // still more extra data lol
         } SREG;
+        SREG_STRUCT *SREG_PTR = &SREG;
 
         // Pointer registers
-        struct PREG {
+        struct PREG_STRUCT {
             uint64_t RIP = 0;
             uint32_t EIP = 0;
             uint16_t IP = 0;
         } PREG;
+        PREG_STRUCT *PREG_PTR = &PREG;
 
-        // Custom (added for now)
-        struct CUSREG {
-            uint16_t IR = 0;
-        } CUSREG;
-
+        // Auxilary registers (added for now)
+        struct AREG_STRUCT {
+            uint16_t IR = 0; // instruction counter
+            uint64_t PC = 0; // program counter
+        } AREG;
+        AREG_STRUCT *AREG_PTR = &AREG;
 
 
         // Control registers

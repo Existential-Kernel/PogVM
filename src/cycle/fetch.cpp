@@ -34,23 +34,6 @@ class FETCH {
             return string;
         }
 
-        // Split strings with spaces into a vector 
-        static vec Split(std::string string){
-            vec vector;
-            std::string nullstring = "";
-
-            for (size_t i = 0; i < string.size(); ++i) {
-                if (string[i] == ' ') {
-                    vector.push_back(nullstring);
-                    nullstring = "";
-                } else {
-                    nullstring.push_back(string[i]);
-                }
-            }
-            
-            vector.push_back(nullstring);
-            return vector;
-        }
 
         // Remove leading, trailing, and inbetween whitespace/spaces
         static std::string Trim(const std::string &string) {
@@ -82,7 +65,25 @@ class FETCH {
         }
 
 
-        // Convert string into packaged vectors of assembly instructions
+        // Split string argument with spaces into a vector 
+        static vec Split(std::string string){
+            vec vector;
+            std::string nullstring = "";
+
+            for (size_t i = 0; i < string.size(); ++i) {
+                if (string[i] == ' ') {
+                    vector.push_back(nullstring);
+                    nullstring = "";
+                } else {
+                    nullstring.push_back(string[i]);
+                }
+            }
+            
+            vector.push_back(nullstring);
+            return vector;
+        }
+
+        // Convert string into a massive vector with packaged vectors of assembly instructions
         static vec Preprocess(std::string &line, bool verbose) {
             if (verbose) { std::cout << "sample:     '" << line << "'\n"; }
 
@@ -104,7 +105,7 @@ class FETCH {
 
     public:
         // Get the line of code
-        doublevec FetchCode(std::string location, bool verbose) {
+        static doublevec FetchCode(std::string location, bool verbose) {
             std::fstream file;
             std::string line;
             doublevec programvector;
@@ -112,7 +113,6 @@ class FETCH {
             // Open the file
             file.open((location), std::ios::in);
             if (file.is_open()) {
-
                 while (std::getline(file, line)) {
                     // Prefiltering unnecessary assembly lines
                     if ((int)line[0] == 0) { continue; }
@@ -121,10 +121,9 @@ class FETCH {
 
                     programvector.push_back(Preprocess(line, verbose));
                 }
-
                 file.close();
             }
-
+            REGISTER.AREG_PTR->PC++;
             return programvector;
         }
 } FETCH;

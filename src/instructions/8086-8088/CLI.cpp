@@ -1,11 +1,11 @@
 /*
  * Instruction: CLI
  * Description: Clear the interrupt flag
- * Opcode:      0xFA
+ * Opcode(s):   0xFA
  */
 
 #include "../cpu/flags.hpp"
 
-void CLI(void) {
+inline void CLI(void) {
     FLAGS::EFLAGS.eflagcode[9] = 0;
 }

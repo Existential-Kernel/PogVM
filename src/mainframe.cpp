@@ -16,30 +16,24 @@
 
 int main(int argc, char *argv[]) {
 	// TODO: make argv into a switch statement
-
-	std::vector<std::vector<std::string>> program = FETCH.FetchCode(argv[1], true);
 /*
 	if (argc == 1) {
 		OUTPUT::HelpMenu();
 	}
-*/
-	if (argc == 2) {
+
+	else */ if (argc == 2) {
 		if (!strcmp(argv[1], "--help")) { OUTPUT::HelpMenu(); }
 		if (!strcmp(argv[1], "--v")) { OUTPUT::Version(false); }
 		if (!strcmp(argv[1], "--version")) { OUTPUT::Version(false); }
 		if (!strcmp(argv[1], "--audit")) { AUDIT::AuditCheck(); }
-		if (CHECK::FileExists(argv[1])) {
-			FETCH.FetchCode(argv[1], false);
+		if (FUNCTIONS::FileExists(argv[1])) {
+			std::vector<std::vector<std::string>> program = FETCH::FetchCode(argv[1], true);
 		}
 
-	}
-
-	if (argc == 3) {
+	} else if (argc == 3) {
 		if (!strcmp(argv[1], "--")) { }
 	}
 
-	//FETCH.FetchCode();
-	//MAIN::
     return 0;
 }
 

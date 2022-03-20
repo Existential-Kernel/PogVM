@@ -1,0 +1,2 @@
+- All the instructions are based on [this](https://en.wikipedia.org/wiki/X86_instruction_listings) wikipedia article
+- Another resource used in this directory is [this]()

@@ -5,9 +5,11 @@
 #define major 1
 #define minor 0
 #define link "https://github.com/Existential-nonce/PogCPU"
+namespace fs = std::filesystem;
 
 #ifndef DEFS
 #define DEFS
+
 
 namespace OUTPUT {
     void Version(bool fallthrough) {
@@ -19,15 +21,15 @@ namespace OUTPUT {
     // Not sure if adding [[noreturn]] is helpful but I'll keep it anyway ¯\_(ツ)_/¯
 
     // Display the help menu
-    [[noreturn]] inline void HelpMenu(void) {
+    [[noreturn]] void HelpMenu(void) {
         Version(true);
-        std::cout << "Usage: " << ANSI::BOLD << "lol" << ANSI::NOBOLD << std::endl;
+        std::cout << "Usage: " << ANSI::BOLD << "lol" << std::endl;
         std::exit(0);
     }
 
     // Log errors
-    [[noreturn]] inline void Error(std::string error) {
-        std::cerr << ANSI::RED << ANSI::BOLD << "FATAL: " << ANSI::NOBOLD << ANSI::EXIT << error << std::endl;
+    [[noreturn]] void Error(std::string error) {
+        std::cerr << ANSI::RED << ANSI::BOLD << "FATAL: " << ANSI::EXIT << error << std::endl;
         std::exit(1);
     }
 };
@@ -40,22 +42,15 @@ namespace FUNCTIONS {
             std::system("clear");
         #endif
     }
-}
 
-
-
-namespace CHECK {
-    
-    namespace fs = std::filesystem;
-
-    // Checks if the file exists
-    bool FileExists(const fs::path& path, fs::file_status status = fs::file_status{}) {
+    inline bool FileExists(const fs::path& path, fs::file_status status = fs::file_status{}) {
         if (fs::status_known(status) ? fs::exists(status) : fs::exists(path)) {
             return true;
-        } else {
+        } else { 
             return false;
         }
     }
-}
+
+};
 
 #endif

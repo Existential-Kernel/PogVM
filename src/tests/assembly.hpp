@@ -8,7 +8,7 @@
 
 class ASSEMBLY {
     public:
-        bool AssemblyTest(void) {
+        static bool AssemblyTest(void) {
             try {
                 //ASSEMBLY::AssemblyTest
                 return true;
