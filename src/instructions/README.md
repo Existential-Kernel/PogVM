@@ -1,2 +1,2 @@
-- All the instructions are based on [this](https://en.wikipedia.org/wiki/X86_instruction_listings) wikipedia article
-- Another resource used in this directory is [this]()
+- Most of the instructions are based on [this](https://en.wikipedia.org/wiki/X86_instruction_listings) wikipedia article
+- Another resource used in this directory is [this](http://ref.x86asm.net/geek-abc.html), which is the most comprehensive list of assembly instructions I've found so far.

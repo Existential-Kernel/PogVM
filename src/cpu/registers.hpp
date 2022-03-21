@@ -11,8 +11,45 @@
 
 class REGISTER {
     public:
+
+        // 256-bit
+        struct R256_STRUCT {
+            std::bitset<256> YMM0 = 0;
+            std::bitset<256> YMM1 = 0;
+            std::bitset<256> YMM2 = 0;
+            std::bitset<256> YMM3 = 0;
+            std::bitset<256> YMM4 = 0;
+            std::bitset<256> YMM5 = 0;
+            std::bitset<256> YMM6 = 0;
+            std::bitset<256> YMM7 = 0;
+        } R256;
+
+        // 128-bit
+        struct R128_STRUCT {
+            std::bitset<128> XMM0 = 0;
+            std::bitset<128> XMM1 = 0;
+            std::bitset<128> XMM2 = 0;
+            std::bitset<128> XMM3 = 0;
+            std::bitset<128> XMM4 = 0;
+            std::bitset<128> XMM5 = 0;
+            std::bitset<128> XMM6 = 0;
+            std::bitset<128> XMM7 = 0;
+        } R128;
+
+        // 80-bit
+        struct R80_STRUCT {
+            std::bitset<80> ST0 = 0;
+            std::bitset<80> ST1 = 0;
+            std::bitset<80> ST2 = 0;
+            std::bitset<80> ST3 = 0;
+            std::bitset<80> ST4 = 0;
+            std::bitset<80> ST5 = 0;
+            std::bitset<80> ST6 = 0;
+            std::bitset<80> ST7 = 0;
+        } R80;
+
         // 64-bit
-        struct R64_STRUCT{
+        struct R64_STRUCT {
             uint64_t RAX = 0; // accumulator
             uint64_t RBX = 0; // base
             uint64_t RCX = 0; // counter
@@ -22,7 +59,6 @@ class REGISTER {
             uint64_t RSI = 0; // source index
             uint64_t RDI = 0; // destination index
         } R64;
-        R64_STRUCT *R64_PTR = &R64;
 
         // 32-bit
         struct R32_STRUCT {
@@ -35,7 +71,6 @@ class REGISTER {
             uint32_t ESI = 0;
             uint32_t EDI = 0;
         } R32;
-        R32_STRUCT *R32_PTR = &R32;
 
         // 16-bit
         struct R16_STRUCT {
@@ -48,7 +83,6 @@ class REGISTER {
             uint16_t SI = 0;
             uint16_t DI = 0;
         } R16;
-        R16_STRUCT *R16_PTR = &R16;
 
         // 8-bit
         struct R8_STRUCT {
@@ -66,7 +100,6 @@ class REGISTER {
             uint8_t SIL = 0;
             uint8_t DIL = 0;
         } R8;
-        R8_STRUCT *R8_PTR = &R8;
 
         // Segment registers
         struct SREG_STRUCT {
@@ -77,7 +110,6 @@ class REGISTER {
             uint16_t FS = 0; // more extra data
             uint16_t GS = 0; // still more extra data lol
         } SREG;
-        SREG_STRUCT *SREG_PTR = &SREG;
 
         // Pointer registers
         struct PREG_STRUCT {
@@ -85,19 +117,26 @@ class REGISTER {
             uint32_t EIP = 0;
             uint16_t IP = 0;
         } PREG;
-        PREG_STRUCT *PREG_PTR = &PREG;
 
         // Auxilary registers (added for now)
         struct AREG_STRUCT {
             uint16_t IR = 0; // instruction counter
             uint64_t PC = 0; // program counter
         } AREG;
-        AREG_STRUCT *AREG_PTR = &AREG;
 
 
         // Control registers
         struct CREG {
+            uint32_t CR0 = 0;
+            uint32_t CR1 = 0;
+            uint32_t CR2 = 0;
+            uint32_t CR3 = 0;
+            uint32_t CR4 = 0;
+            uint32_t CR5 = 0;
+            uint32_t CR6 = 0;
+            uint32_t CR7 = 0;
 
+/*
             struct CR4 {
                 enum collection {
                     VME = 0,       // Virtual 8086 Mode Extensions
@@ -123,7 +162,8 @@ class REGISTER {
                     CET, 	       // Control-flow Enforcement Technology
                     PKS, 	       // Enable Protection Keys for Supervisor-Mode Pages 
                 };
-            } CR4; 
+            } CR4;
+*/
         } CREG;
 
         // Extended control registers
@@ -153,6 +193,16 @@ class REGISTER {
                 };
             } DR7;
         } DREG;
+
+        R256_STRUCT *R256_PTR = &R256;
+        R128_STRUCT *R128_PTR = &R128;
+        R64_STRUCT *R64_PTR = &R64;
+        R32_STRUCT *R32_PTR = &R32;
+        R16_STRUCT *R16_PTR = &R16;
+        R8_STRUCT *R8_PTR = &R8;
+        SREG_STRUCT *SREG_PTR = &SREG;
+        PREG_STRUCT *PREG_PTR = &PREG;
+        AREG_STRUCT *AREG_PTR = &AREG;
         
 } REGISTER;
 

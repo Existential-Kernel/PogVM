@@ -1,38 +1,20 @@
 #include <iostream>
 #include <thread>
 #include <fstream>
+#include <sstream>
 
-#define major 1
-#define minor 0
-#define link "https://github.com/Existential-nonce/PogCPU"
+// Macros
 namespace fs = std::filesystem;
 
 #ifndef DEFS
 #define DEFS
 
-
-namespace OUTPUT {
-    void Version(bool fallthrough) {
-        std::cout << "PogCPU version " << major << "." << minor << " (" << link << ") " << std::endl;
-        if (!fallthrough) { std::exit(0); }
-    }
-
-
-    // Not sure if adding [[noreturn]] is helpful but I'll keep it anyway ¯\_(ツ)_/¯
-
-    // Display the help menu
-    [[noreturn]] void HelpMenu(void) {
-        Version(true);
-        std::cout << "Usage: " << ANSI::BOLD << "lol" << std::endl;
-        std::exit(0);
-    }
-
-    // Log errors
-    [[noreturn]] void Error(std::string error) {
-        std::cerr << ANSI::RED << ANSI::BOLD << "FATAL: " << ANSI::EXIT << error << std::endl;
-        std::exit(1);
-    }
-};
+namespace INFO {
+    #define major 1
+    #define minor 0
+    #define link "https://github.com/Existential-nonce/PogCPU"
+    std::string version = std::string("program version ") + std::to_string(major) + '.' + std::to_string(minor) + " (" + link + ") ";
+}
 
 namespace FUNCTIONS {
     inline void ClearConsole() {

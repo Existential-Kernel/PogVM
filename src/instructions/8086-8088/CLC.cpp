@@ -5,7 +5,10 @@
  */
 
 #include "../cpu/flags.hpp"
+#include "../instructions/constructor.cpp"
 
-inline void CLC(void) {
+inline void CLC_FUNC(void) {
     FLAGS::EFLAGS.eflagcode[0] = 0;
 }
+
+Construct CLC(&CLC_FUNC);
