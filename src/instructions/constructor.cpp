@@ -5,9 +5,10 @@
 class Construct {
     public:
         double size;
+        
 
     template<typename F>
-    explicit Construct(F&& f) : size(f()) {
+    explicit Construct(std::string opcode, unsigned char hex, F&& f) : size(f()) {
 
     };
 };

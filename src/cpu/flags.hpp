@@ -5,6 +5,9 @@
 #include <array>
 #include <bitset>
 
+#ifndef FLAGS
+#define FLAGS
+
 namespace FLAGS {
     struct EFLAGS {
         std::bitset<32> eflagcode;
@@ -58,3 +61,5 @@ namespace FLAGS {
         };
     } CONTROL;
 };
+
+#endif  

@@ -1,19 +1,18 @@
 CC=g++
 CPPFLAGS=-std=c++20 -Wall -Wextra -Werror
-FILE=./src/cycle/test.asm
-OUT=pogcpu
+FILE=./src/tests/elf/helloworld
+OUT=pogvm
 
-.PHONY: all clear compile run audit
+.PHONY: all clearscr clear compile run audit
 
 
-#all: clearscr run
 all: clearscr run
 
 clearscr:
 	@clear
 
 clear:
-	rm -rf *.o
+	@rm -rf *.o
 
 compile:
 	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o $(OUT)

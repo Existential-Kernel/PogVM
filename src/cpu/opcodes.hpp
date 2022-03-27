@@ -3,6 +3,9 @@
 #include <array>
 #include <cstdlib>
 
+#ifndef OPCODES
+#define OPCODES
+
 namespace OPCODE {
     enum {
         AAA = 0,
@@ -24,3 +27,5 @@ namespace OPCODE {
         TRAP    // execute trap
     };
 }
+
+#endif

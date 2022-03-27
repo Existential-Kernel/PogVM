@@ -66,13 +66,6 @@ class CORE {
     */
 };
 
-class CHECK {
-    private:
-
-    public:
-
-};
-
 namespace AUDIT {
 
     // Log the initialisation process if it succeeded or failed

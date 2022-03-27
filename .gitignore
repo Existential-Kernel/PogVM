@@ -33,7 +33,7 @@
 
 # Custom
 production/
-pogcpu.out
-pogcpu
+pogvm.out
+pogvm
 .vscode
 Makefile

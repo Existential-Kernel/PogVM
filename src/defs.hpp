@@ -1,20 +1,10 @@
 #include <iostream>
-#include <thread>
 #include <fstream>
-#include <sstream>
-
-// Macros
-namespace fs = std::filesystem;
 
 #ifndef DEFS
 #define DEFS
 
-namespace INFO {
-    #define major 1
-    #define minor 0
-    #define link "https://github.com/Existential-nonce/PogCPU"
-    std::string version = std::string("program version ") + std::to_string(major) + '.' + std::to_string(minor) + " (" + link + ") ";
-}
+namespace fs = std::filesystem;
 
 namespace FUNCTIONS {
     inline void ClearConsole() {

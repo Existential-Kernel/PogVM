@@ -11,4 +11,4 @@ inline void CLC_FUNC(void) {
     FLAGS::EFLAGS.eflagcode[0] = 0;
 }
 
-Construct CLC(&CLC_FUNC);
+Construct CLC("hi", 0xF8, &CLC_FUNC);

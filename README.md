@@ -1,6 +1,6 @@
 <p align="center">
-<h1>PogCPU</h1>
-A custom virtual machine that can execute x86-64 assembly code!
+<h1>PogVM</h1>
+A mini Virtual Machine designed to run executable files
 
 <br>
          ========================== <br>
@@ -9,9 +9,10 @@ A custom virtual machine that can execute x86-64 assembly code!
 </p>
 
 ## FEATURES
-- x86-64 assembly interpreter
-- Hybrid CISC and RISC processor
-- Scalar pipelining architecture
+- x86-64 assembly interpreter     (WIP)
+- Hybrid CISC and RISC processor  (WIP)
+- Scalar pipelining architecture  (WIP)
+- Executable file analyser        (WIP)
 
 
 # Prerequesites
