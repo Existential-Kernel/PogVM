@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 #ifndef DEFS
 #define DEFS
@@ -18,7 +19,7 @@ namespace FUNCTIONS {
     inline bool FileExists(const fs::path& path, fs::file_status status = fs::file_status{}) {
         if (fs::status_known(status) ? fs::exists(status) : fs::exists(path)) {
             return true;
-        } else { 
+        } else {
             return false;
         }
     }

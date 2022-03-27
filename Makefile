@@ -1,6 +1,6 @@
 CC=g++
 CPPFLAGS=-std=c++20 -Wall -Wextra -Werror
-FILE=./src/tests/elf/helloworld
+FILE=./src/tests/intel-assembly/helloworld.asm
 OUT=pogvm
 
 .PHONY: all clearscr clear compile run audit
@@ -18,7 +18,7 @@ compile:
 	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o $(OUT)
 
 run: compile
-	@./$(OUT) $(FILE)
+	./$(OUT) $(FILE)
 
 audit: compile
 	@./$(OUT) --audit

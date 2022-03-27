@@ -10,26 +10,34 @@
 #include "cycle/fetch.cpp"
 #include "defs.hpp"
 
+// Check if the program is using C++17 or newer
+#if __cplusplus < 201703L
+	#define CXX17 false
+#else
+	#define CXX17 true
+#endif
+
+
 namespace INFO {
+	#define name "pogvm"
     #define major "1"
     #define minor "0"
     #define link "https://github.com/Existential-nonce/PogVM"
-    std::string version = "program version " major "." minor " (" link ") ";
+    std::string information = name " version " major "." minor " (" link ") ";
 }
 
 namespace OUTPUT {
 	// Output the version of the program
     [[noreturn]] static void Version(void) {
-		std::cout << INFO::version << std::endl;
+		std::cout << INFO::information << std::endl;
 		std::exit(0);
     }
 
     // Display the help menu
     [[noreturn]] static void HelpMenu(void) {
-        std::cout << INFO::version << "\n" << ANSI::BOLD << "Usage: " << ANSI::EXIT << 
-			"pogvm <file location> [flags]\n\
-			Example: pogvm ./test --info"
-		<< std::endl;
+        std::cout << INFO::information << "\n" << ANSI::BOLD << "Usage: " << ANSI::EXIT << 
+			"pogvm <file location> [flags]\n \
+			Example: pogvm ./test --info\n";
         std::exit(0);
     }
 
@@ -41,8 +49,11 @@ namespace OUTPUT {
 };
 
 int main(int argc, char *argv[]) {
-	// TODO: make this into a switch statement somehow
+	if (!CXX17) {
+		OUTPUT::Error("This program requires C++17 or newer to run.");
+	}
 
+	// TODO: make this into a switch statement somehow, this looks awful as fuck
 	if (argc == 1) {
 		OUTPUT::HelpMenu();
 	} else if (argc == 2) {
@@ -51,29 +62,35 @@ int main(int argc, char *argv[]) {
 		if (!strcmp(argv[1], "--version")) { OUTPUT::Version(); }
 		if (!strcmp(argv[1], "--audit")) { AUDIT::AuditCheck(); }
 		if (FUNCTIONS::FileExists(argv[1])) {
-			std::vector<unsigned char> hexvector = FETCH::FetchHex(argv[1], false);
-
 
 			// check if file is an ELF file. Else, check if it's an assembly file
-			if (CHECKS::CheckELF(hexvector)) {
-				// do stuff
+			if (CHECKS::CheckELF(FETCH::FetchHex(argv[1]))) {
+
+
+				std::vector<unsigned char> hexvector = FETCH::FetchHex(argv[1]);
+
+
 			} else if (CHECKS::CheckASM(argv[1])) {
-				// do stuff
+
+
+				std::vector<std::vector<std::string>> assemblyvector = FETCH::FetchAssembly(argv[1]);
+
+
 			}
 			
-
-
-			//std::vector<std::vector<std::string>> program = FETCH::FetchCode(argv[1], true);
-			//std::vector<unsigned char> v = FETCH::GetFileHexData(argv[1], v, false)
-			//FETCH::GetFileHexData(argv[1], v, true);
 		} else {
-			OUTPUT::Error("The file provided is not valid.");
+			std::regex r(argv[1]);
+			if (std::regex_search("--", r)) {
+				OUTPUT::Error("unrecognized flag option");
+			} else {
+				OUTPUT::Error("The file provided is not valid");
+			}
 		}
 
 	} else if (argc == 3) {
 		if (FUNCTIONS::FileExists(argv[1])) {
 			if (!strcmp(argv[2], "--info")) {  }
-			std::vector<std::vector<std::string>> program = FETCH::FetchCode(argv[1], true);
+			std::vector<std::vector<std::string>> program = FETCH::FetchAssembly(argv[1]);
 		}
 	}
 
