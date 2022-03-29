@@ -1,6 +1,6 @@
 CC=g++
 CPPFLAGS=-std=c++20 -Wall -Wextra -Werror
-FILE=./src/tests/intel-assembly/helloworld.asm
+FILE=./src/tests/elf/helloworld
 OUT=pogvm
 
 .PHONY: all clearscr clear compile run audit

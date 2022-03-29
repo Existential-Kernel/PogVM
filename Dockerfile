@@ -5,6 +5,6 @@ RUN apk update && apk upgrade \
 && apk add --no-cache cmake
 
 COPY . /src
-RUN g++ -Wall -Wextra -Werror src/mainframe.cpp PogVM 
+RUN g++ -Wall -Wextra -Werror src/mainframe.cpp pogvm
 
-CMD ["./PogVM"]
+CMD ["./pogvm"]

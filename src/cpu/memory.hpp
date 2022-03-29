@@ -10,8 +10,6 @@
 using u32 = unsigned int;
 
 namespace MEMORY {
-    // For some reason this gives me a linker error:
-    // static constexpr u32 MAX_MEM = UINT_MAX;
     static constexpr u32 MAX_MEM = 65536; // 2^16 bits of memory
     unsigned char memory[MAX_MEM];
 

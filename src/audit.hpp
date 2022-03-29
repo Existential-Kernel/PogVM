@@ -10,27 +10,15 @@
 #include "cpu/registers.hpp"
 #include "cpu/memory.hpp"
 #include "tests/assembly.hpp"
-
-namespace ANSI {
-    static const char *BLACK_BG = "\x1B[48;2;0;0;0m";
-    static const char *RED = "\x1B[38;2;255;0;0m";
-    static const char *GREEN = "\x1B[38;2;0;255;0m";
-
-    static std::ostream &BOLD(std::ostream& log) { return log << "\e[1m"; }
-
-    static const char *EXIT = "\x1B[0m";
-}
+#include "defs.hpp"
 
 class CORE {
     public:
         // Check if there's at least 4 threads in the user's CPU for pipelining
         static inline bool ThreadCheck(void) {
             try {
-                if ((uint8_t)std::thread::hardware_concurrency() * 2 >= 4) {
-                    return true;
-                } else {
-                    return false;
-                }
+                bool result = (uint8_t)std::thread::hardware_concurrency() * 2 >= 4;
+                return result;
             } catch (...) {
                 return false;
             }
@@ -39,11 +27,8 @@ class CORE {
         // Check if CPU cores are working as expected
         static inline bool CoreCheck(void) {
             try {
-                if ((uint8_t)std::thread::hardware_concurrency() != 0) {
-                    return true;
-                } else {
-                    return false; 
-                }
+                bool result = (uint8_t)std::thread::hardware_concurrency() != 0;
+                return result;
             } catch (...) {
                 return false;
             }

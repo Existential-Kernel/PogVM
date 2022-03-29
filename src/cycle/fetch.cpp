@@ -11,9 +11,10 @@
 #include <ios>
 #include <iomanip>
 
+
 #include "../cpu/registers.hpp"
 
-class STRINGFETCH {
+class ASSEMBLYFETCH {
     private:
         // Macros
         #define WHITESPACE " \n\r\t\f\v"
@@ -89,6 +90,13 @@ class STRINGFETCH {
         }
 
     public:
+        // check if string ends with .asm or .s file extension
+        inline static bool CheckASM(const std::string &file) {
+            std::string extension = file.substr(file.find_last_of(".") + 1);
+            bool result = (extension == "asm" || extension == "s");
+            return result;
+        }
+
         // Get the line of assembly
         static dsvec FetchAssembly(const std::string &location) {
             std::fstream file;
@@ -120,47 +128,36 @@ class HEXFETCH {
         typedef std::vector<unsigned char> hvec;   // hex vector
         typedef std::vector<unsigned char> dhvec;  // double hex vector
 
-        // Get hex data of file and store in vector (using copilot)
-        static void GetFileHexData(const std::string &filename, std::vector<unsigned char> &v) {
-            std::ifstream file(filename, std::ios::binary);
-            if (file) {
-                file.seekg(0, std::ios::end);
-                v.resize(file.tellg());
-                file.seekg(0, std::ios::beg);
-                file.read((char*)&v[0], v.size());
+        struct HEADER_STRUCT {
+            unsigned char e_ident[16];
+            uint16_t type;
+            uint16_t machine;
+            const uint16_t version = 0x01;
+            unsigned int entry;
+            unsigned int phoff;
+            unsigned int shoff;
+            uint32_t flags;
+            uint16_t ehsize;
+            uint16_t phentsize;
+            uint16_t phnum;
+            uint16_t shentsize;
+            uint16_t shnum;
+            uint16_t shstrndx;
+        };
+
+        static void GetELFHeader(const std::vector<unsigned char> &hex) {
+            //HEXFETCH::HEADER_STRUCT *HEADER_PTR = &HEADER;
+            HEXFETCH::HEADER_STRUCT ELFHEADER;
+
+            for (size_t i = 0; i < 16; ++i) {
+                std::cout << i << "th element: 0x" << 
+                std::hex << (int)hex.at(i) << std::endl;
+                ELFHEADER.e_ident[i] = hex.at(i);
             }
-            file.close();
+
+
         }
 
-        static void GetELFHeader(const std::vector<unsigned char> hex) {
-            struct Header {
-                unsigned char e_ident[16];
-                unsigned short e_type;
-                unsigned short e_machine;
-                unsigned int e_version;
-                unsigned int e_entry;
-                unsigned int e_phoff;
-                unsigned int e_shoff;
-                unsigned int e_flags;
-                unsigned short e_ehsize;
-                unsigned short e_phentsize;
-                unsigned short e_phnum;
-                unsigned short e_shentsize;
-                unsigned short e_shnum;
-                unsigned short e_shstrndx;
-            };
-        }
-
-    public:
-        static std::vector<unsigned char> FetchHex(const std::string &location) {
-            std::vector<unsigned char> vector;
-            GetFileHexData(location, vector);
-            //CheckELF(vector);
-            return vector;
-        }
-};
-
-class CHECKS {
     public:
         // Check if the file is an ELF file
         inline static bool CheckELF(const std::vector<unsigned char> &hexvector) {
@@ -168,19 +165,33 @@ class CHECKS {
             return result;
         }
 
-        // check if string ends with .asm or .s file extension
-        inline static bool CheckASM(const std::string &file) {
-            std::string extension = file.substr(file.find_last_of(".") + 1);
-            if (extension == "asm" || extension == "s") {
-                return true;
-            } else {
-                return false;
+        // Get hex data of file and store in vector (using copilot)
+        static std::vector<unsigned char> GetFileHexData(const std::string &filename) {
+            std::ifstream file(filename, std::ios::binary);
+            std::vector<unsigned char> hexvector{0x00};
+            if (file) {
+                file.seekg(0, std::ios::end);
+                hexvector.resize(file.tellg());
+                file.seekg(0, std::ios::beg);
+                file.read((char*)&hexvector[0], hexvector.size());
             }
+            file.close();
+            return hexvector;
+
         }
+
+        static std::vector<unsigned char> FetchHex(const std::string &location) {
+            std::vector<unsigned char> vector = GetFileHexData(location);
+            GetELFHeader(vector);
+
+            return vector;
+        }
+
+
 };
 
 
-class FETCH : public STRINGFETCH, public HEXFETCH {
+class FETCH : public ASSEMBLYFETCH, public HEXFETCH {
     public:
 
 

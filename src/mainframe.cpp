@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 		OUTPUT::Error("This program requires C++17 or newer to run.");
 	}
 
-	// TODO: make this into a switch statement somehow, this looks awful as fuck
+	// TODO: make this into a switch statement with strings somehow, this looks awful lol
 	if (argc == 1) {
 		OUTPUT::HelpMenu();
 	} else if (argc == 2) {
@@ -64,24 +64,26 @@ int main(int argc, char *argv[]) {
 		if (FUNCTIONS::FileExists(argv[1])) {
 
 			// check if file is an ELF file. Else, check if it's an assembly file
-			if (CHECKS::CheckELF(FETCH::FetchHex(argv[1]))) {
+			if (HEXFETCH::CheckELF(FETCH::GetFileHexData(argv[1]))) {
 
 
 				std::vector<unsigned char> hexvector = FETCH::FetchHex(argv[1]);
 
-
-			} else if (CHECKS::CheckASM(argv[1])) {
+	
+			} else if (ASSEMBLYFETCH::CheckASM(argv[1])) {
 
 
 				std::vector<std::vector<std::string>> assemblyvector = FETCH::FetchAssembly(argv[1]);
 
 
+			} else {
+				OUTPUT::Error("Please provide an executable file or an assembly file to virtualise!");
 			}
 			
 		} else {
 			std::regex r(argv[1]);
 			if (std::regex_search("--", r)) {
-				OUTPUT::Error("unrecognized flag option");
+				OUTPUT::Error("Unrecognized flag option");
 			} else {
 				OUTPUT::Error("The file provided is not valid");
 			}
