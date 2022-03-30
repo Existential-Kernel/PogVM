@@ -2,7 +2,7 @@
 
 
 # LIST OF SHIT THAT'S NEEDED:
-#   - Cmake (obviously)
+#   - cmake (obviously)
 #   - nasm
 #   - ld
 #   - g++

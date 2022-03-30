@@ -18,7 +18,7 @@ compile:
 	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o $(OUT)
 
 run: compile
-	./$(OUT) $(FILE)
+	./$(OUT) $(FILE) --info
 
 audit: compile
 	@./$(OUT) --audit

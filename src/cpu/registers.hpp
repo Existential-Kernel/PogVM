@@ -1,7 +1,4 @@
-#include <iostream>
-#include <cstdlib>
 #include <bitset>
-#include <cstring>
 
 // https://wiki.osdev.org/CPU_Registers_x86
 // https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
@@ -196,6 +193,7 @@ class REGISTER {
 
         R256_STRUCT *R256_PTR = &R256;
         R128_STRUCT *R128_PTR = &R128;
+        R80_STRUCT *R80_PTR = &R80;
         R64_STRUCT *R64_PTR = &R64;
         R32_STRUCT *R32_PTR = &R32;
         R16_STRUCT *R16_PTR = &R16;

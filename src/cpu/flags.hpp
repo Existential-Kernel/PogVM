@@ -5,8 +5,8 @@
 #include <array>
 #include <bitset>
 
-#ifndef FLAGS
-#define FLAGS
+#ifndef FLAG
+#define FLAG
 
 namespace FLAGS {
     struct EFLAGS {

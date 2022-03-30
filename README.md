@@ -8,6 +8,9 @@ A mini Virtual Machine designed to run executable files
          ========================== <br>
 </p>
 
+
+<!-- NOTE: Add demo of the VM here -->
+
 ## FEATURES
 - x86-64 assembly interpreter     (WIP)
 - Hybrid CISC and RISC processor  (WIP)
@@ -24,3 +27,7 @@ cmake ..
 
 
 # Ideas
+
+
+# Resources used
+- https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html

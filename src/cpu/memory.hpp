@@ -1,8 +1,6 @@
 #include <iostream>
 #include <cstdint>
 #include <cmath>
-#include <math.h>
-//#include <climits>
 
 #ifndef MEM
 #define MEM
