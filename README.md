@@ -16,14 +16,32 @@ A mini Virtual Machine designed to run executable files
 - Hybrid CISC and RISC processor  (WIP)
 - Scalar pipelining architecture  (WIP)
 - Executable file analyser        (WIP)
-
+- No external libraries used, just raw C++
+- No hypervisor dependence (mostly bc I have no idea how to implement it lol)
 
 # Prerequesites
 - You must have at least 2 cores in the CPU you're using
 
-mkdir build          # Create a directory to hold the build output.
-cd build
-cmake ..
+# Install
+  **Docker**
+  ```
+  mkdir build
+  cd build
+  cmake ..
+  ```
+
+# Options
+  Command pattern: `pogvm [options] [executable file]`
+  Example: `pogvm --info ./test`
+
+  | Option | Description | Alias |
+  |---|---|---|
+  | --version | Displays PogVM's version | -v |
+  | --help | Displays the help menu for all the options | -h |
+  | --audit | Displays the compatibility of PogVM on your device | -a |
+  | --info | Displays the ELF file header and sections information | -i |
+  | --header | Displays the ELF file header information | -hd |
+  | --section | Displays the ELF file section information | -s |
 
 
 # Ideas
@@ -31,3 +49,7 @@ cmake ..
 
 # Resources used
 - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html
+- https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png
+- https://wiki.osdev.org/CPU_Registers_x86
+- https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
+- https://en.wikipedia.org/wiki/Executable_and_Linkable_Format

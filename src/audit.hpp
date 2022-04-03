@@ -9,7 +9,7 @@
 
 #include "cpu/registers.hpp"
 #include "cpu/memory.hpp"
-#include "tests/assembly.hpp"
+//#include "tests/assembly.hpp"
 #include "defs.hpp"
 
 class CORE {
@@ -68,6 +68,6 @@ namespace AUDIT {
         //AuditLog(REGISTER.ResetAll(), "All registers have been reset");
         AuditLog(CORE::CoreCheck(), "CPU working as expected");
         AuditLog(CORE::ThreadCheck(), "Verified for necessary thread count for pipeline processing");
-        AuditLog(ASSEMBLY::AssemblyTest(), "Tested x86 assembly code");
+        //AuditLog(ASSEMBLY::AssemblyTest(), "Tested x86 assembly code");
     }
 };

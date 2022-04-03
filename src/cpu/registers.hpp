@@ -1,14 +1,10 @@
 #include <bitset>
 
-// https://wiki.osdev.org/CPU_Registers_x86
-// https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
-
 #ifndef REG
 #define REG
 
 class REGISTER {
     public:
-
         // 256-bit
         struct R256_STRUCT {
             std::bitset<256> YMM0 = 0;
