@@ -8,7 +8,7 @@
 namespace fs = std::filesystem;
 
 namespace INFO {
-	#define name "PogVM"
+   	#define name "PogVM"
     #define major "1"
     #define minor "0"
     #define link "https://github.com/Existential-nonce/PogVM"
@@ -24,7 +24,7 @@ namespace ANSI {
     static const char *GREEN = "\x1B[38;2;0;255;0m";
     static const char *GREY = "\x1B[38;2;70;70;70m";
     static const char *EXIT = "\x1B[0m";
-    static std::ostream &BOLD(std::ostream& log) { return log << "\e[1m"; }
+    static std::ostream &BOLD(std::ostream& log) { return log << "\033[1m"; }
 }
 
 namespace OUTPUT {
@@ -53,7 +53,7 @@ namespace OUTPUT {
 };
 
 namespace FUNCTIONS {
-    inline void ClearConsole() {
+    static inline void ClearConsole() {
         #ifdef _WIN32 
             std::system("cls");
         #else 
@@ -61,9 +61,15 @@ namespace FUNCTIONS {
         #endif
     }
 
-    inline bool FileExists(const fs::path& path, fs::file_status status = fs::file_status{}) {
+    static inline bool FileExists(const fs::path& path, fs::file_status status = fs::file_status{}) {
         bool result = (fs::status_known(status) ? fs::exists(status) : fs::exists(path));
         return result;
+    }
+
+    std::string IntToHex(const uint64_t &integer) {
+        std::stringstream stream;
+        stream << std::hex << integer;
+        return stream.str();
     }
 };
 

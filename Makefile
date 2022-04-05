@@ -1,5 +1,5 @@
 CC=g++
-CPPFLAGS=-std=c++20 -Wall -Wextra -Werror
+CPPFLAGS=-O3 -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors
 FILE=./src/tests/elf/helloworld
 OUT=pogvm
 
@@ -18,7 +18,7 @@ compile:
 	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o $(OUT)
 
 run: compile
-	./$(OUT) --$(FLAGS) $(FILE)
+	./$(OUT) --$(FLAG) $(FILE)
 
 flagrun: compile
-	@./$(OUT) -$(FLAGS)
+	@./$(OUT) -$(FLAG)

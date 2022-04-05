@@ -1,13 +1,13 @@
-<p align="center">
-<h1>PogVM</h1>
-A mini Virtual Machine designed to run executable files
+<div align="center">
+  <h1>PogVM</h1>
+  A mini Virtual Machine designed to run executable files
 
-<br>
-         ========================== <br>
-🚧 NOTE: THIS PROJECT IS UNDER CONSTRUCTION 🚧 <br>
-         ========================== <br>
-</p>
-
+  <br>
+          ========================== <br>
+  🚧 NOTE: THIS PROJECT IS UNDER CONSTRUCTION 🚧 <br>
+          ========================== <br>
+  </p>
+</div>
 
 <!-- NOTE: Add demo of the VM here -->
 
@@ -17,12 +17,12 @@ A mini Virtual Machine designed to run executable files
 - Scalar pipelining architecture  (WIP)
 - Executable file analyser        (WIP)
 - No external libraries used, just raw C++
-- No hypervisor dependence (mostly bc I have no idea how to implement it lol)
+- No hypervisor dependency (mostly bc I have no idea how to implement it lol)
 
-# Prerequesites
+## Prerequesites
 - You must have at least 2 cores in the CPU you're using
 
-# Install
+## Install
   **Docker**
   ```
   mkdir build
@@ -30,7 +30,7 @@ A mini Virtual Machine designed to run executable files
   cmake ..
   ```
 
-# Options
+## Options
   Command pattern: `pogvm [options] [executable file]`
   Example: `pogvm --info ./test`
 
@@ -41,13 +41,13 @@ A mini Virtual Machine designed to run executable files
   | --audit | Displays the compatibility of PogVM on your device | -a |
   | --info | Displays the ELF file header and sections information | -i |
   | --header | Displays the ELF file header information | -hd |
-  | --section | Displays the ELF file section information | -s |
+  | --sections | Displays the ELF file section information | -s |
 
 
-# Ideas
+## Ideas
 
 
-# Resources used
+## Resources used
 - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html
 - https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png
 - https://wiki.osdev.org/CPU_Registers_x86
