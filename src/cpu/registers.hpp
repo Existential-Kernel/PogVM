@@ -41,67 +41,49 @@ class REGISTER {
             std::bitset<80> ST7 = 0;
         } R80;
 
+
+/*
+ * A = accumulator
+ * B = base
+ * C = counter
+ * D = data
+ * SP = stack pointer
+ * BP = stack base pointer
+ * SI = source index
+ * DI = destination index
+ */
         // 64-bit
         struct R64_STRUCT {
-            uint64_t RAX = 0; // accumulator
-            uint64_t RBX = 0; // base
-            uint64_t RCX = 0; // counter
-            uint64_t RDX = 0; // data
-            uint64_t RSP = 0; // stack pointer
-            uint64_t RBP = 0; // stack base pointer
-            uint64_t RSI = 0; // source index
-            uint64_t RDI = 0; // destination index
+            uint64_t RAX, RBX, RCX, RDX, RSP, RBP, RSI, RDI = 0;
         } R64;
 
         // 32-bit
         struct R32_STRUCT {
-            uint32_t EAX = 0;
-            uint32_t EBX = 0;
-            uint32_t ECX = 0;
-            uint32_t EDX = 0;
-            uint32_t ESP = 0;
-            uint32_t EBP = 0;
-            uint32_t ESI = 0;
-            uint32_t EDI = 0;
+            uint32_t EAX, EBX, ECX, EDX, ESP, EBP, ESI, EDI = 0;
         } R32;
 
         // 16-bit
         struct R16_STRUCT {
-            uint16_t AX = 0;
-            uint16_t BX = 0;
-            uint16_t CX = 0;
-            uint16_t DX = 0;
-            uint16_t SP = 0;
-            uint16_t BP = 0;
-            uint16_t SI = 0;
-            uint16_t DI = 0;
+            uint16_t AX, BX, CX, DX, SP, BP, SI, DI = 0;
         } R16;
 
         // 8-bit
         struct R8_STRUCT {
-            uint8_t AH = 0;
-            uint8_t BH = 0;
-            uint8_t CH = 0;
-            uint8_t DH = 0;
-            uint8_t AL = 0;
-            uint8_t BL = 0;
-            uint8_t CL = 0;
-            uint8_t DL = 0;
-
-            uint8_t SPL = 0;
-            uint8_t BPL = 0;
-            uint8_t SIL = 0;
-            uint8_t DIL = 0;
+            uint8_t AH, BH, CH, DH = 0;
+            uint8_t AL, BL, CL, DL = 0;
+            uint8_t SPL, BPL, SIL, DIL = 0;
         } R8;
 
         // Segment registers
         struct SREG_STRUCT {
-            uint16_t SS = 0; // stack
-            uint16_t CS = 0; // code
-            uint16_t DS = 0; // data
-            uint16_t ES = 0; // extra data
-            uint16_t FS = 0; // more extra data
-            uint16_t GS = 0; // still more extra data lol
+            uint16_t 
+                SS, // stack
+                CS, // code
+                DS, // data
+                ES, // extra data
+                FS, // more extra data
+                GS  // still more extra data lol
+            = 0;
         } SREG;
 
         // Pointer registers
@@ -120,14 +102,7 @@ class REGISTER {
 
         // Control registers
         struct CREG {
-            uint32_t CR0 = 0;
-            uint32_t CR1 = 0;
-            uint32_t CR2 = 0;
-            uint32_t CR3 = 0;
-            uint32_t CR4 = 0;
-            uint32_t CR5 = 0;
-            uint32_t CR6 = 0;
-            uint32_t CR7 = 0;
+            uint32_t CR0, CR1, CR2, CR3, CR4, CR5, CR6, CR7 = 0;
 
 /*
             struct CR4 {
@@ -187,6 +162,7 @@ class REGISTER {
             } DR7;
         } DREG;
 
+        // Struct pointers
         R256_STRUCT *R256_PTR = &R256;
         R128_STRUCT *R128_PTR = &R128;
         R80_STRUCT *R80_PTR = &R80;
@@ -197,7 +173,6 @@ class REGISTER {
         SREG_STRUCT *SREG_PTR = &SREG;
         PREG_STRUCT *PREG_PTR = &PREG;
         AREG_STRUCT *AREG_PTR = &AREG;
-        
 } REGISTER;
 
 #endif

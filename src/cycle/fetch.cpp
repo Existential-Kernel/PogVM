@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <ios>
 #include <iomanip>
+#include <elf.h>  // https://www.man7.org/linux/man-pages/man5/elf.5.html
 
 #include "../defs.hpp"
 #include "../cpu/registers.hpp"
@@ -148,7 +149,6 @@ class ELF_PROGRAM_STRUCT {
         uint32_t ph_flags;
         std::string ph_flagsname;
 
-
         uint64_t ph_offset;
         uint64_t ph_vaddr;
         uint64_t ph_paddr;
@@ -172,10 +172,10 @@ class ELF_SECTION_STRUCT {
 } ELF_SECTION;
 
 class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public ELF_SECTION_STRUCT {
-    public: // TODO: PUT THIS TO PROTECTED WHEN I'M DONE TESTING
+    protected:
         static void GetELFProgram(const std::vector<unsigned char> &hex, const uint64_t &offset) {
             unsigned char program[0x38];
-            for (uint64_t x = offset, i = 0; x < offset + 0x38; ++x, ++i) { program[i] = hex.at(x); }
+            for (uint16_t x = offset, i = 0; x < offset + 0x38; ++x, ++i) { program[i] = hex.at(x); }
 
             // Get the program type
             ELF_PROGRAM.ph_type = program[0x03] << 24 | program[0x02] << 16 | program[0x01] << 8 | program[0x00];
@@ -188,11 +188,13 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
                 case 0x05: ELF_PROGRAM.ph_typename = "Reserved"; break;
                 case 0x06: ELF_PROGRAM.ph_typename = "Contained program header table"; break;
                 case 0x07: ELF_PROGRAM.ph_typename = "Thread-Local storage template"; break;
-                default: 
+                default:
                     if (ELF_PROGRAM.ph_type >= 0x60000000 && ELF_PROGRAM.ph_type <= 0x6FFFFFFF) {
                         OUTPUT::Error("Operating system specific inclusive ranges for program header type have not yet been implemented for PogVM as of now.", 0x06);
                     } else if (ELF_PROGRAM.ph_type >= 0x70000000 && ELF_PROGRAM.ph_type <= 0x7FFFFFFF) {
                         OUTPUT::Error("Processor specific inclusive ranges for program header type have not yet been implemented for PogVM as of now.", 0x0E);
+                    } else {
+                        OUTPUT::Error("Unknown program header type.", 0x0F);
                     }
             }
 
@@ -215,23 +217,14 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
                 ELF_PROGRAM.ph_align  = program[0x1F] << 24 | program[0x1E] << 16 | program[0x1D] << 8 | program[0x1C];
             }
 
+            // TODO: fix this part
             switch (ELF_PROGRAM.ph_flags) {
                 case 0x01: ELF_PROGRAM.ph_flagsname = "Executable"; break;
                 case 0x02: ELF_PROGRAM.ph_flagsname = "Writable"; break;
                 case 0x04: ELF_PROGRAM.ph_flagsname = "Readable"; break;
             }
-                
-        }
-        static void OutputELFProgram(void) {
-            std::cout << "\n"
-                << ANSI::BOLD << "Program segment type: " << ANSI::EXIT << ELF_PROGRAM.ph_typename << "\n"
-                << ANSI::BOLD << "Program segment flags: " << ANSI::EXIT << ELF_PROGRAM.ph_flagsname << "\n"
-                << "\n";
-            std::exit(0);
-
         }
 
-    protected:
         static void GetELFHeader(const std::vector<unsigned char> &hex) {
             unsigned char header[0x40];
             for (size_t x = 0; x < 0x40; ++x) { 
@@ -456,42 +449,37 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
                 << ANSI::BOLD << "Section header size:      " << ANSI::EXIT << ELF_HEADER.shentsize << "\n"
                 << ANSI::BOLD << "Section header count:     " << ANSI::EXIT << ELF_HEADER.shnum << "\n"
                 << ANSI::BOLD << "Section header string:    " << ANSI::EXIT << ELF_HEADER.shstrndx << "\n"
-                << "\n";
+            << "\n";
         }
 
-
-
-
-
-
-
-
-
-
-
-
+        static void OutputELFProgram(const std::vector<unsigned char> &header) {
+            GetELFProgram(header, ELF_HEADER.phoff);
+            std::cout << "\n"
+                << ANSI::BOLD << "Program segment type:        " << ANSI::EXIT << ELF_PROGRAM.ph_typename << "\n"
+                << ANSI::BOLD << "Segment-dependent flags:     " << ANSI::EXIT << ELF_PROGRAM.ph_flagsname << "\n"
+                << ANSI::BOLD << "Segment offset:              " << ANSI::EXIT << ELF_PROGRAM.ph_offset << "\n"
+                << ANSI::BOLD << "Virtual segment address:     " << ANSI::EXIT << ELF_PROGRAM.ph_vaddr << "\n"
+                << ANSI::BOLD << "Physical segment address:    " << ANSI::EXIT << ELF_PROGRAM.ph_paddr << "\n"
+                << ANSI::BOLD << "Segment size in file image:  " << ANSI::EXIT << ELF_PROGRAM.ph_filesz << "\n"
+                << ANSI::BOLD << "Segment size in memory:      " << ANSI::EXIT << ELF_PROGRAM.ph_memsz << "\n"
+                << ANSI::BOLD << "Program segment align:       " << ANSI::EXIT << ELF_PROGRAM.ph_align << "\n"
+            << "\n";
+        }
 
         static void OutputELFSections(void) {
             // TODO: Create ELF section header table
-            std::exit(0);
         }
 
     public:
-        // Output the ELF header or sections information (or both)
+        // Output the ELF information
         [[noreturn]] static void OutputELF(const uint8_t &option, const std::vector<unsigned char> &header) {
             GetELFHeader(header);
 
-            /*
-             * 0b00 = header only
-             * 0b01 = program only
-             * 0b10 = sections only
-             * 0b11 = all of the above combined
-             */
             switch (option) {
-                case 0: [[noreturn]] OutputELFHeader(); break;
-                case 1: [[noreturn]] OutputELFProgram(); break;
-                case 2: [[noreturn]] OutputELFSections(); break;
-                case 3: OutputELFHeader(); OutputELFProgram(); OutputELFSections(); break;
+                case 0x00: OutputELFHeader(); break;
+                case 0x01: OutputELFProgram(header); break;
+                case 0x02: OutputELFSections(); break;
+                case 0x03: OutputELFHeader(); OutputELFProgram(header); OutputELFSections(); break;
             }
             std::exit(0);
         }
@@ -525,12 +513,13 @@ class ELF : public ELFHEADER {
             return hexvector;
         }
 
+        // Fetch the hex data of a file and store in vector of unsigned chars
         static std::vector<unsigned char> FetchHex(const std::string &location) {
             std::vector<unsigned char> vector = GetFileHexData(location);
             GetELFHeader(vector);
-
             return vector;
         }
+
 };
 
 

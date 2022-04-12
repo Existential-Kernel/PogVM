@@ -32,6 +32,7 @@
 
 ## Options
   Command pattern: `pogvm [options] [executable file]`
+
   Example: `pogvm --info ./test`
 
   | Option | Description | Alias |
@@ -39,9 +40,10 @@
   | --version | Displays PogVM's version | -v |
   | --help | Displays the help menu for all the options | -h |
   | --audit | Displays the compatibility of PogVM on your device | -a |
-  | --info | Displays the ELF file header and sections information | -i |
   | --header | Displays the ELF file header information | -hd |
+  | --program | Displays the ELF file program information | -p |
   | --sections | Displays the ELF file section information | -s |
+  | --info | Displays all the ELF file information (equivalent to -hd -p -s) | -i |
 
 
 ## Ideas

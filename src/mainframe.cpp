@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 			break;
 
 		case 2:
-			// TODO: make this into a switch statement somehow, this looks awful lol
+			// TODO: make this into a switch statement somehow, this looks awful
 			if (!strcmp(argv[1], "-h")) { OUTPUT::HelpMenu(); }
 			if (!strcmp(argv[1], "--help")) { OUTPUT::HelpMenu(); }
 			if (!strcmp(argv[1], "-v")) { OUTPUT::Version(); }
@@ -51,14 +51,16 @@ int main(int argc, char *argv[]) {
 			if (FUNCTIONS::FileExists(argv[2])) {
 				std::vector<unsigned char> hexvector = FETCH::FetchHex(argv[2]);
 				// TODO: make this into a switch statement too
-				if (!strcmp(argv[1], "-hd")) { ELF::OutputELF(0b01, hexvector); }
+				if (!strcmp(argv[1], "-hd")) { ELF::OutputELF(0b00, hexvector); }
+				if (!strcmp(argv[1], "-p")) { ELF::OutputELF(0b01, hexvector); }
 				if (!strcmp(argv[1], "-s")) { ELF::OutputELF(0b10, hexvector); }
 				if (!strcmp(argv[1], "-i")) { ELF::OutputELF(0b11, hexvector); }
-				if (!strcmp(argv[1], "--header")) { ELF::OutputELF(0b01, hexvector); }
+				if (!strcmp(argv[1], "--header")) { ELF::OutputELF(0b00, hexvector); }
+				if (!strcmp(argv[1], "--program")) { ELF::OutputELF(0b01, hexvector); }
 				if (!strcmp(argv[1], "--sections")) { ELF::OutputELF(0b10, hexvector); }
 				if (!strcmp(argv[1], "--info")) { ELF::OutputELF(0b11, hexvector); }
 
-				if (!strcmp(argv[1], "--test")) { ELF::GetELFProgram(hexvector, ELF_HEADER.phoff); }
+				//if (!strcmp(argv[1], "--test")) { ELF::GetELFProgram(hexvector, ELF_HEADER.phoff); }
 				//std::vector<std::vector<std::string>> program = FETCH::FetchAssembly(argv[2]);
 			}
 			break;

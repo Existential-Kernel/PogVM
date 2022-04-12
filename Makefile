@@ -12,13 +12,16 @@ clearscr:
 	@clear
 
 clear:
-	@rm -rf *.o
+	@rm -rf $(OUT)
 
 compile:
 	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o $(OUT)
 
-run: compile
-	./$(OUT) --$(FLAG) $(FILE)
+run: clear compile
+	./$(OUT) -$(FLAG) $(FILE)
 
-flagrun: compile
+flagrun: clear compile
 	@./$(OUT) -$(FLAG)
+
+elf:
+	readelf -$(OPT) ./src/tests/elf/helloworld
