@@ -233,19 +233,19 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             }
 
             switch (header[0x04]) {
-                case 0x01: ELF_HEADER.bits = false; break;
-                [[likely]] case 0x02: ELF_HEADER.bits = true; break;
+                             case 0x01: ELF_HEADER.bits = false; break;
+                [[likely]]   case 0x02: ELF_HEADER.bits = true; break;
                 [[unlikely]] default: OUTPUT::Error("ELF class is invalid. 5th hex of identification header list must be 0x01 or 0x02", 0x09); break;
             };
 
             switch (header[0x05]) {
-                [[likely]] case 0x01: ELF_HEADER.data = "Least Significant Bit (Little Endian)"; break;
-                case 0x02: ELF_HEADER.data = "Most Significant Bit (Big Endian)"; break;
-                [[unlikely]]default: OUTPUT::Error("ELF data is invalid. 6th hex of identification header list must be 0x01 or 0x02", 0x08); break;
+                [[likely]]   case 0x01: ELF_HEADER.data = "Least Significant Bit (Little Endian)"; break;
+                             case 0x02: ELF_HEADER.data = "Most Significant Bit (Big Endian)"; break;
+                [[unlikely]] default: OUTPUT::Error("ELF data is invalid. 6th hex of identification header list must be 0x01 or 0x02", 0x08); break;
             };
 
             switch (header[0x07]) {
-                [[likely]] case 0x00: ELF_HEADER.OSABI = "System V"; break;
+                [[likely]]   case 0x00: ELF_HEADER.OSABI = "System V"; break;
                 [[unlikely]] case 0x01: ELF_HEADER.OSABI = "HP-UX"; break;
                 [[unlikely]] case 0x02: ELF_HEADER.OSABI = "NetBSD"; break;
                              case 0x03: ELF_HEADER.OSABI = "Linux"; break;
@@ -280,8 +280,8 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             switch (header[0x10]) {
                 [[unlikely]] case 0x00: ELF_HEADER.type = "Unknown file type"; break;
                 [[unlikely]] case 0x01: ELF_HEADER.type = "Relocatable file"; break;
-                [[likely]] case 0x02: ELF_HEADER.type = "Executable file"; break;
-                case 0x03: ELF_HEADER.type = "Shared object file"; break;
+                [[likely]]   case 0x02: ELF_HEADER.type = "Executable file"; break;
+                             case 0x03: ELF_HEADER.type = "Shared object file"; break;
                 [[unlikely]] case 0x04: ELF_HEADER.type = "Core file"; break;
                 [[unlikely]] default:
                     const uint16_t type = header[16] << 8 | header[17];
@@ -296,10 +296,10 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
 
             // Determine the processor name, This will evaluate the most common processors first
             switch (header[0x12]) {
-                [[likely]] case 0x03: ELF_HEADER.machine = "x86"; break;
-                [[likely]] case 0x28: ELF_HEADER.machine = "Advanced RISC Machines ARM"; break;
-                [[likely]] case 0x3E: ELF_HEADER.machine = "AMD x86-64 architecture"; break;
-                [[likely]] case 0xB7: ELF_HEADER.machine = "ARM 64-bits (ARMv8/Aarch64)"; break;
+                [[likely]]   case 0x03: ELF_HEADER.machine = "x86"; break;
+                [[likely]]   case 0x28: ELF_HEADER.machine = "Advanced RISC Machines ARM"; break;
+                [[likely]]   case 0x3E: ELF_HEADER.machine = "AMD x86-64 architecture"; break;
+                [[likely]]   case 0xB7: ELF_HEADER.machine = "ARM 64-bits (ARMv8/Aarch64)"; break;
                 [[unlikely]] case 0x08: ELF_HEADER.machine = "MIPS I Architecture"; break;
                 [[unlikely]] case 0x15: ELF_HEADER.machine = "64-bit PowerPC "; break;
                 [[unlikely]] case 0xF3: ELF_HEADER.machine = "RISC-V"; break;

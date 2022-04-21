@@ -15,7 +15,6 @@ namespace INFO {
     std::string information = name " version " major "." minor \
     "\nWritten by Existential-nonce (" link \
     ")\nCopyright (C) 2022 Normie devs\nLicense: WTFPL";
-
 }
 
 namespace ANSI {
@@ -37,7 +36,7 @@ namespace OUTPUT {
     // Display the help menu
     [[noreturn]] static void HelpMenu(void) {
         std::cout << INFO::information << "\n" << ANSI::BOLD << "Usage: " << ANSI::EXIT << 
-			"pogvm <file location> [flags]\n \
+			"pogvm [file location] [flags]\n \
 			Example: pogvm ./test --info\n";
         std::exit(0);
     }
