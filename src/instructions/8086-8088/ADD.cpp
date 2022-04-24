@@ -1,5 +1,0 @@
-/*
- * Instruction: ADD
- * Description: Add
- * Opcode(s):   0x00...0x05, 0x80/0...0x81/0, 0x82/0...0x83/0
- */

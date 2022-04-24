@@ -297,9 +297,9 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             // Determine the processor name, This will evaluate the most common processors first
             switch (header[0x12]) {
                 [[likely]]   case 0x03: ELF_HEADER.machine = "x86"; break;
-                [[likely]]   case 0x28: ELF_HEADER.machine = "Advanced RISC Machines ARM"; break;
+                             case 0x28: ELF_HEADER.machine = "Advanced RISC Machines ARM"; break;
                 [[likely]]   case 0x3E: ELF_HEADER.machine = "AMD x86-64 architecture"; break;
-                [[likely]]   case 0xB7: ELF_HEADER.machine = "ARM 64-bits (ARMv8/Aarch64)"; break;
+                             case 0xB7: ELF_HEADER.machine = "ARM 64-bits (ARMv8/Aarch64)"; break;
                 [[unlikely]] case 0x08: ELF_HEADER.machine = "MIPS I Architecture"; break;
                 [[unlikely]] case 0x15: ELF_HEADER.machine = "64-bit PowerPC "; break;
                 [[unlikely]] case 0xF3: ELF_HEADER.machine = "RISC-V"; break;
@@ -467,7 +467,10 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
         }
 
         static void OutputELFSections(void) {
-            // TODO: Create ELF section header table
+            /* 
+             * TODO: Output ELF sections with their name, type, address,
+             * offset, size, entry size, flags, link, info, and align values
+             */
         }
 
     public:
@@ -519,12 +522,11 @@ class ELF : public ELFHEADER {
             GetELFHeader(vector);
             return vector;
         }
-
 };
 
 
 class FETCH : public ASSEMBLY, public ELF {
-    public:
+    public:        
 
 
 } FETCH;

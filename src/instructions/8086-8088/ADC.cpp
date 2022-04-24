@@ -1,5 +1,0 @@
-/*
- * Instruction: ADC
- * Description: Add with carry
- * Opcodes(s):  0x10...0x15, 0x80...0x81/2, 0x82...0x83/2
- */
