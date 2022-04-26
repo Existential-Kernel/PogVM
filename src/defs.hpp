@@ -12,9 +12,10 @@ namespace INFO {
     #define major "1"
     #define minor "0"
     #define link "https://github.com/Existential-nonce/PogVM"
+    std::string version = name " version " major "." minor;
     std::string information = name " version " major "." minor \
-    "\nWritten by Existential-nonce (" link \
-    ")\nCopyright (C) 2022 Normie devs\nLicense: WTFPL";
+    "\nMade by Existential-nonce (" link \
+    ")\nCopyright (C) 2022 Existential-nonce\nLicense: WTFPL";
 }
 
 namespace ANSI {
@@ -29,15 +30,15 @@ namespace ANSI {
 namespace OUTPUT {
 	// Output the version of the program
     [[noreturn]] static void Version(void) {
-		std::cout << INFO::information << std::endl;
+		std::cout << INFO::version << std::endl;
 		std::exit(0);
     }
 
     // Display the help menu
     [[noreturn]] static void HelpMenu(void) {
         std::cout << INFO::information << "\n" << ANSI::BOLD << "Usage: " << ANSI::EXIT << 
-			"pogvm [file location] [flags]\n \
-			Example: pogvm ./test --info\n";
+"pogvm [flags] [file location]\n \
+  Example: pogvm --info ./test\n";
         std::exit(0);
     }
 
@@ -65,11 +66,13 @@ namespace FUNCTIONS {
         return result;
     }
 
-    std::string IntToHex(const uint64_t &integer) {
+    /*
+    static std::string IntToHex(const uint64_t &integer) {
         std::stringstream stream;
         stream << std::hex << integer;
         return stream.str();
     }
+    */
 };
 
 #endif

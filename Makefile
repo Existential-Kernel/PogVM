@@ -18,10 +18,10 @@ compile:
 	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o $(OUT)
 
 run: clear compile
-	./$(OUT) -$(FLAG) $(FILE)
+	./$(OUT) -i $(FILE)
 
-flagrun: clear compile
-	@./$(OUT) -$(FLAG)
+flag: clear compile
+	@./$(OUT) -$(FLAG) $(FILE)
 
 elf:
 	readelf -$(OPT) ./src/tests/elf/helloworld

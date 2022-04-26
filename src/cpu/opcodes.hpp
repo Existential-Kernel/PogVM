@@ -3,8 +3,8 @@
 #include <array>
 #include <cstdlib>
 
-#ifndef OPCODES
-#define OPCODES
+#ifndef OPCODE_HPP
+#define OPCODE_HPP
 
 namespace OPCODE {
     enum {

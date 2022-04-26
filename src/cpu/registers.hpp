@@ -1,7 +1,7 @@
 #include <bitset>
 
-#ifndef REG
-#define REG
+#ifndef REG_HPP
+#define REG_HPP
 
 class REGISTER {
     public:

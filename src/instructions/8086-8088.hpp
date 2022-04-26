@@ -1,13 +1,20 @@
 #include "../cpu/flags.hpp"
 #include "../cpu/registers.hpp"
 
-namespace ORIGINAL {
+/*
+ * I wish I could rename this namespace to just "8088" but 
+ * C++ doesn't allow only numbers as the namespace name,
+ * so the "i" stands for instruction.
+ */
+namespace i8088 {
     /*
     * Instruction: AAA
     * Description: ASCII adjust AL after addition
     * Opcode(s):   0x37
     */
+    inline void AAA() {
 
+    }
 
 
     /*
@@ -15,7 +22,9 @@ namespace ORIGINAL {
     * Description: ASCII adjust AX before division
     * Opcode(s):   0xD5
     */
+    inline void AAD() {
 
+    } 
 
 
     /*
@@ -23,15 +32,19 @@ namespace ORIGINAL {
     * Description: ASCII adjust AX after multiplication
     * Opcode(s):   0xD4
     */
+    inline void AAM() {
 
-
+    }
+    
 
     /*
     * Instruction: AAS
     * Description: ASCII adjust AL after substration
     * Opcode(s):   0x3F
     */
+    inline void AAS() {
 
+    } 
 
 
     /*
@@ -41,7 +54,6 @@ namespace ORIGINAL {
     */
 
 
-
     /*
     * Instruction: ADD
     * Description: Add
@@ -49,13 +61,11 @@ namespace ORIGINAL {
     */
 
 
-
     /*
     * Instruction: AND
     * Description: Logical AND
     * Opcode(s):   0x20...0x25, 0x80...0x81/4, 0x82...0x83/4
     */
-
 
 
     /*
@@ -68,7 +78,6 @@ namespace ORIGINAL {
     }
 
 
-
     /*
     * Instruction: CLD
     * Description: Clear the direction flag
@@ -77,7 +86,6 @@ namespace ORIGINAL {
     inline void CLD(void) {
         FLAGS::EFLAGS.eflagcode[10] = 0;
     }
-
 
 
     /*

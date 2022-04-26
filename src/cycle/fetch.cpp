@@ -11,6 +11,9 @@
 #include "../defs.hpp"
 #include "../cpu/registers.hpp"
 
+#ifndef FETCH_HPP
+#define FETCH_HPP
+
 class ASSEMBLY {
     private:
         // Macros
@@ -112,7 +115,6 @@ class ASSEMBLY {
                 }
                 file.close();
             }
-            //REGISTER.AREG_PTR->PC++;
             return programvector;
         }
 };
@@ -473,6 +475,25 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
              */
         }
 
+        /*
+        static void OutputDissassembly(const std::vector<unsigned char> &text) {
+            // TODO: create a dissassembler for the ELF text section
+        }
+        */
+
+        //static std::vector<u_char> GetCode(std::vector<u_char> & code) {
+        static std::vector<u_char> GetCode(void) {
+            // test vector for now:
+            std::vector<u_char> code = {
+                0x8B, 0x03,                           // mov    eax,DWORD PTR [ebx]
+                0x89, 0x1D, 0x00, 0x00, 0x00, 0x00,   // mov    DWORD PTR ds:0x0,ebx
+                0x8B, 0x46, 0xFC,                     // mov    eax,DWORD PTR [esi-0x4]
+                0x88, 0x0C, 0x06,                     // mov    BYTE PTR [esi+eax*1],cl
+                0x8B, 0x14, 0x9E                      // mov    edx,DWORD PTR [esi+ebx*4] 
+            };
+            return code;
+        }
+
     public:
         // Output the ELF information
         [[noreturn]] static void OutputELF(const uint8_t &option, const std::vector<unsigned char> &header) {
@@ -494,6 +515,12 @@ class ELF : public ELFHEADER {
         // Macros
         typedef std::vector<unsigned char> hvec;   // hex vector
         typedef std::vector<unsigned char> dhvec;  // double hex vector
+
+        /*
+        static void VectoriseOpcodes(std::vector<unsigned char> &hexvector) {
+            
+        }
+        */
 
     public:
         // Check if the file is an ELF file
@@ -530,3 +557,5 @@ class FETCH : public ASSEMBLY, public ELF {
 
 
 } FETCH;
+
+#endif

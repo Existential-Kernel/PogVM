@@ -1,14 +1,15 @@
-main:                                   # @main
-        push    rax
-        mov     edi, offset .L.str
-        mov     esi, offset .L.str.1
-        xor     eax, eax
-        call    printf
-        xor     eax, eax
-        pop     rcx
-        ret
-.L.str:
-        .asciz  "%s"
+section	.text
+	global _start
+_start:
+	mov	edx, len
+	mov	ecx, msg
+	mov	ebx, 1
+	mov	eax, 4
+	int	0x80
+	mov	eax, 1
+	int	0x80
 
-.L.str.1:
-        .asciz  "hello world!"
+section	.data
+
+msg	db	'Hello, world!',0xa
+len	equ	$ - msg

@@ -2,8 +2,8 @@
 #include <cstdint>
 #include <cmath>
 
-#ifndef MEM
-#define MEM
+#ifndef MEM_HPP
+#define MEM_HPP
 
 using u32 = unsigned int;
 
