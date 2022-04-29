@@ -126,7 +126,7 @@ class ELF_HEADER_STRUCT {
         std::string data;
         std::string type;
         std::string machine;
-        std::bitset<1> version;
+        uint8_t version;
         uint8_t ABIversion;
         std::string OSABI;
 
@@ -234,18 +234,21 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
                 if (x < 16) { ELF_HEADER.e_ident[x] = hex.at(x); }
             }
 
+            // Get the ELF bit class (true = 64-bit, false = 32-bit)
             switch (header[0x04]) {
                              case 0x01: ELF_HEADER.bits = false; break;
                 [[likely]]   case 0x02: ELF_HEADER.bits = true; break;
                 [[unlikely]] default: OUTPUT::Error("ELF class is invalid. 5th hex of identification header list must be 0x01 or 0x02", 0x09); break;
             };
 
+            // Get endianness
             switch (header[0x05]) {
                 [[likely]]   case 0x01: ELF_HEADER.data = "Least Significant Bit (Little Endian)"; break;
                              case 0x02: ELF_HEADER.data = "Most Significant Bit (Big Endian)"; break;
                 [[unlikely]] default: OUTPUT::Error("ELF data is invalid. 6th hex of identification header list must be 0x01 or 0x02", 0x08); break;
             };
 
+            // Get OS ABI system
             switch (header[0x07]) {
                 [[likely]]   case 0x00: ELF_HEADER.OSABI = "System V"; break;
                 [[unlikely]] case 0x01: ELF_HEADER.OSABI = "HP-UX"; break;
@@ -278,7 +281,7 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             // Get the ABI version
             ELF_HEADER.ABIversion = header[0x08];
 
-            // 
+            // Get the ELF file type
             switch (header[0x10]) {
                 [[unlikely]] case 0x00: ELF_HEADER.type = "Unknown file type"; break;
                 [[unlikely]] case 0x01: ELF_HEADER.type = "Relocatable file"; break;
@@ -394,7 +397,7 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             }
 
             // Set version to 1
-            ELF_HEADER.version = 0b1;
+            ELF_HEADER.version = 1;
 
             // Get entry point address
             ELF_HEADER.entry = header[0x1B] << 24 | header[0x1A] << 16 | header[0x19] << 8 | header[0x18];
