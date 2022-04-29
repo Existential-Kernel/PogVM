@@ -19,10 +19,10 @@
 - No external libraries used, just raw C++
 - No hypervisor dependency (mostly bc I have no idea how to implement it lol)
 
-## Prerequesites
+## PREREQUESITES
 - You must have at least 2 cores in the CPU you're using
 
-## Install
+## INSTALL
   **Docker**
   ```
   mkdir build
@@ -30,7 +30,7 @@
   cmake ..
   ```
 
-## Options
+## OPTIONS
   Command pattern: `pogvm [options] [executable file]`
 
   Example: `pogvm --info ./test`
@@ -46,10 +46,10 @@
   | --info | Displays all the ELF file information (equivalent to -hd -p -s) | -i |
 
 
-## Ideas
+## CONTRIBUTING
 
 
-## Resources used
+## RESOURCES USED
 - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html
 - https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png
 - https://wiki.osdev.org/CPU_Registers_x86

@@ -2,8 +2,8 @@
 #include <fstream>
 #include <filesystem>
 
-#ifndef DEFS
-#define DEFS
+#ifndef DEFS_HPP
+#define DEFS_HPP
 
 namespace fs = std::filesystem;
 
@@ -11,11 +11,11 @@ namespace INFO {
    	#define name "PogVM"
     #define major "1"
     #define minor "0"
-    #define link "https://github.com/Existential-nonce/PogVM"
+    #define link "https://github.com/Existential-Kernel/PogVM"
     std::string version = name " version " major "." minor;
     std::string information = name " version " major "." minor \
-    "\nMade by Existential-nonce (" link \
-    ")\nCopyright (C) 2022 Existential-nonce\nLicense: WTFPL";
+    "\nMade by Existential-Kernel (" link \
+    ")\nCopyright (C) 2022 Existential-Kernel\nLicense: WTFPL";
 }
 
 namespace ANSI {
@@ -52,6 +52,7 @@ namespace OUTPUT {
     }
 };
 
+// For miscellaneous functions used throughout the program
 namespace FUNCTIONS {
     static inline void ClearConsole() {
         #ifdef _WIN32 

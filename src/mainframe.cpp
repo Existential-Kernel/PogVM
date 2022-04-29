@@ -14,7 +14,7 @@
 int main(int argc, char *argv[]) {
 	#if __cplusplus < 201703L
 		OUTPUT::Error("PogVM requires C++17 or newer to run", 0x0D);
-		return 0;
+		exit(1);
 	#endif
 
 	switch(argc) {
@@ -36,7 +36,8 @@ int main(int argc, char *argv[]) {
 
 		case 3:
 			if (FUNCTIONS::FileExists(argv[2])) {
-				std::vector<unsigned char> hexvector = FETCH::FetchHex(argv[2]);
+				std::vector<u_char> hexvector = FETCH::FetchHex(argv[2]);
+
 				// TODO: make this into a switch statement too
 				if (!strcmp(argv[1], "-hd")) { ELF::OutputELF(0b00, hexvector); }
 				if (!strcmp(argv[1], "-p")) { ELF::OutputELF(0b01, hexvector); }

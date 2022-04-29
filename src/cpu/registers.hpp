@@ -93,9 +93,9 @@ class REGISTER {
             uint16_t IP = 0;
         } PREG;
 
-        // Auxilary registers (added for now)
+        // Auxiliary registers (added for convenience)
         struct AREG_STRUCT {
-            uint16_t IR = 0; // instruction counter
+            uint16_t IR = 0; // instruction register
             uint64_t PC = 0; // program counter
         } AREG;
 

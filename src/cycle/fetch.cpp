@@ -126,7 +126,7 @@ class ELF_HEADER_STRUCT {
         std::string data;
         std::string type;
         std::string machine;
-        std::bitset<1> version;
+        bool version;
         uint8_t ABIversion;
         std::string OSABI;
 
@@ -227,25 +227,86 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             }
         }
 
+    private:
+        // Output the ELF header information
+        static void OutputELFHeader(void) {
+            std::cout << ANSI::BOLD << "Magic:                    " << ANSI::EXIT;
+            for (int i = 0; i < 16; ++i) {
+                std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)ELF_HEADER.e_ident[i] << " ";
+            }
+            std::cout 
+                << "\n"
+                << ANSI::BOLD << "Bit class:                " << ANSI::EXIT << (ELF_HEADER.bits ? "64-bit" : "32-bit") << "\n"
+                << ANSI::BOLD << "Data encoding:            " << ANSI::EXIT << ELF_HEADER.data << "\n"
+                << ANSI::BOLD << "OS/ABI:                   " << ANSI::EXIT << ELF_HEADER.OSABI << "\n"
+                << ANSI::BOLD << "ABI version:              " << ANSI::EXIT << (int)ELF_HEADER.ABIversion << "\n"
+                << ANSI::BOLD << "Type:                     " << ANSI::EXIT << ELF_HEADER.type << "\n"
+                << ANSI::BOLD << "Machine:                  " << ANSI::EXIT << ELF_HEADER.machine << "\n"
+                << ANSI::BOLD << "Version:                  " << ANSI::EXIT << ELF_HEADER.version << "\n"
+                << ANSI::BOLD << "Entry point:              " << ANSI::EXIT << "0x" << ELF_HEADER.entry << "\n"
+                << ANSI::BOLD << "Program header offset:    " << ANSI::EXIT << std::dec << ELF_HEADER.phoff << "\n"
+                << ANSI::BOLD << "Section header offset:    " << ANSI::EXIT << ELF_HEADER.shoff << "\n"
+                << ANSI::BOLD << "Flags:                    " << ANSI::EXIT << "0x" << ELF_HEADER.flags << "\n"
+                << ANSI::BOLD << "ELF header size:          " << ANSI::EXIT << ELF_HEADER.ehsize << "\n"
+                << ANSI::BOLD << "Program header size:      " << ANSI::EXIT << ELF_HEADER.phentsize << "\n"
+                << ANSI::BOLD << "Program header count:     " << ANSI::EXIT << ELF_HEADER.phnum << "\n"
+                << ANSI::BOLD << "Section header size:      " << ANSI::EXIT << ELF_HEADER.shentsize << "\n"
+                << ANSI::BOLD << "Section header count:     " << ANSI::EXIT << ELF_HEADER.shnum << "\n"
+                << ANSI::BOLD << "Section header string:    " << ANSI::EXIT << ELF_HEADER.shstrndx << "\n"
+            << "\n";
+        }
+
+        static void OutputELFProgram(const std::vector<unsigned char> &header) {
+            GetELFProgram(header, ELF_HEADER.phoff);
+            std::cout << "\n"
+                << ANSI::BOLD << "Program segment type:        " << ANSI::EXIT << ELF_PROGRAM.ph_typename << "\n"
+                << ANSI::BOLD << "Segment-dependent flags:     " << ANSI::EXIT << ELF_PROGRAM.ph_flagsname << "\n"
+                << ANSI::BOLD << "Segment offset:              " << ANSI::EXIT << ELF_PROGRAM.ph_offset << "\n"
+                << ANSI::BOLD << "Virtual segment address:     " << ANSI::EXIT << ELF_PROGRAM.ph_vaddr << "\n"
+                << ANSI::BOLD << "Physical segment address:    " << ANSI::EXIT << ELF_PROGRAM.ph_paddr << "\n"
+                << ANSI::BOLD << "Segment size in file image:  " << ANSI::EXIT << ELF_PROGRAM.ph_filesz << "\n"
+                << ANSI::BOLD << "Segment size in memory:      " << ANSI::EXIT << ELF_PROGRAM.ph_memsz << "\n"
+                << ANSI::BOLD << "Program segment align:       " << ANSI::EXIT << ELF_PROGRAM.ph_align << "\n"
+            << "\n";
+        }
+
+        static void OutputELFSections(void) {
+            /* 
+             * TODO: Output ELF sections with their name, type, address,
+             * offset, size, entry size, flags, link, info, and align values
+             */
+        }
+
+        /*
+        static void OutputDissassembly(const std::vector<unsigned char> &text) {
+            // TODO: create a dissassembler for the ELF text section
+        }
+        */
+
+    public:
         static void GetELFHeader(const std::vector<unsigned char> &hex) {
+            // Get the ELF file's first 16 bytes
             unsigned char header[0x40];
             for (size_t x = 0; x < 0x40; ++x) { 
                 header[x] = hex.at(x);
                 if (x < 16) { ELF_HEADER.e_ident[x] = hex.at(x); }
             }
 
+            // Get the ELF bit class (true = 64-bit, false = 32-bit)
             switch (header[0x04]) {
                              case 0x01: ELF_HEADER.bits = false; break;
                 [[likely]]   case 0x02: ELF_HEADER.bits = true; break;
                 [[unlikely]] default: OUTPUT::Error("ELF class is invalid. 5th hex of identification header list must be 0x01 or 0x02", 0x09); break;
             };
 
+            // Get endianness
             switch (header[0x05]) {
                 [[likely]]   case 0x01: ELF_HEADER.data = "Least Significant Bit (Little Endian)"; break;
                              case 0x02: ELF_HEADER.data = "Most Significant Bit (Big Endian)"; break;
                 [[unlikely]] default: OUTPUT::Error("ELF data is invalid. 6th hex of identification header list must be 0x01 or 0x02", 0x08); break;
             };
 
+            // Get the OS/ABI system
             switch (header[0x07]) {
                 [[likely]]   case 0x00: ELF_HEADER.OSABI = "System V"; break;
                 [[unlikely]] case 0x01: ELF_HEADER.OSABI = "HP-UX"; break;
@@ -278,7 +339,7 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             // Get the ABI version
             ELF_HEADER.ABIversion = header[0x08];
 
-            // 
+            // Get ELF file type
             switch (header[0x10]) {
                 [[unlikely]] case 0x00: ELF_HEADER.type = "Unknown file type"; break;
                 [[unlikely]] case 0x01: ELF_HEADER.type = "Relocatable file"; break;
@@ -425,76 +486,6 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             }
         }
 
-    private:
-        // Output the ELF header information
-        static void OutputELFHeader(void) {
-            std::cout << ANSI::BOLD << "Magic:                    " << ANSI::EXIT;
-            for (int i = 0; i < 16; ++i) {
-                std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)ELF_HEADER.e_ident[i] << " ";
-            }
-            std::cout 
-                << "\n"
-                << ANSI::BOLD << "Bit class:                " << ANSI::EXIT << (ELF_HEADER.bits ? "64-bit" : "32-bit") << "\n"
-                << ANSI::BOLD << "Data encoding:            " << ANSI::EXIT << ELF_HEADER.data << "\n"
-                << ANSI::BOLD << "OS/ABI:                   " << ANSI::EXIT << ELF_HEADER.OSABI << "\n"
-                << ANSI::BOLD << "ABI version:              " << ANSI::EXIT << (int)ELF_HEADER.ABIversion << "\n"
-                << ANSI::BOLD << "Type:                     " << ANSI::EXIT << ELF_HEADER.type << "\n"
-                << ANSI::BOLD << "Machine:                  " << ANSI::EXIT << ELF_HEADER.machine << "\n"
-                << ANSI::BOLD << "Version:                  " << ANSI::EXIT << ELF_HEADER.version << "\n"
-                << ANSI::BOLD << "Entry point:              " << ANSI::EXIT << "0x" << ELF_HEADER.entry << "\n"
-                << ANSI::BOLD << "Program header offset:    " << ANSI::EXIT << std::dec << ELF_HEADER.phoff << "\n"
-                << ANSI::BOLD << "Section header offset:    " << ANSI::EXIT << ELF_HEADER.shoff << "\n"
-                << ANSI::BOLD << "Flags:                    " << ANSI::EXIT << "0x" << ELF_HEADER.flags << "\n"
-                << ANSI::BOLD << "ELF header size:          " << ANSI::EXIT << ELF_HEADER.ehsize << "\n"
-                << ANSI::BOLD << "Program header size:      " << ANSI::EXIT << ELF_HEADER.phentsize << "\n"
-                << ANSI::BOLD << "Program header count:     " << ANSI::EXIT << ELF_HEADER.phnum << "\n"
-                << ANSI::BOLD << "Section header size:      " << ANSI::EXIT << ELF_HEADER.shentsize << "\n"
-                << ANSI::BOLD << "Section header count:     " << ANSI::EXIT << ELF_HEADER.shnum << "\n"
-                << ANSI::BOLD << "Section header string:    " << ANSI::EXIT << ELF_HEADER.shstrndx << "\n"
-            << "\n";
-        }
-
-        static void OutputELFProgram(const std::vector<unsigned char> &header) {
-            GetELFProgram(header, ELF_HEADER.phoff);
-            std::cout << "\n"
-                << ANSI::BOLD << "Program segment type:        " << ANSI::EXIT << ELF_PROGRAM.ph_typename << "\n"
-                << ANSI::BOLD << "Segment-dependent flags:     " << ANSI::EXIT << ELF_PROGRAM.ph_flagsname << "\n"
-                << ANSI::BOLD << "Segment offset:              " << ANSI::EXIT << ELF_PROGRAM.ph_offset << "\n"
-                << ANSI::BOLD << "Virtual segment address:     " << ANSI::EXIT << ELF_PROGRAM.ph_vaddr << "\n"
-                << ANSI::BOLD << "Physical segment address:    " << ANSI::EXIT << ELF_PROGRAM.ph_paddr << "\n"
-                << ANSI::BOLD << "Segment size in file image:  " << ANSI::EXIT << ELF_PROGRAM.ph_filesz << "\n"
-                << ANSI::BOLD << "Segment size in memory:      " << ANSI::EXIT << ELF_PROGRAM.ph_memsz << "\n"
-                << ANSI::BOLD << "Program segment align:       " << ANSI::EXIT << ELF_PROGRAM.ph_align << "\n"
-            << "\n";
-        }
-
-        static void OutputELFSections(void) {
-            /* 
-             * TODO: Output ELF sections with their name, type, address,
-             * offset, size, entry size, flags, link, info, and align values
-             */
-        }
-
-        /*
-        static void OutputDissassembly(const std::vector<unsigned char> &text) {
-            // TODO: create a dissassembler for the ELF text section
-        }
-        */
-
-        //static std::vector<u_char> GetCode(std::vector<u_char> & code) {
-        static std::vector<u_char> GetCode(void) {
-            // test vector for now:
-            std::vector<u_char> code = {
-                0x8B, 0x03,                           // mov    eax,DWORD PTR [ebx]
-                0x89, 0x1D, 0x00, 0x00, 0x00, 0x00,   // mov    DWORD PTR ds:0x0,ebx
-                0x8B, 0x46, 0xFC,                     // mov    eax,DWORD PTR [esi-0x4]
-                0x88, 0x0C, 0x06,                     // mov    BYTE PTR [esi+eax*1],cl
-                0x8B, 0x14, 0x9E                      // mov    edx,DWORD PTR [esi+ebx*4] 
-            };
-            return code;
-        }
-
-    public:
         // Output the ELF information
         [[noreturn]] static void OutputELF(const uint8_t &option, const std::vector<unsigned char> &header) {
             GetELFHeader(header);
@@ -506,6 +497,21 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
                 case 0x03: OutputELFHeader(); OutputELFProgram(header); OutputELFSections(); break;
             }
             std::exit(0);
+        }
+
+        //static std::vector<u_char> GetCode(std::vector<u_char> & code) {
+        static std::vector<u_char> GetCode(void) {
+            // test vector for now:
+            std::vector<u_char> code = {
+                0x8B, 0x15, 0x00, 0x00, 0x00, 0x00,  // mov    edx,DWORD PTR ds:0x0
+                0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00,  // mov    ecx,DWORD PTR ds:0x0
+                0xBB, 0x01, 0x00, 0x00, 0x00,        // mov    ebx,0x1
+                0xB8, 0x04, 0x00, 0x00, 0x00,        // mov    eax,0x4
+                0xCD, 0x80,                          // int    0x80
+                0xB8, 0x01, 0x00, 0x00, 0x00,        // mov    eax,0x1
+                0xCD, 0x80,                          // int    0x80
+            };
+            return code;
         }
 };
 
@@ -529,8 +535,8 @@ class ELF : public ELFHEADER {
             return result;
         }
 
-        // Get hex data of file and store in vector (using copilot)
-        static std::vector<unsigned char> GetFileHexData(const std::string &filename) {
+        // Get hex data of file and return as vector
+        static std::vector<unsigned char> FetchHex(const std::string &filename) {
             std::ifstream file(filename, std::ios::binary);
             std::vector<unsigned char> hexvector{0x00};
             if (file) {
@@ -542,19 +548,10 @@ class ELF : public ELFHEADER {
             file.close();
             return hexvector;
         }
-
-        // Fetch the hex data of a file and store in vector of unsigned chars
-        static std::vector<unsigned char> FetchHex(const std::string &location) {
-            std::vector<unsigned char> vector = GetFileHexData(location);
-            GetELFHeader(vector);
-            return vector;
-        }
 };
 
 
-class FETCH : public ASSEMBLY, public ELF {
-    public:        
-
+class FETCH : public ASSEMBLY, public ELF {      
 
 } FETCH;
 

@@ -20,10 +20,10 @@ class EXECUTE {
         // Hybrid binary and linear search: Split all the opcodes first into 3 sections then 5 subelements for each, then perform a linear search
         static void Execute(
             const u_char &opcode, 
-            const std::string &operand1, 
-            const std::string &operand2,
-            const std::string &operand3,
-            const std::string &operand4
+            const u_char &operand1, 
+            const u_char &operand2,
+            const u_char &operand3,
+            const u_char &operand4
         ) {
             std::cout << opcode << operand1 << operand2 << operand3 << operand4;
             /*
