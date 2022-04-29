@@ -339,7 +339,7 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             // Get the ABI version
             ELF_HEADER.ABIversion = header[0x08];
 
-            // Get ELF file type
+            // Get the ELF file type
             switch (header[0x10]) {
                 [[unlikely]] case 0x00: ELF_HEADER.type = "Unknown file type"; break;
                 [[unlikely]] case 0x01: ELF_HEADER.type = "Relocatable file"; break;
@@ -455,7 +455,7 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             }
 
             // Set version to 1
-            ELF_HEADER.version = 0b1;
+            ELF_HEADER.version = 1;
 
             // Get entry point address
             ELF_HEADER.entry = header[0x1B] << 24 | header[0x1A] << 16 | header[0x19] << 8 | header[0x18];

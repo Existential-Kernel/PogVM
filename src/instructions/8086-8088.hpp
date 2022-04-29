@@ -46,6 +46,7 @@ namespace i8088 {
      * Instruction: ADC
      * Description: Add with carry
      * Opcodes(s):  0x10...0x15, 0x80...0x81/2, 0x82...0x83/2
+<<<<<<< HEAD
     */
  
 
@@ -60,10 +61,29 @@ namespace i8088 {
      * Instruction: AND
      * Description: Logical AND
      * Opcode(s):   0x20...0x25, 0x80...0x81/4, 0x82...0x83/4
+=======
+>>>>>>> 5c317c95b6012bebee527757cea804ac58848d1a
      */
 
 
     /*
+<<<<<<< HEAD
+=======
+     * Instruction: ADD
+     * Description: Add
+     * Opcode(s):   0x00...0x05, 0x80/0...0x81/0, 0x82/0...0x83/0
+     */
+
+
+    /*
+     * Instruction: AND
+     * Description: Logical AND
+     * Opcode(s):   0x20...0x25, 0x80...0x81/4, 0x82...0x83/4
+     */
+
+
+    /*
+>>>>>>> 5c317c95b6012bebee527757cea804ac58848d1a
      * Instruction: CLC
      * Description: Clear the carry flag
      * Opcode(s):   0xF8

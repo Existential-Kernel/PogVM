@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream>
 #include <cstring>
-#include <thread>
 
 #include "cpu/registers.hpp"
 #include "cpu/memory.hpp"
