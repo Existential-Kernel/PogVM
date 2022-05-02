@@ -8,15 +8,16 @@
 namespace fs = std::filesystem;
 
 namespace INFO {
-   	#define name "PogVM"
-    #define major "1"
-    #define minor "0"
-    #define link "https://github.com/Existential-Kernel/PogVM"
-    std::string version = name " version " major "." minor;
-    std::string information = name " version " major "." minor \
-    "\nMade by Existential-Kernel (" link \
-    ")\nCopyright (C) 2022 Existential-Kernel\nLicense: WTFPL";
-}
+    std::string program = "PogVM";
+    char major = '1';
+    char minor = '0';
+    std::string link = "https://github.com/Existential-Kernel/PogVM";
+
+    static const std::string version = program + " version " + major + "." + minor;
+    const std::string information = program + " version " + major + "." + minor \
+    + "\nMade by Existential-Kernel (" + link \
+    + ")\nCopyright (C) 2022 Existential-Kernel\nLicense: WTFPL";
+};
 
 namespace ANSI {
     const char *BLACK_BG = "\x1B[48;2;0;0;0m";
@@ -27,7 +28,8 @@ namespace ANSI {
     std::ostream &BOLD(std::ostream& log) { return log << "\033[1m"; }
 }
 
-namespace OUTPUT {
+class OUTPUT {
+    public:
 	// Output the version of the program
     [[noreturn]] static void Version(void) {
 		std::cout << INFO::version << std::endl;
@@ -53,7 +55,7 @@ namespace OUTPUT {
 };
 
 // For miscellaneous functions used throughout the program
-namespace FUNCTIONS {
+namespace UTILITY {
     static inline void ClearConsole() {
         #ifdef _WIN32 
             std::system("cls");
@@ -65,6 +67,12 @@ namespace FUNCTIONS {
     static inline bool FileExists(const fs::path& path, fs::file_status status = fs::file_status{}) {
         bool result = (fs::status_known(status) ? fs::exists(status) : fs::exists(path));
         return result;
+    }
+
+    // This is strictly used only during development for debugging purposes. (BP = breakpoint)
+    [[noreturn]] static inline void BP(const std::string &message = "breakpoint") {
+        std::cout << message << std::endl;
+        std::exit(0);
     }
 
     /*

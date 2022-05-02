@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <typeinfo>
 
 #include "../defs.hpp"
 
@@ -15,56 +16,36 @@ class DECODE {
         #define sec 0x55  // sections
         #define sub 0x11  // subelements
 
-        /*
-        typedef std::vector<u_char> charv;
-        typedef std::vector<std::vector<u_char>> charvv;
-        */
-
         static inline void Push(std::vector<u_char> &v, const u_char &s, uint8_t &arg, const uint8_t &count) {
             v.push_back(s);
             arg = count;
         }
 
-        static inline void VectorPush(std::vector<std::vector<u_char>> &program, std::vector<u_char> &v) {
-            program.push_back(v);
-            v.clear();
-        }
-
-        static inline void SinglePush(
-            std::vector<u_char> &v, 
-            const u_char &s, 
-            uint8_t &arg, 
-            std::vector<std::vector<u_char>> &program
-        ) {
-            Push(v, s, arg, 0);
-            VectorPush(program, v);
-        }
-
-
-
     public:
-        static std::vector<std::vector<unsigned char>> Decode(const std::vector<u_char> &hexvector) {
-            std::vector<std::vector<unsigned char>> instructions;
+        static void Decode(const std::vector<u_char> &hexvector, std::vector<u_char> &returnvector) {
             std::vector<u_char> temp;
             u_char hex;
             uint8_t argcount = 0;
 
             for (ulong i = 0; i <= hexvector.size(); ++i) {
                 hex = hexvector.at(i);
-
                 if (argcount > 0) {
                     temp.push_back(hex);
-                    argcount--;
-                    if (argcount == 0) { VectorPush(instructions, temp); }
-                    continue;
+                    --argcount;
+                    if (argcount == 0) {
+                        returnvector = temp;
+                        return;
+                    } else {
+                        continue;
+                    }
                 }
 
                 if (hex <= sec) {
                     if (hex <= sub) {
                         switch (hex) {
                             case 0x00: continue;
-                            case 0x01:
-                            case 0x02:
+                            case 0x01: Push(temp, hex, argcount, 1); return; // test
+                            case 0x02: returnvector.push_back(hex); return;
                             case 0x03:
                             case 0x04:
                             case 0x05:
@@ -226,9 +207,9 @@ class DECODE {
                         }
                     } else if (hex <= sub * 9) {
                         switch (hex) {
-                            case 0x89: // fallthrough
-                            case 0x8A:
-                            case 0x8B:
+                            case 0x89: 
+                            case 0x8A: 
+                            case 0x8B: 
                             case 0x8C: Push(temp, hex, argcount, 2); continue;
                             case 0x8D: break;
                             case 0x8E: Push(temp, hex, argcount, 2); continue;
@@ -252,9 +233,9 @@ class DECODE {
                             case 0x9D:
                             case 0x9E:
                             case 0x9F: break;
-                            case 0xA0: // fallthrough
-                            case 0xA1:
-                            case 0xA2:
+                            case 0xA0: 
+                            case 0xA1: 
+                            case 0xA2: 
                             case 0xA3: Push(temp, hex, argcount, 2); continue;
                             case 0xA4:
                             case 0xA5:
@@ -299,7 +280,7 @@ class DECODE {
                             case 0xC3:
                             case 0xC4:
                             case 0xC5: break;
-                            case 0xC6: // fallthrough
+                            case 0xC6: 
                             case 0xC7: Push(temp, hex, argcount, 2); continue;
                             case 0xC8:
                             case 0xC9:
@@ -311,7 +292,7 @@ class DECODE {
                         switch (hex) {
                             case 0xCD: Push(temp, hex, argcount, 1); continue;
                             case 0xCE:
-                            case 0xCF:
+                            case 0xCF: returnvector.push_back(hex); return;
                             case 0xD0:
                             case 0xD1:
                             case 0xD2:
@@ -358,17 +339,11 @@ class DECODE {
                             case 0xF5:
                             case 0xF6:
                             case 0xF7: break;
-                            case 0xF8: 
-                                SinglePush(temp, hex, argcount, instructions);
-                                continue;
+                            case 0xF8: returnvector.push_back(hex); return;
                             case 0xF9: break;
-                            case 0xFA: 
-                                SinglePush(temp, hex, argcount, instructions);
-                                continue;
+                            case 0xFA: returnvector.push_back(hex); return;
                             case 0xFB: break;
-                            case 0xFC: 
-                                SinglePush(temp, hex, argcount, instructions);
-                                continue;
+                            case 0xFC: returnvector.push_back(hex); return;
                             case 0xFD:
                             case 0xFE:
                             case 0xFF: break;
@@ -377,9 +352,8 @@ class DECODE {
                     }
                 }
             }
-            return instructions;
         }
 
-} DEhex;
+} DECODE;
 
 #endif

@@ -8,7 +8,7 @@
 
 #include "audit.hpp"
 #include "cycle/fetch.cpp"
-#include "kernel.cpp"
+#include "core.cpp"
 #include "defs.hpp"
 
 int main(int argc, char *argv[]) {
@@ -31,11 +31,13 @@ int main(int argc, char *argv[]) {
 			if (!strcmp(argv[1], "-a")) { AUDIT::AuditCheck(); }
 			if (!strcmp(argv[1], "--audit")) { AUDIT::AuditCheck(); }
 
-			KERNEL::Kernel(argv[1]);
+			if (UTILITY::FileExists(argv[1])) {
+				KERNEL::Kernel(argv[1], true); // REVISION NEEDED: change default bool value if i find out which mode is more stable
+			}
 			break;
 
 		case 3:
-			if (FUNCTIONS::FileExists(argv[2])) {
+			if (UTILITY::FileExists(argv[2])) {
 				std::vector<u_char> hexvector = FETCH::FetchHex(argv[2]);
 
 				// TODO: make this into a switch statement too
@@ -47,6 +49,9 @@ int main(int argc, char *argv[]) {
 				if (!strcmp(argv[1], "--program")) { ELF::OutputELF(0b01, hexvector); }
 				if (!strcmp(argv[1], "--sections")) { ELF::OutputELF(0b10, hexvector); }
 				if (!strcmp(argv[1], "--info")) { ELF::OutputELF(0b11, hexvector); }
+
+				if (!strcmp(argv[1], "--interpreted")) { KERNEL::Kernel(argv[2], false); }
+				if (!strcmp(argv[1], "--compiled")) { KERNEL::Kernel(argv[2], true); }
 			} else {
 				if (argv[1][0] == '-') {
 					OUTPUT::Error("Unrecognized flag option", 0x0B);

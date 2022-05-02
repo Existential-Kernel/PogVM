@@ -49,6 +49,11 @@
 ## CONTRIBUTING
 
 
+## IDEAS
+- [ ] Make the program available on various package managers (apt, dnf, etc...)
+- [ ] Implement pairing functionality for hex vector instructions
+
+
 ## RESOURCES USED
 - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html
 - https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png

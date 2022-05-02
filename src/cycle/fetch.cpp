@@ -49,14 +49,10 @@ class ASSEMBLY {
             if (trimstring.find("  ") != std::string::npos) [[unlikely]] {
                 inputstring += trimstring[0];
                 for (size_t i = 1; i < trimstring.length(); ++i) {
-                    if (trimstring[i] == ' ' && trimstring[i] == trimstring[i-1]) {
-                        continue;
-                    } else {
-                        inputstring += trimstring[i];
-                    }
+                    if (trimstring[i] == ' ' && trimstring[i] == trimstring[i-1]) { continue; }
+                    else { inputstring += trimstring[i]; }
                 }
             }
-
             return inputstring;
         }
 
@@ -494,14 +490,13 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
                 case 0x00: OutputELFHeader(); break;
                 case 0x01: OutputELFProgram(header); break;
                 case 0x02: OutputELFSections(); break;
-                case 0x03: OutputELFHeader(); OutputELFProgram(header); OutputELFSections(); break;
+                case 0x03: OutputELFHeader(); OutputELFProgram(header); OutputELFSections(); break; 
             }
             std::exit(0);
         }
 
         //static std::vector<u_char> GetCode(std::vector<u_char> & code) {
         static std::vector<u_char> GetCode(void) {
-            // test vector for now:
             std::vector<u_char> code = {
                 0x8B, 0x15, 0x00, 0x00, 0x00, 0x00,  // mov    edx,DWORD PTR ds:0x0
                 0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00,  // mov    ecx,DWORD PTR ds:0x0
@@ -511,7 +506,31 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
                 0xB8, 0x01, 0x00, 0x00, 0x00,        // mov    eax,0x1
                 0xCD, 0x80,                          // int    0x80
             };
-            return code;
+
+            std::vector<u_char> code2 = {
+                0x8B, 0x15, 0x00, 0x00, 0x00,        // mov    edx,DWORD PTR ds:0x0
+                0x8B, 0x0D, 0x00, 0x00, 0x00,        // mov    ecx,DWORD PTR ds:0x0
+                0xBB, 0x01, 0x00, 0x00, 0x00,        // mov    ebx,0x1
+                0xB8, 0x04, 0x00, 0x00, 0x00,        // mov    eax,0x4
+                0xCD, 0x80,                          // int    0x80
+                0xB8, 0x01, 0x00, 0x00, 0x00,        // mov    eax,0x1
+                0xCD, 0x80,                          // int    0x80
+            };
+
+            std::vector<u_char> code3 = {
+                0xF8,  // clc
+                0xFA,  // cli
+                0xFC   // cld
+            };
+
+            std::vector<u_char> code4 = {
+                0x01, 0x10
+            };
+            
+            std::vector<u_char> code5 = {
+                0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02
+            };
+            return code5;
         }
 };
 
@@ -522,17 +541,29 @@ class ELF : public ELFHEADER {
         typedef std::vector<unsigned char> hvec;   // hex vector
         typedef std::vector<unsigned char> dhvec;  // double hex vector
 
-        /*
-        static void VectoriseOpcodes(std::vector<unsigned char> &hexvector) {
-            
-        }
-        */
-
     public:
         // Check if the file is an ELF file
-        inline static bool CheckELF(const std::vector<unsigned char> &hexvector) {
-            bool result = hexvector[0] == 0x7F && hexvector[1] == 0x45 && hexvector[2] == 0x4C && hexvector[3] == 0x46;
+        inline static bool CheckELF(const std::string &filename) {
+            std::ifstream file(filename, std::ios::binary);
+/*
+            std::vector<unsigned char> magicvector;
+
+            if (file) {
+                file.seekg(0, std::ios::beg);
+                magicvector.resize(4);
+                file.read((char*)&magicvector[0], magicvector.size());
+            }
+            file.close();
+            
+            bool result = (
+                magicvector[0] == 0x7F &&
+                magicvector[1] == 0x45 &&
+                magicvector[2] == 0x4C &&
+                magicvector[3] == 0x46
+            );
             return result;
+*/
+            return true;
         }
 
         // Get hex data of file and return as vector

@@ -6,6 +6,7 @@
 
 #include "../defs.hpp"
 #include "../instructions/8086-8088.hpp"
+#include "../instructions/testing.hpp"
 
 #ifndef EXECUTE_HPP
 #define EXECUTE_HPP
@@ -18,20 +19,14 @@ class EXECUTE {
 
     public:
         // Hybrid binary and linear search: Split all the opcodes first into 3 sections then 5 subelements for each, then perform a linear search
-        static void Execute(
-            const u_char &opcode, 
-            const u_char &operand1, 
-            const u_char &operand2,
-            const u_char &operand3,
-            const u_char &operand4
-        ) {
-            std::cout << opcode << operand1 << operand2 << operand3 << operand4;
-            /*
+        static void Execute(const std::vector<u_char> &v) {
+            uint8_t opcode = v.at(0);
+
             if (opcode <= sec) {
                 if (opcode <= sub) {
                     switch (opcode) {
-                        case 0x01:
-                        case 0x02:
+                        case 0x01: iTesting::TEST(v.at(1)); return;
+                        case 0x02: iTesting::TEST(); return;
                         case 0x03:
                         case 0x04:
                         case 0x05:
@@ -46,7 +41,7 @@ class EXECUTE {
                         case 0x0E:
                         case 0x0F:
                         case 0x10:
-                        case 0x11:
+                        case 0x11: break;
                     }
                 } else if (opcode <= sub * 2) {
                     switch (opcode) {
@@ -66,7 +61,7 @@ class EXECUTE {
                         case 0x1F:
                         case 0x20:
                         case 0x21:
-                        case 0x22:
+                        case 0x22: break;
                     }
                 } else if (opcode <= sub * 3) {
                     switch (opcode) {
@@ -86,7 +81,7 @@ class EXECUTE {
                         case 0x30:
                         case 0x31:
                         case 0x32:
-                        case 0x33:
+                        case 0x33: break;
                     }
                 } else if (opcode <= sub * 4) {
                     switch (opcode) {
@@ -106,7 +101,7 @@ class EXECUTE {
                         case 0x41:
                         case 0x42:
                         case 0x43:
-                        case 0x44:
+                        case 0x44: break;
                     }
                 } else if (opcode <= sub * 5) {
                     switch (opcode) {
@@ -126,7 +121,7 @@ class EXECUTE {
                         case 0x52:
                         case 0x53:
                         case 0x54:
-                        case 0x55:
+                        case 0x55: break;
                     }
                 }
             } 
@@ -150,7 +145,7 @@ class EXECUTE {
                         case 0x63:
                         case 0x64:
                         case 0x65:
-                        case 0x66:
+                        case 0x66: break;
                     }
                 } else if (opcode <= sub * 7) {
                     switch (opcode) {
@@ -169,7 +164,7 @@ class EXECUTE {
                         case 0x73:
                         case 0x74:
                         case 0x75:
-                        case 0x76:
+                        case 0x76: break;
                     }
                 } else if (opcode <= sub * 8) {
                     switch (opcode) {
@@ -190,7 +185,7 @@ class EXECUTE {
                         case 0x85:
                         case 0x86:
                         case 0x87:
-                        case 0x88:
+                        case 0x88: break;
                     }
                 } else if (opcode <= sub * 9) {
                     switch (opcode) {
@@ -210,7 +205,7 @@ class EXECUTE {
                         case 0x96:
                         case 0x97:
                         case 0x98:
-                        case 0x99:
+                        case 0x99: break;
                     }
                 } else if (opcode <= sub * 10) {
                     switch (opcode) {
@@ -230,7 +225,7 @@ class EXECUTE {
                         case 0xA7:
                         case 0xA8:
                         case 0xA9:
-                        case 0xAA:
+                        case 0xAA: break;
                     }
                 }
             } 
@@ -254,7 +249,7 @@ class EXECUTE {
                         case 0xB8:
                         case 0xB9:
                         case 0xBA:
-                        case 0xBB:
+                        case 0xBB: break;
                     }
                 } else if (opcode <= sub * 12) {
                     switch (opcode) {
@@ -274,12 +269,12 @@ class EXECUTE {
                         case 0xC9:
                         case 0xCA:
                         case 0xCB:
-                        case 0xCC:
+                        case 0xCC: i8088::INT(0xCC); break;
                     }
                 } else if (opcode <= sub * 13) {
                     switch (opcode) {
-                        case 0xCD:
-                        case 0xCE:
+                        case 0xCD: i8088::INT(0xCD, v.at(1)); break;
+                        case 0xCE: i8088::INT(0xCE); break;
                         case 0xCF:
                         case 0xD0:
                         case 0xD1:
@@ -294,7 +289,7 @@ class EXECUTE {
                         case 0xDA:
                         case 0xDB:
                         case 0xDC:
-                        case 0xDD:
+                        case 0xDD: break;
                     }
                 } else if (opcode <= sub * 14) {
                     switch (opcode) {
@@ -314,13 +309,13 @@ class EXECUTE {
                         case 0xEB:
                         case 0xEC:
                         case 0xED:
-                        case 0xEE:
+                        case 0xEE: break;
                     }
                 } else {
                     switch (opcode) {
                         case 0xEF:
                         case 0xF0:
-                        case 0xF1:
+                        case 0xF1: i8088::INT(0xF1); break;
                         case 0xF2:
                         case 0xF3:
                         case 0xF4:
@@ -334,12 +329,11 @@ class EXECUTE {
                         case 0xFC: i8088::CLD(); break;
                         case 0xFD:
                         case 0xFE:
-                        case 0xFF:
+                        case 0xFF: break;
                         default: OUTPUT::Error("Unknown opcode", 0x10); break;
                     }
                 }
             }
-            */
         }
 };
 
