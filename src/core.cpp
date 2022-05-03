@@ -27,27 +27,25 @@ class KERNEL : public FETCH, public DECODE, public EXECUTE {
 
 					/**************** DECODE STAGE ****************/		
 						std::vector<u_char> tempvector;
-						size_t adjust = 6;
-
-						//if (hexvector.size() < 6) { adjust = hexvector.size(); }
-						for (size_t index = 0; (index < hexvector.size());) {
-							std::cout << "index: " << index << std::endl;
-							std::cout << "size: " << hexvector.size() << std::endl;
-							if (hexvector.at(index) == 0x00) { index += 1; continue; }
-							tempvector.insert(tempvector.begin(), hexvector.begin() + index, hexvector.begin() + (index + adjust));
-							DECODE::Decode(tempvector, resultvector);
-							index = resultvector.size();
-
-							instructions.push_back(resultvector);
-							tempvector.clear();
-							if (index == hexvector.size()) { break; }
+						for (size_t index = 0; index < hexvector.size(); ++index) {
+							if (hexvector.at(index) == 0x00) { 
+								hexvector.erase(hexvector.begin() + index);
+								continue; 
+							}
 						}
+
+						DECODE::Decode(hexvector, instructions);
+
+						std::cout << "Decoded instructions: " << std::endl;
+						std::cout << UTILITY::IntToHex(instructions.at(0).at(0)) << std::endl;
+						std::cout << UTILITY::IntToHex(instructions.at(1).at(0)) << std::endl;
+						std::cout << UTILITY::IntToHex(instructions.at(2).at(0)) << std::endl;
 
 					/**************** EXECUTE STAGE ****************/	
-						std::cout << "size :" << instructions.size() << std::endl;
-						for (size_t x = 0; x < instructions.size(); ++x) {
-							EXECUTE::Execute(instructions.at(x));
-						}
+						EXECUTE::Execute(instructions);
+
+						std::cout << FLAGS::EFLAGS.eflagcode << std::endl;
+		
 					} else { // interpreter mode
 
 					}

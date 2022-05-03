@@ -520,17 +520,19 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             std::vector<u_char> code3 = {
                 0xF8,  // clc
                 0xFA,  // cli
-                0xFC   // cld
+                0xFC,  // cld
             };
 
             std::vector<u_char> code4 = {
-                0x01, 0x10
+                0x01, 0x01, 0x02, 
+                0x01, 0x03, 0x04,
+                0x01, 0x10, 0x10,
             };
             
             std::vector<u_char> code5 = {
-                0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02
+                0x02, 0x02, 0x02,
             };
-            return code5;
+            return code3;
         }
 };
 

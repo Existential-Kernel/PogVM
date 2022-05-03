@@ -21,31 +21,37 @@ class DECODE {
             arg = count;
         }
 
+        static inline void SinglePush(std::vector<u_char> &v, const u_char &s, std::vector<std::vector<u_char>> &instructions) {
+            v.push_back(s);
+            instructions.push_back(v);
+        }
+
     public:
-        static void Decode(const std::vector<u_char> &hexvector, std::vector<u_char> &returnvector) {
+        static void Decode(const std::vector<u_char> &hexvector, std::vector<std::vector<u_char>> &resultvector) {
             std::vector<u_char> temp;
-            u_char hex;
             uint8_t argcount = 0;
 
-            for (ulong i = 0; i <= hexvector.size(); ++i) {
-                hex = hexvector.at(i);
+            for (size_t i = 0; i < hexvector.size(); ++i) {
                 if (argcount > 0) {
-                    temp.push_back(hex);
+                    temp.push_back(hexvector.at(i));
                     --argcount;
                     if (argcount == 0) {
-                        returnvector = temp;
-                        return;
-                    } else {
-                        continue;
+                        resultvector.push_back(temp);
+                        temp.clear();
                     }
+                    continue;
                 }
+                temp.clear();
+
+                u_char hex = hexvector.at(i);
+                std::cout << "hex :" << UTILITY::IntToHex(hex) << std::endl;
 
                 if (hex <= sec) {
                     if (hex <= sub) {
                         switch (hex) {
                             case 0x00: continue;
-                            case 0x01: Push(temp, hex, argcount, 1); return; // test
-                            case 0x02: returnvector.push_back(hex); return;
+                            case 0x01: Push(temp, hex, argcount, 2); continue; // test
+                            case 0x02: SinglePush(temp, hex, resultvector); continue;
                             case 0x03:
                             case 0x04:
                             case 0x05:
@@ -292,7 +298,7 @@ class DECODE {
                         switch (hex) {
                             case 0xCD: Push(temp, hex, argcount, 1); continue;
                             case 0xCE:
-                            case 0xCF: returnvector.push_back(hex); return;
+                            case 0xCF: SinglePush(temp, hex, resultvector); continue;
                             case 0xD0:
                             case 0xD1:
                             case 0xD2:
@@ -339,12 +345,12 @@ class DECODE {
                             case 0xF5:
                             case 0xF6:
                             case 0xF7: break;
-                            case 0xF8: returnvector.push_back(hex); return;
+                            case 0xF8: SinglePush(temp, hex, resultvector); continue;
                             case 0xF9: break;
-                            case 0xFA: returnvector.push_back(hex); return;
+                            case 0xFA: SinglePush(temp, hex, resultvector); continue;
                             case 0xFB: break;
-                            case 0xFC: returnvector.push_back(hex); return;
-                            case 0xFD:
+                            case 0xFC: SinglePush(temp, hex, resultvector); continue;
+                            case 0xFD: break;
                             case 0xFE:
                             case 0xFF: break;
                             default: OUTPUT::Error("Unknown hex", 0x10); break;

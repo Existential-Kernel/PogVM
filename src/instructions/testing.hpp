@@ -9,8 +9,8 @@ namespace iTesting {
      * Description: add 1 to register AH, this is not an actual instruction just to be clear.
      * Opcode(s):   0x01
      */
-    inline void TEST(uint8_t operand1 = 1) {
-        REGISTER::R8_PTR->AH += operand1;
+    inline void TEST(uint8_t operand1 = 1, uint8_t operand2 = 1) {
+        REGISTER::R8_PTR->AH += operand1 + operand2;
         std::cout << "AH = " << (int)REGISTER::R8_PTR->AH << std::endl;
     }
 }

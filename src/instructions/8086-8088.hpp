@@ -83,17 +83,7 @@ namespace i8088 {
      * Opcode(s):   0xF8
      */
     inline void CLC(void) {
-        FLAGS::EFLAGS.eflagcode[0] = 0;
-    }
-
-
-    /*
-     * Instruction: CLD
-     * Description: Clear the direction flag
-     * Opcode(s):   0xFC
-     */
-    inline void CLD(void) {
-        FLAGS::EFLAGS.eflagcode[10] = 0;
+        FLAGS::EFLAGS.eflagcode.set(0, 1);
     }
 
 
@@ -103,7 +93,17 @@ namespace i8088 {
      * Opcode(s):   0xFA
      */
     inline void CLI(void) {
-        FLAGS::EFLAGS.eflagcode[9] = 0;
+        FLAGS::EFLAGS.eflagcode.set(9, 1);
+    }
+
+
+    /*
+     * Instruction: CLD
+     * Description: Clear the direction flag
+     * Opcode(s):   0xFC
+     */
+    inline void CLD(void) {
+        FLAGS::EFLAGS.eflagcode.set(10, 1);
     }
 
 
