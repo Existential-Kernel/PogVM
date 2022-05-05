@@ -26,8 +26,13 @@ class DECODE {
             instructions.push_back(v);
         }
 
+        static void CheckBit(const uint8_t &argbits, const uint8_t &hex) {
+            if (argbit == 64) { OUTPUT::Error(hex "is an invalid hex in 64-bit mode", 0x12); }
+            OUTPUT::Error(hex "is an invalid hex in 32-bit mode", 0x12);
+        }
+
     public:
-        static void Decode(const std::vector<u_char> &hexvector, std::vector<std::vector<u_char>> &resultvector) {
+        static void Decode(const std::vector<u_char> &hexvector, std::vector<std::vector<u_char>> &resultvector, const uint8_t &bits) {
             std::vector<u_char> temp;
             uint8_t argcount = 0;
 
@@ -291,21 +296,27 @@ class DECODE {
                             case 0xC8:
                             case 0xC9:
                             case 0xCA:
-                            case 0xCB:
-                            case 0xCC: break;
+                            case 0xCB: break;
+                            case 0xCC: SinglePush(temp, hex, resultvector); continue;
                         }
                     } else if (hex <= sub * 13) {
                         switch (hex) {
                             case 0xCD: Push(temp, hex, argcount, 1); continue;
-                            case 0xCE:
+                            case 0xCE: SinglePush(temp, hex, resultvector); continue;
                             case 0xCF: SinglePush(temp, hex, resultvector); continue;
                             case 0xD0:
                             case 0xD1:
                             case 0xD2:
-                            case 0xD3:
-                            case 0xD4:
-                            case 0xD5:
-                            case 0xD6:
+                            case 0xD3: break;
+                            case 0xD4: 
+                                CheckBit(64);
+                                if (hexvector.at(i + 1) == 0x0A) {
+                                    Push(temp, hex, argcount, 1);
+                                    continue;
+                                }
+                                continue;
+                            case 0xD5: CheckBit(64);
+                            case 0xD6: CheckBit(64);
                             case 0xD7:
                             case 0xD8:
                             case 0xD9:
@@ -328,7 +339,7 @@ class DECODE {
                             case 0xE7:
                             case 0xE8:
                             case 0xE9:
-                            case 0xEA:
+                            case 0xEA: CheckBit(64);
                             case 0xEB:
                             case 0xEC:
                             case 0xED:
@@ -338,7 +349,7 @@ class DECODE {
                         switch (hex) {
                             case 0xEF:
                             case 0xF0:
-                            case 0xF1:
+                            case 0xF1: SinglePush(temp, hex, resultvector); continue;
                             case 0xF2:
                             case 0xF3:
                             case 0xF4:

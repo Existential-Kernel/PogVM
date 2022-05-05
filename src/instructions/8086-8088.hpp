@@ -19,7 +19,7 @@ namespace i8088 {
      */
     inline void AAD() {
 
-    } 
+    }
 
 
     /*
@@ -27,8 +27,9 @@ namespace i8088 {
      * Description: ASCII adjust AX after multiplication
      * Opcode(s):   0xD4
      */
-    inline void AAM() {
-
+    inline void AAM(void) {
+        REGISTER::R8_PTR->AH = (uint8_t)(REGISTER::R8_PTR->AL / 10);
+        REGISTER::R8_PTR->AL %= 10;
     }
     
 
