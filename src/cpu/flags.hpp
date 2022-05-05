@@ -9,10 +9,10 @@
 #define FLAGS_HPP
 
 namespace FLAGS {
-    struct EFLAGS {
+    struct EFLAGS_STRUCT {
         std::bitset<32> eflagcode;
 
-        void Reset() { eflagcode = 0b0; }
+        void Reset() { eflagcode.reset(); }
 
         /*
         enum collection { 
@@ -60,6 +60,8 @@ namespace FLAGS {
             PG,      // paging
         };
     } CONTROL;
+
+    EFLAGS_STRUCT *EFLAGS_PTR = &EFLAGS;
 };
 
 #endif  

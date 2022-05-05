@@ -318,16 +318,16 @@ class EXECUTE {
                             case 0xF1: i8088::INT(0xF1); continue;
                             case 0xF2:
                             case 0xF3:
-                            case 0xF4:
+                            case 0xF4: i8088::HLT(); continue;
                             case 0xF5:
                             case 0xF6:
                             case 0xF7:
                             case 0xF8: i8088::CLC(); continue;
-                            case 0xF9:
+                            case 0xF9: i8088::STC(); continue;
                             case 0xFA: i8088::CLI(); continue;
-                            case 0xFB:
+                            case 0xFB: i8088::STI(); continue;
                             case 0xFC: i8088::CLD(); continue;
-                            case 0xFD:
+                            case 0xFD: i8088::STD(); continue;
                             case 0xFE:
                             case 0xFF: break;
                             default: OUTPUT::Error("Unknown opcode", 0x10); break;

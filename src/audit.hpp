@@ -4,6 +4,7 @@
 #include "cpu/registers.hpp"
 #include "cpu/memory.hpp"
 #include "defs.hpp"
+#include "instructions/8086-8088.hpp"
 
 
 // TODO: Fix the ResetAll() function
@@ -29,7 +30,8 @@ class AUDIT {
 			if (result) {
 				std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::EXIT<< std::endl;
 			} else {
-				std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::EXIT << std::endl;
+				std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "]  " << ANSI::BOLD << message << ANSI::EXIT << std::endl;
+                std::exit(1);
 			}
 		}
 
@@ -45,7 +47,22 @@ class AUDIT {
         // Check if CPU cores are working as expected
         static inline bool CPUCoreCheck(void) {
             try {
-                return (uint8_t)std::thread::hardware_concurrency() != 0;
+                return (uint8_t)std::thread::hardware_concurrency() != 0; 
+            } catch (...) {
+                return false;
+            }
+        }
+
+        static bool Check8088(void) {
+            try {
+                // Cancel out the flag code 
+                i8088::STC(); i8088::CLC();
+                i8088::STI(); i8088::CLI();
+                i8088::STD(); i8088::CLD();
+                if (FLAGS::EFLAGS_PTR->eflagcode != 0) { return false; }
+                FLAGS::EFLAGS_PTR->Reset();
+
+                return true;
             } catch (...) {
                 return false;
             }
@@ -54,16 +71,10 @@ class AUDIT {
 	public:
 		// Checks all the necessary processes and data needed to run the machine
 		static void AuditCheck(void) {
-			AuditLog(MEMORY::Initialise(), "2^32 bits of memory space allocated");
+			AuditLog(MEMORY::Initialise(), "Allocating 2^16 bits of memory space...");
 			//AuditLog(REGISTER::ResetAll(), "All registers have been reset");
-			AuditLog(AUDIT::CPUCoreCheck(), "CPU working as expected");
-			AuditLog(AUDIT::ThreadCheck(), "Verified for necessary thread count for pipeline processing");
-            AuditLog(true, "Cycle check passed");
-            AuditLog(true, "Kernel verification check processed");
-            AuditLog(true, "Loaded all registers");
-            AuditLog(false, "Failed to initialise write-back stage of cycle (discarded)");
-            AuditLog(true, "Loaded all flags");
-            AuditLog(true, "Core functionality check verified");
-            AuditLog(true, "Thread utility initialised");
+			AuditLog(AUDIT::CPUCoreCheck(), "Checking CPU compatibility...");
+			AuditLog(AUDIT::ThreadCheck(), "Checking thread utilisation...");
+            AuditLog(AUDIT::Check8088(), "Verifying 8086/8088 instruction set...");
 		}
 };

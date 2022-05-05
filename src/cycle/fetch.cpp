@@ -524,6 +524,7 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             };
 
             std::vector<u_char> code4 = {
+                0x00, 0x00, 0x00,
                 0x01, 0x01, 0x02, 
                 0x01, 0x03, 0x04,
                 0x01, 0x10, 0x10,
@@ -547,7 +548,6 @@ class ELF : public ELFHEADER {
         // Check if the file is an ELF file
         inline static bool CheckELF(const std::string &filename) {
             std::ifstream file(filename, std::ios::binary);
-/*
             std::vector<unsigned char> magicvector;
 
             if (file) {
@@ -556,7 +556,7 @@ class ELF : public ELFHEADER {
                 file.read((char*)&magicvector[0], magicvector.size());
             }
             file.close();
-            
+
             bool result = (
                 magicvector[0] == 0x7F &&
                 magicvector[1] == 0x45 &&
@@ -564,8 +564,8 @@ class ELF : public ELFHEADER {
                 magicvector[3] == 0x46
             );
             return result;
-*/
-            return true;
+
+            //return true;
         }
 
         // Get hex data of file and return as vector

@@ -68,28 +68,9 @@ namespace REGISTER {
 
     // 8-bit
     struct R8_STRUCT {
-
         uint8_t AH, BH, CH, DH = 0;
         uint8_t AL, BL, CL, DL = 0;
         uint8_t SPL, BPL, SIL, DIL = 0;
-
-
-       /*
-        uint8_t AH = 0;
-        uint8_t BH = 0;
-        uint8_t CH = 0;
-        uint8_t DH = 0;
-
-        uint8_t AL = 0;
-        uint8_t BL = 0;
-        uint8_t CL = 0;
-        uint8_t DL = 0;
-
-        uint8_t SPL = 0;
-        uint8_t BPL = 0;
-        uint8_t SIL = 0;
-        uint8_t DIL = 0;
-        */
     } R8;
 
     // Segment registers

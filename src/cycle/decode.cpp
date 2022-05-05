@@ -44,8 +44,6 @@ class DECODE {
                 temp.clear();
 
                 u_char hex = hexvector.at(i);
-                std::cout << "hex :" << UTILITY::IntToHex(hex) << std::endl;
-
                 if (hex <= sec) {
                     if (hex <= sub) {
                         switch (hex) {
@@ -340,17 +338,17 @@ class DECODE {
                             case 0xF0:
                             case 0xF1:
                             case 0xF2:
-                            case 0xF3:
-                            case 0xF4:
+                            case 0xF3: break;
+                            case 0xF4: SinglePush(temp, hex, resultvector); continue;
                             case 0xF5:
                             case 0xF6:
                             case 0xF7: break;
                             case 0xF8: SinglePush(temp, hex, resultvector); continue;
-                            case 0xF9: break;
+                            case 0xF9: SinglePush(temp, hex, resultvector); continue;
                             case 0xFA: SinglePush(temp, hex, resultvector); continue;
-                            case 0xFB: break;
+                            case 0xFB: SinglePush(temp, hex, resultvector); continue;
                             case 0xFC: SinglePush(temp, hex, resultvector); continue;
-                            case 0xFD: break;
+                            case 0xFD: SinglePush(temp, hex, resultvector); continue;
                             case 0xFE:
                             case 0xFF: break;
                             default: OUTPUT::Error("Unknown hex", 0x10); break;

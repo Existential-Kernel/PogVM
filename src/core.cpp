@@ -12,7 +12,7 @@
 class KERNEL : public FETCH, public DECODE, public EXECUTE {
     public:
 		// 
-        static void Kernel(const std::string &argv, const bool &mode = false) { // REVISION NEEDED: change mode if needed
+        static void Kernel(const std::string &argv, const bool &mode = true) { // REVISION NEEDED: change mode if needed
 			std::vector<u_char> resultvector;
 			std::vector<std::vector<u_char>> instructions;
 			if (UTILITY::FileExists(argv)) {
@@ -21,31 +21,11 @@ class KERNEL : public FETCH, public DECODE, public EXECUTE {
 				if (ELF::CheckELF(argv)) {
 
 					if (mode) { // compiled mode
-					/**************** FETCH STAGE ****************/		
 						//std::vector<u_char> hexvector = FETCH::FetchHex(argv);
 						std::vector<u_char> hexvector = FETCH::GetCode();
-
-					/**************** DECODE STAGE ****************/		
-						std::vector<u_char> tempvector;
-						for (size_t index = 0; index < hexvector.size(); ++index) {
-							if (hexvector.at(index) == 0x00) { 
-								hexvector.erase(hexvector.begin() + index);
-								continue; 
-							}
-						}
-
 						DECODE::Decode(hexvector, instructions);
-
-						std::cout << "Decoded instructions: " << std::endl;
-						std::cout << UTILITY::IntToHex(instructions.at(0).at(0)) << std::endl;
-						std::cout << UTILITY::IntToHex(instructions.at(1).at(0)) << std::endl;
-						std::cout << UTILITY::IntToHex(instructions.at(2).at(0)) << std::endl;
-
-					/**************** EXECUTE STAGE ****************/	
 						EXECUTE::Execute(instructions);
 
-						std::cout << FLAGS::EFLAGS.eflagcode << std::endl;
-		
 					} else { // interpreter mode
 
 					}
