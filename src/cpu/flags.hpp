@@ -5,14 +5,11 @@
 #include <array>
 #include <bitset>
 
-#ifndef FLAGS_HPP
-#define FLAGS_HPP
+#pragma once
 
 namespace FLAGS {
     struct EFLAGS_STRUCT {
         std::bitset<32> eflagcode;
-
-        void Reset() { eflagcode.reset(); }
 
         /*
         enum collection { 
@@ -63,5 +60,3 @@ namespace FLAGS {
 
     EFLAGS_STRUCT *EFLAGS_PTR = &EFLAGS;
 };
-
-#endif  

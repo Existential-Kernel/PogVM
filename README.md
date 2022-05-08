@@ -1,6 +1,6 @@
 <div align="center">
   <h1>PogVM</h1>
-  A mini Virtual Machine designed to run executable files
+  A minimal Virtual Machine designed to run executable files
 
   <br>
           ========================== <br>
@@ -13,17 +13,14 @@
 
 ## FEATURES
 - x86-64 assembly interpreter     (WIP)
-- Hybrid CISC and RISC processor  (WIP)
 - Scalar pipelining architecture  (WIP)
-- Executable file analyser        (WIP)
+- Executable file analyser
 - No external libraries used, just raw C++
-- No hypervisor dependency (mostly bc I have no idea how to implement it lol)
 
 ## PREREQUESITES
 - You must have at least 2 cores in the CPU you're using
 
 ## INSTALL
-  **Docker**
   ```
   mkdir build
   cd build
@@ -31,7 +28,7 @@
   ```
 
 ## OPTIONS
-  Command pattern: `pogvm [options] [executable file]`
+  Command pattern: `pogvm [option(s)] [executable file]`
 
   Example: `pogvm --info ./test`
 

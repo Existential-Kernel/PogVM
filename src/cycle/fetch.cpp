@@ -11,8 +11,7 @@
 #include "../defs.hpp"
 #include "../cpu/registers.hpp"
 
-#ifndef FETCH_HPP
-#define FETCH_HPP
+#pragma once
 
 class ASSEMBLY {
     private:
@@ -57,7 +56,7 @@ class ASSEMBLY {
         }
 
         // Split string argument with spaces into a vector 
-        static svec Split(const std::string &string){
+        static svec Split(const std::string &string) {
             svec vector;
             std::string nullstring = "";
 
@@ -533,7 +532,7 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             std::vector<u_char> code5 = {
                 0x02, 0x02, 0x02,
             };
-            return code3;
+            return code4;
         }
 };
 
@@ -584,8 +583,6 @@ class ELF : public ELFHEADER {
 };
 
 
-class FETCH : public ASSEMBLY, public ELF {      
+class FETCH : public ASSEMBLY, public ELF {
 
 } FETCH;
-
-#endif

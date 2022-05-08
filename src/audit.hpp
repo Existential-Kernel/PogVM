@@ -6,6 +6,7 @@
 #include "defs.hpp"
 #include "instructions/8086-8088.hpp"
 
+#pragma once
 
 // TODO: Fix the ResetAll() function
 /*
@@ -55,12 +56,26 @@ class AUDIT {
 
         static bool Check8088(void) {
             try {
-                // Cancel out the flag code 
-                i8088::STC(); i8088::CLC();
-                i8088::STI(); i8088::CLI();
-                i8088::STD(); i8088::CLD();
-                if (FLAGS::EFLAGS_PTR->eflagcode != 0) { return false; }
-                FLAGS::EFLAGS_PTR->Reset();
+                i8088::STC();
+                i8088::STI();
+                i8088::STD();
+                if (FLAGS::EFLAGS_PTR->eflagcode != 0x601) { return false; }
+                FLAGS::EFLAGS_PTR->eflagcode.reset();
+                FLAGS::EFLAGS_PTR->eflagcode.flip();
+                i8088::CLC();
+                i8088::CLI();
+                i8088::CLD();
+                if (~FLAGS::EFLAGS_PTR->eflagcode != 0x601) { return false; }
+                FLAGS::EFLAGS_PTR->eflagcode.reset();
+
+                i8088::ADD(0x04, 10, 0);
+                i8088::ADD(0x80, 0xC1, 10);
+                i8088::ADD(0x80, 0xC2, 10);
+                i8088::ADD(0x80, 0xC3, 10);
+                i8088::ADD(0x80, 0xC4, 10);
+                i8088::ADD(0x80, 0xC5, 10);
+                i8088::ADD(0x80, 0xC6, 10);
+                i8088::ADD(0x80, 0xC7, 10);
 
                 return true;
             } catch (...) {

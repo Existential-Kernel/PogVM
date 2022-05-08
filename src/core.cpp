@@ -10,9 +10,15 @@
 //https://www.cplusplus.com/reference/thread/thread/?kw=thread
 
 class KERNEL : public FETCH, public DECODE, public EXECUTE {
+	private:
+		static void InitHardware(void) {
+			if (!MEMORY::Initialise()) {
+				OUTPUT::Error("Memory initialisation failed", 0x11);
+			}
+		}
+
     public:
-		// 
-        static void Kernel(const std::string &argv, const bool &mode = true) { // REVISION NEEDED: change mode if needed
+        static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
 			std::vector<u_char> resultvector;
 			std::vector<std::vector<u_char>> instructions;
 			if (UTILITY::FileExists(argv)) {
@@ -23,7 +29,7 @@ class KERNEL : public FETCH, public DECODE, public EXECUTE {
 					if (mode) { // compiled mode
 						//std::vector<u_char> hexvector = FETCH::FetchHex(argv);
 						std::vector<u_char> hexvector = FETCH::GetCode();
-						DECODE::Decode(hexvector, instructions);
+						DECODE::Decode(hexvector, instructions, bits, processor);
 						EXECUTE::Execute(instructions);
 
 					} else { // interpreter mode
@@ -42,11 +48,5 @@ class KERNEL : public FETCH, public DECODE, public EXECUTE {
 					OUTPUT::Error("The file provided is not valid or does not exist", 0x0A);
 				}
 			}
-
-/*
-			if (!MEMORY::Initialise()) {
-				OUTPUT::Error("Memory initialisation failed", 0x11);
-			}
-*/
 		}
 } KERNEL;

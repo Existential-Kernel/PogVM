@@ -2,8 +2,7 @@
 #include <cstdint>
 #include <cmath>
 
-#ifndef MEM_HPP
-#define MEM_HPP
+#pragma once
 
 using u32 = unsigned int;
 
@@ -22,5 +21,3 @@ namespace MEMORY {
         }
     }
 };
-
-#endif

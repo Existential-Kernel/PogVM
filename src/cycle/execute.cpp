@@ -6,16 +6,16 @@
 
 #include "../defs.hpp"
 #include "../instructions/8086-8088.hpp"
-#include "../instructions/testing.hpp"
+#include "../instructions/handler.cpp"
 
-#ifndef EXECUTE_HPP
-#define EXECUTE_HPP
-
+#pragma once
 
 class EXECUTE {
     private:
         #define sec 0x55  // sections
         #define sub 0x11  // subelements
+
+        // 1. Create a function a
 
     public:
         static void Execute(const std::vector<std::vector<u_char>> &v) {
@@ -25,11 +25,12 @@ class EXECUTE {
                 if (opcode <= sec) {
                     if (opcode <= sub) {
                         switch (opcode) {
-                            case 0x01: iTesting::TEST(v.at(i).at(1), v.at(i).at(2)); continue;
-                            case 0x02: iTesting::TEST(); continue;
+                            case 0x00: i8088::ADD(0x05, v.at(i).at(1), 0); continue;
+                            case 0x01: 
+                            case 0x02: 
                             case 0x03:
-                            case 0x04:
-                            case 0x05:
+                            case 0x04: i8088::ADD(0x05, v.at(i).at(1), 0); continue;
+                            case 0x05: i8088::ADD(0x05, v.at(i).at(1), v.at(i).at(2)); continue;
                             case 0x06:
                             case 0x07:
                             case 0x08:
@@ -337,5 +338,3 @@ class EXECUTE {
             }
         }
 };
-
-#endif

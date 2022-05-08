@@ -6,8 +6,7 @@
 
 #include "../defs.hpp"
 
-#ifndef DECODE_HPP
-#define DECODE_HPP
+#pragma once
 
 // https://stackoverflow.com/questions/30443501/why-do-these-two-instructions-have-the-same-opcode
 
@@ -26,8 +25,40 @@ class DECODE {
             instructions.push_back(v);
         }
 
+        static void CheckBits(const uint8_t &acceptablebits, const uint8_t &kernelbits, const uint8_t &hex) {
+            if (acceptablebits != kernelbits) {
+                std::stringstream error;
+                error << hex << "is an invalid instruction in " << kernelbits << "-bit mode";
+                OUTPUT::Error(error.str(), 0x12);
+            }
+        }
+
+        static void CheckProc(const uint8_t &acceptableproc, const uint8_t &kernelproc) {
+            if (acceptableproc > kernelproc) {
+                std::stringstream error;
+                std::string proc;
+                switch (kernelproc) {
+                    case 1: proc = "8086/8088"; break;
+                    case 2: proc = "80186/80188"; break;
+                    case 3: proc = "NEC-V"; break;
+                    case 4: proc = "80286"; break;
+                    case 5: proc = "80386"; break;
+                    case 6: proc = "80486"; break;
+                    case 7: proc = "Pentium"; break;
+                    case 8: proc = "Pentium-MMX"; break;
+                    case 9: proc = "AMD-K6"; break;
+                    case 10: proc = "Pentium-Pro"; break;
+                    case 11: proc = "Pentium-II"; break;
+                    case 12: proc = "Intel-Itanium"; break;
+                    case 13: proc = "Cyrix-Geode"; break;
+                }
+                error << "This instruction is not supported by the " << proc << " processor";
+                OUTPUT::Error(error.str(), 0x13);
+            }
+        }
+
     public:
-        static void Decode(const std::vector<u_char> &hexvector, std::vector<std::vector<u_char>> &resultvector) {
+        static void Decode(const std::vector<u_char> &hexvector, std::vector<std::vector<u_char>> &resultvector, const uint8_t &bits, const uint8_t &processor) {
             std::vector<u_char> temp;
             uint8_t argcount = 0;
 
@@ -45,15 +76,16 @@ class DECODE {
 
                 u_char hex = hexvector.at(i);
                 if (hex <= sec) {
+                    CheckProc(1, processor); // add this for now as a parameter buffer
                     if (hex <= sub) {
                         switch (hex) {
-                            case 0x00: continue;
-                            case 0x01: Push(temp, hex, argcount, 2); continue; // test
-                            case 0x02: SinglePush(temp, hex, resultvector); continue;
+                            case 0x00: Push(temp, hex, argcount, 1); continue;
+                            case 0x01: // fallthrough (for now)
+                            case 0x02:
                             case 0x03:
-                            case 0x04:
-                            case 0x05:
-                            case 0x06:
+                            case 0x04: Push(temp, hex, argcount, 1); continue;
+                            case 0x05: Push(temp, hex, argcount, 2); continue;
+                            case 0x06: 
                             case 0x07:
                             case 0x08:
                             case 0x09:
@@ -289,21 +321,27 @@ class DECODE {
                             case 0xC8:
                             case 0xC9:
                             case 0xCA:
-                            case 0xCB:
-                            case 0xCC: break;
+                            case 0xCB: break;
+                            case 0xCC: SinglePush(temp, hex, resultvector); continue;
                         }
                     } else if (hex <= sub * 13) {
                         switch (hex) {
                             case 0xCD: Push(temp, hex, argcount, 1); continue;
-                            case 0xCE:
+                            case 0xCE: SinglePush(temp, hex, resultvector); continue;
                             case 0xCF: SinglePush(temp, hex, resultvector); continue;
                             case 0xD0:
                             case 0xD1:
                             case 0xD2:
-                            case 0xD3:
-                            case 0xD4:
-                            case 0xD5:
-                            case 0xD6:
+                            case 0xD3: break;
+                            case 0xD4: 
+                                CheckBits(32, bits, 0xD4);
+                                if (hexvector.at(i + 1) == 0x0A) {
+                                    Push(temp, hex, argcount, 1);
+                                    continue;
+                                }
+                                continue;
+                            case 0xD5: CheckBits(32, bits, 0xD5); continue;
+                            case 0xD6: CheckBits(32, bits, 0xD6); continue;
                             case 0xD7:
                             case 0xD8:
                             case 0xD9:
@@ -326,7 +364,7 @@ class DECODE {
                             case 0xE7:
                             case 0xE8:
                             case 0xE9:
-                            case 0xEA:
+                            case 0xEA: CheckBits(32, bits, 0xEA);
                             case 0xEB:
                             case 0xEC:
                             case 0xED:
@@ -336,7 +374,7 @@ class DECODE {
                         switch (hex) {
                             case 0xEF:
                             case 0xF0:
-                            case 0xF1:
+                            case 0xF1: SinglePush(temp, hex, resultvector); continue;
                             case 0xF2:
                             case 0xF3: break;
                             case 0xF4: SinglePush(temp, hex, resultvector); continue;
@@ -359,5 +397,3 @@ class DECODE {
         }
 
 } DECODE;
-
-#endif

@@ -1,7 +1,6 @@
 #include <bitset>
 
-#ifndef REG_HPP
-#define REG_HPP
+#pragma once
 
 namespace REGISTER {
     // 256-bit
@@ -173,5 +172,3 @@ namespace REGISTER {
     PREG_STRUCT *PREG_PTR = &PREG;
     AREG_STRUCT *AREG_PTR = &AREG;
 }
-
-#endif

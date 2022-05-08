@@ -2,8 +2,7 @@
 #include <fstream>
 #include <filesystem>
 
-#ifndef DEFS_HPP
-#define DEFS_HPP
+#pragma once
 
 namespace fs = std::filesystem;
 
@@ -92,5 +91,3 @@ namespace UTILITY {
     }
 */
 };
-
-#endif
