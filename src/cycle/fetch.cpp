@@ -169,6 +169,12 @@ class ELF_SECTION_STRUCT {
 } ELF_SECTION;
 
 class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public ELF_SECTION_STRUCT {
+
+    private: 
+        ELF_SECTION_STRUCT *ELFSEC_PTR = &ELF_SECTION;
+        ELF_HEADER_STRUCT *ELF_HEADER_PTR = &ELF_HEADER;
+        ELF_PROGRAM_STRUCT *ELF_PROGRAM_PTR = &ELF_PROGRAM;
+
     protected:
         static void GetELFProgram(const std::vector<unsigned char> &hex, const uint64_t &offset) {
             unsigned char program[0x38];
