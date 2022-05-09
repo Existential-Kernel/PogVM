@@ -1,0 +1,6 @@
+ - https://www.felixcloutier.com/x86/
+ - http://ref.x86asm.net/geek32.html 
+ - http://www.mathemainzel.info/files/x86asmref.html 
+ - http://www.c-jump.com/CIS77/CPU/x86/lecture.html 
+ - http://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=add+eax%2C+30&arch=x86-32&as_format=inline#assembly
+ - https://www.sandpile.org/
