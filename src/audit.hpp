@@ -27,11 +27,11 @@
 class AUDIT {
 	private:
 		// Log the initialisation process if it succeeded or failed
-		static void AuditLog(bool result, const std::string &message) {
+		static void AuditLog(const bool &result, const std::string &message, const bool &indent) {
 			if (result) {
-				std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::EXIT<< std::endl;
+				std::cout << (indent ? "   " : 0) << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::EXIT<< std::endl;
 			} else {
-				std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "]  " << ANSI::BOLD << message << ANSI::EXIT << std::endl;
+				std::cout << (indent ? "   " : 0) << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "]  " << ANSI::BOLD << message << ANSI::EXIT << std::endl;
                 std::exit(1);
 			}
 		}
@@ -77,6 +77,35 @@ class AUDIT {
                 i8088::ADD(0x80, 0xC6, 10);
                 i8088::ADD(0x80, 0xC7, 10);
 
+
+
+                i8088::INC(0x66, 40, 0);
+                i8088::INC(0x66, 41, 0);
+                i8088::INC(0x66, 42, 0);
+                i8088::INC(0x66, 43, 0);
+                i8088::INC(0x66, 44, 0);
+                i8088::INC(0x66, 45, 0);
+                i8088::INC(0x66, 46, 0);
+                i8088::INC(0x66, 47, 0);
+
+                i8088::INC(0, 40, 0);
+                i8088::INC(0, 41, 0);
+                i8088::INC(0, 42, 0);
+                i8088::INC(0, 43, 0);
+                i8088::INC(0, 44, 0);
+                i8088::INC(0, 45, 0);
+                i8088::INC(0, 46, 0);
+                i8088::INC(0, 47, 0);
+
+                i8088::INC(0, 0xFE, 0xC0);
+                i8088::INC(0, 0xFE, 0xC1);
+                i8088::INC(0, 0xFE, 0xC2);
+                i8088::INC(0, 0xFE, 0xC3);
+                i8088::INC(0, 0xFE, 0xC4);
+                i8088::INC(0, 0xFE, 0xC5);
+                i8088::INC(0, 0xFE, 0xC6);
+                i8088::INC(0, 0xFE, 0xC7);
+
                 return true;
             } catch (...) {
                 return false;
@@ -86,10 +115,11 @@ class AUDIT {
 	public:
 		// Checks all the necessary processes and data needed to run the machine
 		static void AuditCheck(void) {
-			AuditLog(MEMORY::Initialise(), "Allocating 2^16 bits of memory space...");
-			//AuditLog(REGISTER::ResetAll(), "All registers have been reset");
-			AuditLog(AUDIT::CPUCoreCheck(), "Checking CPU compatibility...");
-			AuditLog(AUDIT::ThreadCheck(), "Checking thread utilisation...");
-            AuditLog(AUDIT::Check8088(), "Verifying 8086/8088 instruction set...");
+			AuditLog(MEMORY::Initialise(), "Allocating 2^16 bits of memory space...", false);
+			//AuditLog(REGISTER::ResetAll(), "All registers have been reset", false);
+			AuditLog(AUDIT::CPUCoreCheck(), "Checking CPU compatibility...", false);
+			AuditLog(AUDIT::ThreadCheck(), "Checking thread utilisation...", false);
+            std::cout << ANSI::BLACK_BG << "\n===== CHECKING INSTRUCTION SETS =====" << ANSI::EXIT << "\n\n";
+            AuditLog(AUDIT::Check8088(), "Verifying 8086/8088 instruction set...", true);
 		}
 };

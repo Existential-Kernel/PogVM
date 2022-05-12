@@ -231,8 +231,8 @@ namespace i8088 {
 
                 
                     
-            case 0x02:
-            case 0x03:
+            case 0x02: 
+            case 0x03: break;
             case 0x04: REGISTER::R8_PTR->AL += operand1; break; //
             case 0x05: REGISTER::R32_PTR->EAX += operand1; break;
 
@@ -247,7 +247,7 @@ namespace i8088 {
                     case 0xC7: REGISTER::R8_PTR->BH += operand2; break;
                 }
                 break;
-            case 0x81:
+            case 0x81: break;
 
         }
     }
@@ -305,6 +305,53 @@ namespace i8088 {
 
 
     /*
+     * Instruction: INC
+     * Description: Increment by 1
+     * Arguments:   None, 1 if 0xFE
+     * Opcode(s):   0x40...0x47, 0xFE/0, 0xFF/0
+     */
+    static inline void INC(const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
+        if (prefix == 0x66) {
+            switch (opcode) {
+                case 0x40: ++REGISTER::R16_PTR->AX; break;
+                case 0x41: ++REGISTER::R16_PTR->CX; break;
+                case 0x42: ++REGISTER::R16_PTR->DX; break;
+                case 0x43: ++REGISTER::R16_PTR->BX; break;
+
+                case 0x44: ++REGISTER::R16_PTR->SP; break;
+                case 0x45: ++REGISTER::R16_PTR->BP; break;
+                case 0x46: ++REGISTER::R16_PTR->SI; break;
+                case 0x47: ++REGISTER::R16_PTR->DI; break;
+            }
+            return;
+        }
+        
+        switch (opcode) {
+            case 0x40: ++REGISTER::R32_PTR->EAX; break;
+            case 0x41: ++REGISTER::R32_PTR->ECX; break;
+            case 0x42: ++REGISTER::R32_PTR->EDX; break;
+            case 0x43: ++REGISTER::R32_PTR->EBX; break;
+            case 0x44: ++REGISTER::R32_PTR->ESP; break;
+            case 0x45: ++REGISTER::R32_PTR->EBP; break;
+            case 0x46: ++REGISTER::R32_PTR->ESI; break;
+            case 0x47: ++REGISTER::R32_PTR->ESI; break;
+
+            case 0xFE: 
+                switch (operand1) {
+                    case 0xC0: ++REGISTER::R8_PTR->AL; break;
+                    case 0xC1: ++REGISTER::R8_PTR->CL; break;
+                    case 0xC2: ++REGISTER::R8_PTR->DL; break;
+                    case 0xC3: ++REGISTER::R8_PTR->BL; break;
+                    case 0xC4: ++REGISTER::R8_PTR->AH; break;
+                    case 0xC5: ++REGISTER::R8_PTR->CH; break;
+                    case 0xC6: ++REGISTER::R8_PTR->DH; break;
+                    case 0xC7: ++REGISTER::R8_PTR->BH; break;
+                }
+        }
+    }
+
+
+    /*
      * Instruction: INT
      * Description: Generate interrupt signal
      * Arguments:   None, 1 if opcode = 0xCD
@@ -333,9 +380,10 @@ namespace i8088 {
      * Opcode(s):   0xC0...0xC1/4, 0xD0...0xD3/4
      */
     static inline void SAL(const uint8_t &opcode, uint8_t &operand1, uint8_t &operand2) {
-        switch(opcode) {
+        //switch(opcode) {
 
-        }
+        //}
+        std::cout << opcode << operand1 << operand2;
     }
 
     /*
@@ -398,6 +446,7 @@ namespace i8088 {
             case 0x34: REGISTER::R8_PTR->AL ^= operand1; break;
             case 0x35: REGISTER::R8_PTR->AH ^= operand1; break;
         }
+        std::cout << opcode << operand1 << operand2 << operand3 << operand4;
 
     }
 }

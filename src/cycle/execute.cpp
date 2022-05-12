@@ -6,7 +6,7 @@
 
 #include "../defs.hpp"
 #include "../instructions/8086-8088.hpp"
-#include "../instructions/handler.cpp"
+#include "../instructions/testing.hpp"
 
 #pragma once
 
@@ -19,6 +19,7 @@ class EXECUTE {
 
     public:
         static void Execute(const std::vector<std::vector<u_char>> &v) {
+            bool prefix;
             for (size_t i = 0; i < v.size(); ++i) {
                 uint8_t opcode = v.at(i).at(0);
 
@@ -39,7 +40,7 @@ class EXECUTE {
                             case 0x0B:
                             case 0x0C:
                             case 0x0D:
-                            case 0x0E:
+                            case 0x0E: iTesting::TEST(v.at(i).at(1), v.at(i).at(2)); continue;
                             case 0x0F:
                             case 0x10:
                             case 0x11: break;
@@ -97,18 +98,24 @@ class EXECUTE {
                             case 0x3C:
                             case 0x3D:
                             case 0x3E:
-                            case 0x3F:
-                            case 0x40:
+                            case 0x3F: break;
+                            case 0x40: // fallthrough 
                             case 0x41:
                             case 0x42:
                             case 0x43:
-                            case 0x44: break;
+                            case 0x44:
+                                prefix ? i8088::INC(0x66, opcode, v.at(i).at(1)) : i8088::INC(0, opcode, v.at(i).at(1));
+                                prefix = false;
+                                continue;
                         }
                     } else if (opcode <= sub * 5) {
                         switch (opcode) {
-                            case 0x45:
+                            case 0x45: // fallthrough
                             case 0x46:
                             case 0x47:
+                                prefix ? i8088::INC(0x66, opcode, v.at(i).at(1)) : i8088::INC(0, opcode, v.at(i).at(1));
+                                prefix = false;
+                                continue;
                             case 0x48:
                             case 0x49:
                             case 0x4A:
@@ -146,7 +153,7 @@ class EXECUTE {
                             case 0x63:
                             case 0x64:
                             case 0x65:
-                            case 0x66: break;
+                            case 0x66: prefix = true; continue;
                         }
                     } else if (opcode <= sub * 7) {
                         switch (opcode) {

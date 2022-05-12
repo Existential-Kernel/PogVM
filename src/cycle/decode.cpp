@@ -93,7 +93,7 @@ class DECODE {
                             case 0x0B:
                             case 0x0C:
                             case 0x0D:
-                            case 0x0E:
+                            case 0x0E: Push(temp, hex, argcount, 2); continue;
                             case 0x0F:
                             case 0x10:
                             case 0x11: break;
@@ -151,18 +151,18 @@ class DECODE {
                             case 0x3C:
                             case 0x3D:
                             case 0x3E:
-                            case 0x3F:
-                            case 0x40:
+                            case 0x3F: break;
+                            case 0x40: SinglePush(temp, hex, resultvector); continue;
                             case 0x41:
                             case 0x42:
                             case 0x43:
-                            case 0x44: break;
+                            case 0x44: SinglePush(temp, hex, resultvector); continue;
                         }
                     } else if (hex <= sub * 5) {
                         switch (hex) {
                             case 0x45:
                             case 0x46:
-                            case 0x47:
+                            case 0x47: SinglePush(temp, hex, resultvector); continue;
                             case 0x48:
                             case 0x49:
                             case 0x4A:
@@ -199,7 +199,7 @@ class DECODE {
                             case 0x63:
                             case 0x64:
                             case 0x65:
-                            case 0x66: break;
+                            case 0x66: temp.push_back(0x66); continue;
                         }
                     } else if (hex <= sub * 7) {
                         switch (hex) {

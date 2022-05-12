@@ -50,17 +50,17 @@ int main(int argc, char *argv[]) {
 				if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--sections")) { ELF::OutputELF(0b10, hexvector); }
 				if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--info")) { ELF::OutputELF(0b11, hexvector); }
 
-				bool mode;
+				bool mode{};
 				if (!strcmp(argv[1], "--interpreted")) { mode = false; }
 				else if (!strcmp(argv[1], "--compiled")) { mode = true; }
 				else { mode = true; }
 
-				uint8_t bitclass;
+				uint8_t bitclass{};
 				if (!strcmp(argv[1], "--64-bit")) { bitclass = 64; }
 				else if (!strcmp(argv[1], "--32-bit")) { bitclass = 32; }
 				else { bitclass = 32; }   
 
-				uint8_t processorID;
+				uint8_t processorID{};
 				if (!strcmp(argv[1], "--8086") || !strcmp(argv[1], "--8088")) { processorID = 1; }
 				else if (!strcmp(argv[1], "--80186") || !strcmp(argv[1], "--80188")) { processorID = 2; }
 				else if (!strcmp(argv[1], "--nec-v")) { processorID = 3; }

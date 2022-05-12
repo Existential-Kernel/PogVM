@@ -23,7 +23,7 @@ class ASSEMBLY {
         // Filter for things like comments and commas for simplicity
         static std::string Filter(const std::string &string) {
             // TODO: also filter for '#' comments in certain assembly syntaxes
-            std::string filter;
+            std::string filter{};
             if (string.find(';') != std::string::npos || string.find(',') != std::string::npos || string.find('#') != std::string::npos) {
                 std::string filter(string.begin(), std::find(string.begin(), string.end(), ';'));
                 filter.erase(std::remove(filter.begin(), filter.end(), ','), filter.end());
@@ -33,7 +33,7 @@ class ASSEMBLY {
 
         // Remove leading, trailing, and inbetween whitespace/spaces
         static std::string Trim(const std::string &string) {
-            std::string trimstring;
+            std::string trimstring{};
             size_t start = string.find_first_not_of(WHITESPACE);
             size_t end = string.find_last_not_of(WHITESPACE);
             trimstring = (start == std::string::npos) ? "" : string.substr(start);
@@ -44,7 +44,7 @@ class ASSEMBLY {
             trimstring = std::regex_replace(trimstring, std::regex("[' ']{2,}"), " ");
 
             // Check and remove for inbetween extra spaces
-            std::string inputstring = "";
+            std::string inputstring{};
             if (trimstring.find("  ") != std::string::npos) [[unlikely]] {
                 inputstring += trimstring[0];
                 for (size_t i = 1; i < trimstring.length(); ++i) {
@@ -58,7 +58,7 @@ class ASSEMBLY {
         // Split string argument with spaces into a vector 
         static svec Split(const std::string &string) {
             svec vector;
-            std::string nullstring = "";
+            std::string nullstring{};
 
             for (size_t i = 0; i < string.size(); ++i) {
                 if (string[i] == ' ') {
@@ -87,14 +87,13 @@ class ASSEMBLY {
         // check if string ends with .asm or .s file extension
         static bool CheckASM(const std::string &file) {
             std::string extension = file.substr(file.find_last_of(".") + 1);
-            bool result = (extension == "asm" || extension == "s");
-            return result;
+            return (extension == "asm" || extension == "s");
         }
 
         // Get the line of assembly
         static dsvec FetchAssembly(const std::string &location) {
-            std::fstream file;
-            std::string line;
+            std::fstream file{};
+            std::string line{};
             dsvec programvector;
 
             // Open the file
@@ -529,10 +528,9 @@ class ELFHEADER : public ELF_HEADER_STRUCT, public ELF_PROGRAM_STRUCT, public EL
             };
 
             std::vector<u_char> code4 = {
-                0x00, 0x00, 0x00,
-                0x01, 0x01, 0x02, 
-                0x01, 0x03, 0x04,
-                0x01, 0x10, 0x10,
+                0x0E, 0x01, 0x02, 
+                0x0E, 0x03, 0x04,
+                0x0E, 0x10, 0x10,
             };
             
             std::vector<u_char> code5 = {
@@ -569,8 +567,6 @@ class ELF : public ELFHEADER {
                 magicvector[3] == 0x46
             );
             return result;
-
-            //return true;
         }
 
         // Get hex data of file and return as vector
