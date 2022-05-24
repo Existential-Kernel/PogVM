@@ -1,1 +1,49 @@
-<mxfile host="app.diagrams.net" modified="2022-05-24T11:53:28.718Z" agent="5.0 (X11; CrOS x86_64 14588.98.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.59 Safari/537.36" version="18.1.2" etag="n9RV3ukZgrCs2n_kZADq" type="github"><diagram id="Xibfo8k1uq9rd5_zCF6U">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-05-24T12:13:22.514Z" agent="5.0 (X11; CrOS x86_64 14588.98.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.59 Safari/537.36" etag="hfmZauPXl_upn0k0g40t" version="18.1.2" type="github">
+  <diagram id="Xibfo8k1uq9rd5_zCF6U" name="Page-1">
+    <mxGraphModel dx="2800" dy="1866" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-1" value="START" style="rounded=0;whiteSpace=wrap;html=1;fontSize=20;labelBackgroundColor=none;fillColor=#00FF00;" vertex="1" parent="1">
+          <mxGeometry x="350" y="220" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-2" value="" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="175" y="320" width="460" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-3" value="" style="endArrow=classic;html=1;rounded=0;fontSize=20;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Iv4GpIztjlKY7P0iXTON-1" target="Iv4GpIztjlKY7P0iXTON-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="330" as="sourcePoint" />
+            <mxPoint x="360" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-5" value="mainframe.cpp" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=20;size=18;" vertex="1" parent="1">
+          <mxGeometry x="325" y="340" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-7" value="defs.hpp" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="-540" y="140" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-11" value="OUTPUT namespace" style="swimlane;labelBackgroundColor=none;fontSize=20;fillColor=#FFFF66;" vertex="1" parent="1">
+          <mxGeometry x="-870" y="250" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-18" value="- Contains functions that&lt;br&gt;output information to the end-user&lt;br&gt;such as the help menu, error logs, etc..." style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;" vertex="1" parent="Iv4GpIztjlKY7P0iXTON-11">
+          <mxGeometry x="10" y="40" width="370" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-12" value="INFO namespace" style="swimlane;labelBackgroundColor=none;fontSize=20;fillColor=#FFFF66;" vertex="1" parent="1">
+          <mxGeometry x="-460" y="260" width="310" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-17" value="- Contains all the necessary &lt;br&gt;information about PogVM &lt;br&gt;such as credits, license, &lt;br&gt;source code link, version, etc..." style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;" vertex="1" parent="Iv4GpIztjlKY7P0iXTON-12">
+          <mxGeometry x="10" y="40" width="290" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-13" value="ANSI namespace" style="swimlane;labelBackgroundColor=none;fontSize=20;fillColor=#FFFF66;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="-140" y="240" width="210" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-14" value="- Contains various &lt;br&gt;colours for outputting &lt;br&gt;in the terminal" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;" vertex="1" parent="Iv4GpIztjlKY7P0iXTON-13">
+          <mxGeometry x="10" y="40" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Iv4GpIztjlKY7P0iXTON-6" value="" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="-800" y="-440" width="710" height="520" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
