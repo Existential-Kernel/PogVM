@@ -29,7 +29,7 @@ class DECODE {
             if (acceptablebits != kernelbits) {
                 std::stringstream error;
                 error << hex << "is an invalid instruction in " << kernelbits << "-bit mode";
-                OUTPUT::Error(error.str(), 0x12);
+                OUTPUT::Abort(error.str());
             }
         }
 
@@ -53,7 +53,7 @@ class DECODE {
                     case 13: proc = "Cyrix-Geode"; break;
                 }
                 error << "This instruction is not supported by the " << proc << " processor";
-                OUTPUT::Error(error.str(), 0x13);
+                OUTPUT::Abort(error.str());
             }
         }
 
@@ -153,14 +153,14 @@ class DECODE {
                             case 0x3E:
                             case 0x3F: break;
                             case 0x40: SinglePush(temp, hex, resultvector); continue;
-                            case 0x41:
+                            case 0x41: // fallthrough
                             case 0x42:
                             case 0x43:
                             case 0x44: SinglePush(temp, hex, resultvector); continue;
                         }
                     } else if (hex <= sub * 5) {
                         switch (hex) {
-                            case 0x45:
+                            case 0x45: // fallthrough
                             case 0x46:
                             case 0x47: SinglePush(temp, hex, resultvector); continue;
                             case 0x48:
@@ -198,7 +198,7 @@ class DECODE {
                             case 0x62:
                             case 0x63:
                             case 0x64:
-                            case 0x65:
+                            case 0x65: break;
                             case 0x66: temp.push_back(0x66); continue;
                         }
                     } else if (hex <= sub * 7) {
@@ -238,14 +238,14 @@ class DECODE {
                             case 0x84:
                             case 0x85:
                             case 0x86:
-                            case 0x87:
+                            case 0x87: break;
                             case 0x88: Push(temp, hex, argcount, 2); continue;
                         }
                     } else if (hex <= sub * 9) {
                         switch (hex) {
                             case 0x89: 
                             case 0x8A: 
-                            case 0x8B: 
+                            case 0x8B: break;
                             case 0x8C: Push(temp, hex, argcount, 2); continue;
                             case 0x8D: break;
                             case 0x8E: Push(temp, hex, argcount, 2); continue;
@@ -298,11 +298,11 @@ class DECODE {
                             case 0xB4:
                             case 0xB5:
                             case 0xB6:
-                            case 0xB7:
-                            case 0xB8: Push(temp, hex, argcount, 2); continue;
+                            case 0xB7: break;
+                            case 0xB8: Push(temp, hex, argcount, 4); continue;
                             case 0xB9:
-                            case 0xBA:
-                            case 0xBB: break;
+                            case 0xBA: break;
+                            case 0xBB: Push(temp, hex, argcount, 4); continue;
                         }
                     } else if (hex <= sub * 12) {
                         switch (hex) {
@@ -389,7 +389,6 @@ class DECODE {
                             case 0xFD: SinglePush(temp, hex, resultvector); continue;
                             case 0xFE:
                             case 0xFF: break;
-                            default: OUTPUT::Error("Unknown hex", 0x10); break;
                         }
                     }
                 }

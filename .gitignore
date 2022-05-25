@@ -35,5 +35,4 @@
 production/
 pogvm.out
 pogvm
-.vscode
-Makefile
+.vscode/

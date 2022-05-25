@@ -21,12 +21,12 @@ project(PogVM
     LANGUAGES CXX ASM
 )
 
-target_compile_features(pogvm PUBLIC cxx_std_17)
+target_compile_features(pogvm PUBLIC cxx_std_20)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic -pedantic-errors")
+set(CMAKE_CXX_FLAGS "-std=c++20 -time -B ./src -Wall -Wextra -Werror -pthread -pedantic -pedantic-errors -ffunction-sections -fdata-sections")
 
 
 add_executable(pogvm src/mainframe.cpp)

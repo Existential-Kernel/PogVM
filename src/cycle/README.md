@@ -5,5 +5,3 @@
         Convert the assembly mnemonic instruction and arguments into hexadecimal opcodes and operands. If it's already just a hex format, ignore this step.
     - **Execute.cpp**:
         Run the specific instruction based on its opcode hex value. If no such instruction exists, exit the program.
-
-- **kernel.cpp** in the `src` directory is used to synchronise the cycle and perform multithreading. It's basically the conductor in an opera.

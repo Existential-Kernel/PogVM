@@ -8,6 +8,14 @@
 #include "cpu/memory.hpp"
 
 //https://www.cplusplus.com/reference/thread/thread/?kw=thread
+/* 
+Check if CPU virtualisation support is enabled
+	mov eax,1
+	cpuid
+	bt ecx,5
+	jc VMX_Supported
+	jmp VMX_NotSupported    
+*/
 
 class KERNEL : public FETCH, public DECODE, public EXECUTE {
 	private:
@@ -32,7 +40,7 @@ class KERNEL : public FETCH, public DECODE, public EXECUTE {
 						DECODE::Decode(hexvector, instructions, bits, processor);
 						EXECUTE::Execute(instructions);
 
-					} else { // interpreter mode
+					} else { // threading mode
 
 					}
 

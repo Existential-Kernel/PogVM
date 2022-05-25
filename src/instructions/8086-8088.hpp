@@ -2,8 +2,17 @@
 
 #include "../cpu/flags.hpp"
 #include "../cpu/registers.hpp"
+#include "../defs.hpp"
 
-#pragma once
+
+/*
+Examples:
+    mov eax, [ebx] 	            ; Move the 4 bytes in memory at the address contained in EBX into EAX
+    mov [var], ebx 	            ; Move the contents of EBX into the 4 bytes at memory address var. (Note, var is a 32-bit constant).
+    mov eax, [esi-4] 	        ; Move 4 bytes at memory address ESI + (-4) into EAX
+    mov [esi+eax], cl 	        ; Move the contents of CL into the byte at address ESI+EAX
+    mov edx, [esi+4*ebx]     	; Move the 4 bytes of data at address ESI+4*EBX into EDX
+*/
 
 namespace i8088 {
     /*
@@ -149,6 +158,7 @@ namespace i8088 {
                     case 0xFD: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->BH; break;
                     case 0xFE: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->BH; break;
                     case 0xFF: REGISTER::R8_PTR->BH <<= 1; break;
+                    default: OUTPUT::Abort("Invalid operand");
                 }
                 break;
             case 0x01: 
@@ -224,6 +234,7 @@ namespace i8088 {
                     case 0xFD: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->EDI; break;
                     case 0xFE: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->EDI; break;
                     case 0xFF: REGISTER::R32_PTR->EDI <<= 1; break;
+                    default: OUTPUT::Abort("Invalid operand");
                 }
 
                 // (int)log2(number)+1; count number of total bits
@@ -248,6 +259,7 @@ namespace i8088 {
                 }
                 break;
             case 0x81: break;
+            default: OUTPUT::Abort("Invalid opcode");
 
         }
     }
@@ -258,6 +270,11 @@ namespace i8088 {
      * Description: Logical AND
      * Opcode(s):   0x20...0x25, 0x80...0x81/4, 0x82...0x83/4
      */
+    static inline void AND(const uint8_t &opcode, const uint8_t &operand1, const uint8_t &operand2) {
+        __asm (
+            ".byte 0xB8, 0x0C, 0x00, 0x00, 0x00"
+        );
+    }
 
 
     /*
@@ -294,6 +311,74 @@ namespace i8088 {
 
 
     /*
+     * Instruction: DEC
+     * Description: Decrement by 1
+     * Arguments:   None
+     * Opcode(s):   0x48...0x4F, 0xFE/1, 0xFF/1
+     */
+    static inline void DEC(const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
+        if (prefix == 0x66) {
+            switch (opcode) {
+                case 0x48: REGISTER::R16_PTR->AX--; break;
+                case 0x49: REGISTER::R16_PTR->CX--; break;
+                case 0x4A: REGISTER::R16_PTR->DX--; break;
+                case 0x4B: REGISTER::R16_PTR->BX--; break;
+
+                case 0x4C: REGISTER::R16_PTR->SP--; break;
+                case 0x4D: REGISTER::R16_PTR->BP--; break;
+                case 0x4E: REGISTER::R16_PTR->SI--; break;
+                case 0x4F: REGISTER::R16_PTR->DI--; break;
+                default: OUTPUT::Abort("Invalid opcode");
+            }
+            return;
+        }
+
+        switch (opcode) {
+            case 0x48: REGISTER::R32_PTR->EAX--; break;
+            case 0x49: REGISTER::R32_PTR->ECX--; break;
+            case 0x4A: REGISTER::R32_PTR->EDX--; break;
+            case 0x4B: REGISTER::R32_PTR->EBX--; break;
+
+            case 0x4C: REGISTER::R32_PTR->ESP--; break;
+            case 0x4D: REGISTER::R32_PTR->EBP--; break;
+            case 0x4E: REGISTER::R32_PTR->ESI--; break;
+            case 0x4F: REGISTER::R32_PTR->EDI--; break;
+
+            if (opcode == 0xFF) {
+                /*
+                switch (operand1) {
+                    case 0x48: REGISTER::R32_PTR->EAX--; break;
+                    case 0x49: REGISTER::R32_PTR->ECX--; break;
+                    case 0x4A: REGISTER::R32_PTR->EDX--; break;
+                    case 0x4B: REGISTER::R32_PTR->EBX--; break;
+
+                    case 0x4C: REGISTER::R32_PTR->ESP--; break;
+                    case 0xCD: REGISTER::R32_PTR->EBP--; break;
+                    case 0xCE: REGISTER::R32_PTR->ESI--; break;
+                    case 0x4F: REGISTER::R32_PTR->EDI--; break;
+                }
+                */
+            }
+
+            case 0xFE:
+                switch (operand1) {
+                    case 0xC8: REGISTER::R8_PTR->AL--; break;
+                    case 0xC9: REGISTER::R8_PTR->CL--; break;
+                    case 0xCA: REGISTER::R8_PTR->DL--; break;
+                    case 0xCB: REGISTER::R8_PTR->BL--; break;
+    
+                    case 0xCC: REGISTER::R8_PTR->AH--; break;
+                    case 0xCD: REGISTER::R8_PTR->CH--; break;
+                    case 0xCE: REGISTER::R8_PTR->DH--; break;
+                    case 0xCF: REGISTER::R8_PTR->BH--; break;
+                }
+
+            default: OUTPUT::Abort("Invalid opcode");
+        }
+    }
+
+
+    /*
      * Instruction: HLT
      * Description: Enter halt state
      * Arguments:   None
@@ -313,15 +398,15 @@ namespace i8088 {
     static inline void INC(const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
         if (prefix == 0x66) {
             switch (opcode) {
-                case 0x40: ++REGISTER::R16_PTR->AX; break;
-                case 0x41: ++REGISTER::R16_PTR->CX; break;
-                case 0x42: ++REGISTER::R16_PTR->DX; break;
-                case 0x43: ++REGISTER::R16_PTR->BX; break;
+                case 0x40: REGISTER::R16_PTR->AX++; break;
+                case 0x41: REGISTER::R16_PTR->CX++; break;
+                case 0x42: REGISTER::R16_PTR->DX++; break;
+                case 0x43: REGISTER::R16_PTR->BX++; break;
 
-                case 0x44: ++REGISTER::R16_PTR->SP; break;
-                case 0x45: ++REGISTER::R16_PTR->BP; break;
-                case 0x46: ++REGISTER::R16_PTR->SI; break;
-                case 0x47: ++REGISTER::R16_PTR->DI; break;
+                case 0x44: REGISTER::R16_PTR->SP++; break;
+                case 0x45: REGISTER::R16_PTR->BP++; break;
+                case 0x46: REGISTER::R16_PTR->SI++; break;
+                case 0x47: REGISTER::R16_PTR->DI++; break;
             }
             return;
         }
@@ -334,7 +419,7 @@ namespace i8088 {
             case 0x44: ++REGISTER::R32_PTR->ESP; break;
             case 0x45: ++REGISTER::R32_PTR->EBP; break;
             case 0x46: ++REGISTER::R32_PTR->ESI; break;
-            case 0x47: ++REGISTER::R32_PTR->ESI; break;
+            case 0x47: ++REGISTER::R32_PTR->EDI; break;
 
             case 0xFE: 
                 switch (operand1) {
@@ -368,8 +453,13 @@ namespace i8088 {
      * Arguments:   
      * Opcode(s):   0x88...0x8C, 0x8E, 0xA0...0xA3, 0xB0, 0xB8, 0xC6, 0xC7
      */
-    static inline void MOV(/*const uint8_t &opcode, uint8_t operand1*/) {
-        
+    static inline void MOV(const uint8_t &opcode, uint8_t operand1, uint8_t operand2, uint8_t operand3, uint8_t operand4) {
+        switch (opcode) {
+            case 0xBB: 
+                const uint32_t lendian = operand4 << 24 | operand3 << 16 | operand2 << 8 | operand1;
+                REGISTER::R32_PTR->EBX = lendian;
+                break;
+        }
     }
 
     
@@ -385,6 +475,7 @@ namespace i8088 {
         //}
         std::cout << opcode << operand1 << operand2;
     }
+
 
     /*
      * Instruction: POPF

@@ -15,8 +15,6 @@ class EXECUTE {
         #define sec 0x55  // sections
         #define sub 0x11  // subelements
 
-        // 1. Create a function a
-
     public:
         static void Execute(const std::vector<std::vector<u_char>> &v) {
             bool prefix;
@@ -257,7 +255,7 @@ class EXECUTE {
                             case 0xB8:
                             case 0xB9:
                             case 0xBA:
-                            case 0xBB: break;
+                            case 0xBB: i8088::MOV(0xBB, v.at(i).at(1), v.at(i).at(2), v.at(i).at(3), v.at(i).at(4)); break;
                         }
                     } else if (opcode <= sub * 12) {
                         switch (opcode) {

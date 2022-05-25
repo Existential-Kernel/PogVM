@@ -1,8 +1,8 @@
 CC=g++
-CPPFLAGS=-std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors
-FILE=./src/tests/elf/helloworld
-FLAG=--compiled
 OUT=pogvm
+CPPFLAG=-std=c++20 -time -B ./src -Wall -Wextra -Werror -pthread -pedantic -pedantic-errors -ffunction-sections -fdata-sections
+FILE=./src/tests/elf/helloworld
+VMFLAG=--compiled
 
 .PHONY: all clearscr clear compile run audit
 
@@ -16,10 +16,13 @@ clear:
 	@rm -rf $(OUT)
 
 compile:
-	@$(CC) $(CPPFLAGS) src/mainframe.cpp -o $(OUT)
+	@$(CC) $(CPPFLAGS) -Ofast -ftree-vectorize -flto src/mainframe.cpp -o $(OUT)
+
+debug: clear 
+	@$(CC) $(CPPFLAGS) -Og -g src/mainframe.cpp -o $(OUT)
 
 run: clear compile
-	./$(OUT) $(FLAG) $(FILE)
+	./$(OUT)
 
 elf:
-	readelf -$(OPT) ./src/tests/elf/helloworld
+	readelf -$(VMFLAG) ./src/tests/elf/helloworld

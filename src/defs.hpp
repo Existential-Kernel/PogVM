@@ -19,13 +19,13 @@ namespace INFO {
 };
 
 namespace ANSI {
-    const char *BLACK_BG = "\x1B[48;2;0;0;0m";
-    const char *RED_BG   = "\x1B[48;2;255;0;0m";
+    constexpr char *BLACK_BG = "\x1B[48;2;0;0;0m";
+    constexpr char *RED_BG   = "\x1B[48;2;255;0;0m";
 
-    const char *RED      = "\x1B[38;2;255;0;0m";
-    const char *GREEN    = "\x1B[38;2;0;255;0m";
-    const char *GREY     = "\x1B[38;2;70;70;70m";
-    const char *EXIT     = "\x1B[0m";
+    constexpr char *RED      = "\x1B[38;2;255;0;0m";
+    constexpr char *GREEN    = "\x1B[38;2;0;255;0m";
+    constexpr char *GREY     = "\x1B[38;2;70;70;70m";
+    constexpr char *EXIT     = "\x1B[0m";
     std::ostream &BOLD(std::ostream& log) { return log << "\033[1m"; }
 }
 
@@ -46,11 +46,19 @@ class OUTPUT {
     }
 
     // Log errors
-    [[noreturn]] static void Error(std::string error, uint8_t code) {
+    [[noreturn]] static void Error(const std::string &error, const uint8_t &code) {
         std::cerr 
             << ANSI::RED << ANSI::BOLD << "FATAL: " << ANSI::EXIT 
             << ANSI::BOLD << error << ANSI::EXIT << "\n"
             << ANSI::GREY << "(Error code " << 100 + (int)code << ")" << ANSI::EXIT << std::endl;
+        std::exit(1);
+    }
+
+    // Abort log
+    [[noreturn]] static void Abort(const std::string &error) {
+        std::cerr 
+            << ANSI::RED << ANSI::BOLD << "ABORTED: " << ANSI::EXIT 
+            << ANSI::BOLD << error << ANSI::EXIT << "\n";
         std::exit(1);
     }
 };
@@ -65,7 +73,7 @@ namespace UTILITY {
         #endif
     }
 
-    static inline bool FileExists(const fs::path& path, fs::file_status status = fs::file_status{}) {
+    static inline bool FileExists(const fs::path &path, const fs::file_status &status = fs::file_status{}) {
         return (fs::status_known(status) ? fs::exists(status) : fs::exists(path));
     }
 

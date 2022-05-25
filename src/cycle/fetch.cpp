@@ -550,6 +550,11 @@ class ELF : public ELFHEADER {
     public:
         // Check if the file is an ELF file
         inline static bool CheckELF(const std::string &filename) {
+            constexpr uint8_t magic1 = 0x7F;
+            constexpr uint8_t magic2 = 0x45;
+            constexpr uint8_t magic3 = 0x4C;
+            constexpr uint8_t magic4 = 0x46;
+
             std::ifstream file(filename, std::ios::binary);
             std::vector<unsigned char> magicvector;
 
