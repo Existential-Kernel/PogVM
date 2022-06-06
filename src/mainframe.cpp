@@ -8,7 +8,7 @@
 
 #include "audit.hpp"
 #include "cycle/fetch.cpp"
-#include "core.cpp"
+#include "vcore.cpp"
 #include "defs.hpp"
 
 int main(int argc, char *argv[]) {
@@ -42,13 +42,16 @@ int main(int argc, char *argv[]) {
 
 		case 3:
 			if (UTILITY::FileExists(argv[2])) {
-				std::vector<u_char> hexvector = FETCH::FetchHex(argv[2]);
+				{
+					std::unique_ptr<ELF>ELF_PTR(new ELF);
+					std::vector<uint8_t>hexvector = ELF_PTR->FetchHex(argv[2]);
 
-				// TODO: make this into a switch statement too
-				if (!strcmp(argv[1], "-hd") || !strcmp(argv[1], "--header")) { ELF::OutputELF(0b00, hexvector); }
-				if (!strcmp(argv[1], "-p") || !strcmp(argv[1], "--program")) { ELF::OutputELF(0b01, hexvector); }
-				if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--sections")) { ELF::OutputELF(0b10, hexvector); }
-				if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--info")) { ELF::OutputELF(0b11, hexvector); }
+					// TODO: make this into a switch statement too
+					if (!strcmp(argv[1], "-hd") || !strcmp(argv[1], "--header")) { ELF_PTR->OutputELF(0b00, hexvector); }
+					if (!strcmp(argv[1], "-p") || !strcmp(argv[1], "--program")) { ELF_PTR->OutputELF(0b01, hexvector); }
+					if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--sections")) { ELF_PTR->OutputELF(0b10, hexvector); }
+					if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--info")) { ELF_PTR->OutputELF(0b11, hexvector); }
+				}
 
 				bool mode{};
 				if (!strcmp(argv[1], "--interpreted")) { mode = false; }

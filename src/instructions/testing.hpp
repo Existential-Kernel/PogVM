@@ -11,7 +11,8 @@ namespace iTesting {
      * Opcode(s):   0x01
      */
     inline void TEST(uint8_t operand1 = 1, uint8_t operand2 = 1) {
-        REGISTER::R8_PTR->AH += operand1 + operand2;
-        std::cout << "AH = " << (int)REGISTER::R8_PTR->AH << std::endl;
+        std::unique_ptr<REGISTER>REG(new REGISTER);
+        REG->R8_PTR->AH += operand1 + operand2;
+        std::cout << "AH = " << static_cast<int>(REG->R8_PTR->AH) << std::endl;
     }
 }

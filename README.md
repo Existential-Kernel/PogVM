@@ -12,8 +12,8 @@
 <!-- NOTE: Add demo of the VM here -->
 
 ## FEATURES
-- x86-64 assembly interpreter     (WIP)
-- Scalar pipelining architecture  (WIP)
+- x86-64 assembly interpreter         (WIP)
+- Scalar pipelining CPU architecture  (WIP)
 - Executable file analyser
 - No external libraries used, just raw C++
 
@@ -44,11 +44,6 @@
 
 
 ## CONTRIBUTING
-
-
-## IDEAS
-- [ ] Make the program available on various package managers (apt, dnf, etc...)
-- [ ] Implement pairing functionality for hex vector instructions
 
 
 ## RESOURCES USED

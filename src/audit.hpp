@@ -36,7 +36,7 @@ class AUDIT {
 			}
 		}
 
-		// Check if there's at least 4 threads in the user's CPU for pipelining
+		// Check if there's at least 4 threads in the end-user's CPU for pipelining
         static inline bool ThreadCheck(void) {
             try {
                 return (uint8_t)std::thread::hardware_concurrency() * 2 >= 4;

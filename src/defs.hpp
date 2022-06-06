@@ -4,8 +4,6 @@
 
 #pragma once
 
-namespace fs = std::filesystem;
-
 namespace INFO {
     std::string program = "PogVM";
     char major = '1';
@@ -19,13 +17,13 @@ namespace INFO {
 };
 
 namespace ANSI {
-    constexpr char *BLACK_BG = "\x1B[48;2;0;0;0m";
-    constexpr char *RED_BG   = "\x1B[48;2;255;0;0m";
+    const char *BLACK_BG = "\x1B[48;2;0;0;0m";
+    const char *RED_BG   = "\x1B[48;2;255;0;0m";
 
-    constexpr char *RED      = "\x1B[38;2;255;0;0m";
-    constexpr char *GREEN    = "\x1B[38;2;0;255;0m";
-    constexpr char *GREY     = "\x1B[38;2;70;70;70m";
-    constexpr char *EXIT     = "\x1B[0m";
+    const char *RED      = "\x1B[38;2;255;0;0m";
+    const char *GREEN    = "\x1B[38;2;0;255;0m";
+    const char *GREY     = "\x1B[38;2;70;70;70m";
+    const char *EXIT     = "\x1B[0m";
     std::ostream &BOLD(std::ostream& log) { return log << "\033[1m"; }
 }
 
@@ -50,7 +48,7 @@ class OUTPUT {
         std::cerr 
             << ANSI::RED << ANSI::BOLD << "FATAL: " << ANSI::EXIT 
             << ANSI::BOLD << error << ANSI::EXIT << "\n"
-            << ANSI::GREY << "(Error code " << 100 + (int)code << ")" << ANSI::EXIT << std::endl;
+            << ANSI::GREY << "(Error code " << 100 + code << ")" << ANSI::EXIT << std::endl;
         std::exit(1);
     }
 
@@ -65,7 +63,9 @@ class OUTPUT {
 
 // For miscellaneous functions used throughout the program
 namespace UTILITY {
-    static inline void ClearConsole() {
+    namespace fs = std::filesystem;
+
+    static inline void ClearConsole(void) {
         #ifdef _WIN32 
             std::system("cls");
         #else 

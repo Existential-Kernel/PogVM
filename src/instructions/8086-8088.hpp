@@ -1,9 +1,15 @@
 #include <iostream>
+#include <map>
+#include <tuple>
+#include <unordered_map>
+#include <functional>
+#include <memory>
 
 #include "../cpu/flags.hpp"
 #include "../cpu/registers.hpp"
 #include "../defs.hpp"
 
+#pragma once
 
 /*
 Examples:
@@ -15,6 +21,7 @@ Examples:
 */
 
 namespace i8088 {
+    //https://stackoverflow.com/questions/24092600/how-do-ascii-adjust-and-decimal-adjust-instructions-work
     /*
      * Instruction: AAA
      * Description: ASCII adjust AL after addition
@@ -30,8 +37,11 @@ namespace i8088 {
      * Description: ASCII adjust AX before division
      * Opcode(s):   0xD5
      */
-    static inline void AAD() {
-
+    static inline void AAD(const uint8_t &extension, const uint8_t &operand1) {
+        std::cout << operand1 << std::endl;
+        if (extension == 0x0A) {
+            std::cout << "something idk";
+        }
     }
 
 
@@ -41,8 +51,9 @@ namespace i8088 {
      * Opcode(s):   0xD4
      */
     inline void AAM(void) {
-        REGISTER::R8_PTR->AH = (uint8_t)(REGISTER::R8_PTR->AL / 10);
-        REGISTER::R8_PTR->AL %= 10;
+        std::unique_ptr<REGISTER>REG(new REGISTER);
+        REG->R8_PTR->AH = static_cast<uint8_t>(REG->R8_PTR->AL / 10);
+        REG->R8_PTR->AL %= 10;
     }
     
 
@@ -84,156 +95,157 @@ namespace i8088 {
      * Opcode(s):   0x00...0x05, 0x80/0...0x81/0, 0x82/0...0x83/0
      */
     static void ADD(const uint8_t &opcode, const uint8_t &operand1, const uint8_t &operand2) {
+        std::unique_ptr<REGISTER>REG(new REGISTER);
         switch (opcode) {
             case 0x00:
                 switch (operand1) {
-                    case 0xC0: REGISTER::R8_PTR->AL <<= 1; break;
-                    case 0xC1: REGISTER::R8_PTR->CL += REGISTER::R8_PTR->AL; break;
-                    case 0xC2: REGISTER::R8_PTR->DL += REGISTER::R8_PTR->AL; break;
-                    case 0xC3: REGISTER::R8_PTR->BL += REGISTER::R8_PTR->AL; break;
-                    case 0xC4: REGISTER::R8_PTR->AH += REGISTER::R8_PTR->AL; break;
-                    case 0xC5: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->AL; break;
-                    case 0xC6: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->AL; break;
-                    case 0xC7: REGISTER::R8_PTR->BH += REGISTER::R8_PTR->AL; break;
+                    case 0xC0:REG->R8_PTR->AL <<= 1; break;
+                    case 0xC1:REG->R8_PTR->CL +=REG->R8_PTR->AL; break;
+                    case 0xC2:REG->R8_PTR->DL +=REG->R8_PTR->AL; break;
+                    case 0xC3:REG->R8_PTR->BL +=REG->R8_PTR->AL; break;
+                    case 0xC4:REG->R8_PTR->AH +=REG->R8_PTR->AL; break;
+                    case 0xC5:REG->R8_PTR->CH +=REG->R8_PTR->AL; break;
+                    case 0xC6:REG->R8_PTR->DH +=REG->R8_PTR->AL; break;
+                    case 0xC7:REG->R8_PTR->BH +=REG->R8_PTR->AL; break;
 
-                    case 0xC8: REGISTER::R8_PTR->AL += REGISTER::R8_PTR->CL; break;
-                    case 0xC9: REGISTER::R8_PTR->CL <<= 1; break;
-                    case 0xCA: REGISTER::R8_PTR->DL += REGISTER::R8_PTR->CL; break;
-                    case 0xCB: REGISTER::R8_PTR->BL += REGISTER::R8_PTR->CL; break;
-                    case 0xCC: REGISTER::R8_PTR->AH += REGISTER::R8_PTR->CL; break;
-                    case 0xCD: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->CL; break;
-                    case 0xCE: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->CL; break;
-                    case 0xCF: REGISTER::R8_PTR->BH += REGISTER::R8_PTR->CL; break;
+                    case 0xC8:REG->R8_PTR->AL +=REG->R8_PTR->CL; break;
+                    case 0xC9:REG->R8_PTR->CL <<= 1; break;
+                    case 0xCA:REG->R8_PTR->DL +=REG->R8_PTR->CL; break;
+                    case 0xCB:REG->R8_PTR->BL +=REG->R8_PTR->CL; break;
+                    case 0xCC:REG->R8_PTR->AH +=REG->R8_PTR->CL; break;
+                    case 0xCD:REG->R8_PTR->CH +=REG->R8_PTR->CL; break;
+                    case 0xCE:REG->R8_PTR->DH +=REG->R8_PTR->CL; break;
+                    case 0xCF:REG->R8_PTR->BH +=REG->R8_PTR->CL; break;
 
-                    case 0xD0: REGISTER::R8_PTR->AL += REGISTER::R8_PTR->DL; break;
-                    case 0xD1: REGISTER::R8_PTR->CL += REGISTER::R8_PTR->DL; break;
-                    case 0xD2: REGISTER::R8_PTR->DL <<= 1; break;
-                    case 0xD3: REGISTER::R8_PTR->BL += REGISTER::R8_PTR->DL; break;
-                    case 0xD4: REGISTER::R8_PTR->AH += REGISTER::R8_PTR->DL; break;
-                    case 0xD5: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->DL; break;
-                    case 0xD6: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->DL; break;
-                    case 0xD7: REGISTER::R8_PTR->BH += REGISTER::R8_PTR->DL; break;
+                    case 0xD0:REG->R8_PTR->AL +=REG->R8_PTR->DL; break;
+                    case 0xD1:REG->R8_PTR->CL +=REG->R8_PTR->DL; break;
+                    case 0xD2:REG->R8_PTR->DL <<= 1; break;
+                    case 0xD3:REG->R8_PTR->BL +=REG->R8_PTR->DL; break;
+                    case 0xD4:REG->R8_PTR->AH +=REG->R8_PTR->DL; break;
+                    case 0xD5:REG->R8_PTR->CH +=REG->R8_PTR->DL; break;
+                    case 0xD6:REG->R8_PTR->DH +=REG->R8_PTR->DL; break;
+                    case 0xD7:REG->R8_PTR->BH +=REG->R8_PTR->DL; break;
 
-                    case 0xD8: REGISTER::R8_PTR->AL += REGISTER::R8_PTR->BL; break;
-                    case 0xD9: REGISTER::R8_PTR->CL += REGISTER::R8_PTR->BL; break;
-                    case 0xDA: REGISTER::R8_PTR->DL += REGISTER::R8_PTR->BL; break;
-                    case 0xDB: REGISTER::R8_PTR->BL <<= 1; break;
-                    case 0xDC: REGISTER::R8_PTR->AH += REGISTER::R8_PTR->BL; break;
-                    case 0xDD: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->BL; break;
-                    case 0xDE: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->BL; break;
-                    case 0xDF: REGISTER::R8_PTR->BH += REGISTER::R8_PTR->BL; break;
+                    case 0xD8:REG->R8_PTR->AL +=REG->R8_PTR->BL; break;
+                    case 0xD9:REG->R8_PTR->CL +=REG->R8_PTR->BL; break;
+                    case 0xDA:REG->R8_PTR->DL +=REG->R8_PTR->BL; break;
+                    case 0xDB:REG->R8_PTR->BL <<= 1; break;
+                    case 0xDC:REG->R8_PTR->AH +=REG->R8_PTR->BL; break;
+                    case 0xDD:REG->R8_PTR->CH +=REG->R8_PTR->BL; break;
+                    case 0xDE:REG->R8_PTR->DH +=REG->R8_PTR->BL; break;
+                    case 0xDF:REG->R8_PTR->BH +=REG->R8_PTR->BL; break;
 
-                    case 0xE0: REGISTER::R8_PTR->AL += REGISTER::R8_PTR->AH; break;
-                    case 0xE1: REGISTER::R8_PTR->CL += REGISTER::R8_PTR->AH; break;
-                    case 0xE2: REGISTER::R8_PTR->DL += REGISTER::R8_PTR->AH; break;
-                    case 0xE3: REGISTER::R8_PTR->BL += REGISTER::R8_PTR->AH; break;
-                    case 0xE4: REGISTER::R8_PTR->AH <<= 1; break;
-                    case 0xE5: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->AH; break;
-                    case 0xE6: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->AH; break;
-                    case 0xE7: REGISTER::R8_PTR->BH += REGISTER::R8_PTR->AH; break;
+                    case 0xE0:REG->R8_PTR->AL +=REG->R8_PTR->AH; break;
+                    case 0xE1:REG->R8_PTR->CL +=REG->R8_PTR->AH; break;
+                    case 0xE2:REG->R8_PTR->DL +=REG->R8_PTR->AH; break;
+                    case 0xE3:REG->R8_PTR->BL +=REG->R8_PTR->AH; break;
+                    case 0xE4:REG->R8_PTR->AH <<= 1; break;
+                    case 0xE5:REG->R8_PTR->CH +=REG->R8_PTR->AH; break;
+                    case 0xE6:REG->R8_PTR->DH +=REG->R8_PTR->AH; break;
+                    case 0xE7:REG->R8_PTR->BH +=REG->R8_PTR->AH; break;
 
-                    case 0xE8: REGISTER::R8_PTR->AL += REGISTER::R8_PTR->CH; break;
-                    case 0xE9: REGISTER::R8_PTR->CL += REGISTER::R8_PTR->CH; break;
-                    case 0xEA: REGISTER::R8_PTR->DL += REGISTER::R8_PTR->CH; break;
-                    case 0xEB: REGISTER::R8_PTR->BL += REGISTER::R8_PTR->CH; break;
-                    case 0xEC: REGISTER::R8_PTR->AH += REGISTER::R8_PTR->CH; break;
-                    case 0xED: REGISTER::R8_PTR->CH <<= 1; break;
-                    case 0xEE: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->CH; break;
-                    case 0xEF: REGISTER::R8_PTR->BH += REGISTER::R8_PTR->CH; break;
+                    case 0xE8:REG->R8_PTR->AL +=REG->R8_PTR->CH; break;
+                    case 0xE9:REG->R8_PTR->CL +=REG->R8_PTR->CH; break;
+                    case 0xEA:REG->R8_PTR->DL +=REG->R8_PTR->CH; break;
+                    case 0xEB:REG->R8_PTR->BL +=REG->R8_PTR->CH; break;
+                    case 0xEC:REG->R8_PTR->AH +=REG->R8_PTR->CH; break;
+                    case 0xED:REG->R8_PTR->CH <<= 1; break;
+                    case 0xEE:REG->R8_PTR->DH +=REG->R8_PTR->CH; break;
+                    case 0xEF:REG->R8_PTR->BH +=REG->R8_PTR->CH; break;
 
-                    case 0xF0: REGISTER::R8_PTR->AL += REGISTER::R8_PTR->DH; break;
-                    case 0xF1: REGISTER::R8_PTR->CL += REGISTER::R8_PTR->DH; break;
-                    case 0xF2: REGISTER::R8_PTR->DL += REGISTER::R8_PTR->DH; break;
-                    case 0xF3: REGISTER::R8_PTR->BL += REGISTER::R8_PTR->DH; break;
-                    case 0xF4: REGISTER::R8_PTR->AH += REGISTER::R8_PTR->DH; break;
-                    case 0xF5: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->DH; break;
-                    case 0xF6: REGISTER::R8_PTR->DH <<= 1; break;
-                    case 0xF7: REGISTER::R8_PTR->BH += REGISTER::R8_PTR->DH; break;
+                    case 0xF0:REG->R8_PTR->AL +=REG->R8_PTR->DH; break;
+                    case 0xF1:REG->R8_PTR->CL +=REG->R8_PTR->DH; break;
+                    case 0xF2:REG->R8_PTR->DL +=REG->R8_PTR->DH; break;
+                    case 0xF3:REG->R8_PTR->BL +=REG->R8_PTR->DH; break;
+                    case 0xF4:REG->R8_PTR->AH +=REG->R8_PTR->DH; break;
+                    case 0xF5:REG->R8_PTR->CH +=REG->R8_PTR->DH; break;
+                    case 0xF6:REG->R8_PTR->DH <<= 1; break;
+                    case 0xF7:REG->R8_PTR->BH +=REG->R8_PTR->DH; break;
 
-                    case 0xF8: REGISTER::R8_PTR->AL += REGISTER::R8_PTR->BH; break;
-                    case 0xF9: REGISTER::R8_PTR->CL += REGISTER::R8_PTR->BH; break;
-                    case 0xFA: REGISTER::R8_PTR->DL += REGISTER::R8_PTR->BH; break;
-                    case 0xFB: REGISTER::R8_PTR->BL += REGISTER::R8_PTR->BH; break;
-                    case 0xFC: REGISTER::R8_PTR->AH += REGISTER::R8_PTR->BH; break;
-                    case 0xFD: REGISTER::R8_PTR->CH += REGISTER::R8_PTR->BH; break;
-                    case 0xFE: REGISTER::R8_PTR->DH += REGISTER::R8_PTR->BH; break;
-                    case 0xFF: REGISTER::R8_PTR->BH <<= 1; break;
+                    case 0xF8:REG->R8_PTR->AL +=REG->R8_PTR->BH; break;
+                    case 0xF9:REG->R8_PTR->CL +=REG->R8_PTR->BH; break;
+                    case 0xFA:REG->R8_PTR->DL +=REG->R8_PTR->BH; break;
+                    case 0xFB:REG->R8_PTR->BL +=REG->R8_PTR->BH; break;
+                    case 0xFC:REG->R8_PTR->AH +=REG->R8_PTR->BH; break;
+                    case 0xFD:REG->R8_PTR->CH +=REG->R8_PTR->BH; break;
+                    case 0xFE:REG->R8_PTR->DH +=REG->R8_PTR->BH; break;
+                    case 0xFF:REG->R8_PTR->BH <<= 1; break;
                     default: OUTPUT::Abort("Invalid operand");
                 }
                 break;
             case 0x01: 
                 switch (operand1) {
-                    case 0xC0: REGISTER::R32_PTR->EAX <<= 1; break;
-                    case 0xC1: REGISTER::R32_PTR->ECX += REGISTER::R32_PTR->EAX; break;
-                    case 0xC2: REGISTER::R32_PTR->EDX += REGISTER::R32_PTR->EAX; break;
-                    case 0xC3: REGISTER::R32_PTR->EBX += REGISTER::R32_PTR->EAX; break;
-                    case 0xC4: REGISTER::R32_PTR->ESP += REGISTER::R32_PTR->EAX; break;
-                    case 0xC5: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->EAX; break;
-                    case 0xC6: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->EAX; break;
-                    case 0xC7: REGISTER::R32_PTR->EDI += REGISTER::R32_PTR->EAX; break;
+                    case 0xC0:REG->R32_PTR->EAX <<= 1; break;
+                    case 0xC1:REG->R32_PTR->ECX +=REG->R32_PTR->EAX; break;
+                    case 0xC2:REG->R32_PTR->EDX +=REG->R32_PTR->EAX; break;
+                    case 0xC3:REG->R32_PTR->EBX +=REG->R32_PTR->EAX; break;
+                    case 0xC4:REG->R32_PTR->ESP +=REG->R32_PTR->EAX; break;
+                    case 0xC5:REG->R32_PTR->EBP +=REG->R32_PTR->EAX; break;
+                    case 0xC6:REG->R32_PTR->ESI +=REG->R32_PTR->EAX; break;
+                    case 0xC7:REG->R32_PTR->EDI +=REG->R32_PTR->EAX; break;
 
-                    case 0xC8: REGISTER::R32_PTR->EAX += REGISTER::R32_PTR->ECX; break;
-                    case 0xC9: REGISTER::R32_PTR->ECX <<= 1; break;
-                    case 0xCA: REGISTER::R32_PTR->EDX += REGISTER::R32_PTR->ECX; break;
-                    case 0xCB: REGISTER::R32_PTR->EBX += REGISTER::R32_PTR->ECX; break;
-                    case 0xCC: REGISTER::R32_PTR->ESP += REGISTER::R32_PTR->ECX; break;
-                    case 0xCD: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->ECX; break;
-                    case 0xCE: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->ECX; break;
-                    case 0xCF: REGISTER::R32_PTR->EDI += REGISTER::R32_PTR->ECX; break;
+                    case 0xC8:REG->R32_PTR->EAX +=REG->R32_PTR->ECX; break;
+                    case 0xC9:REG->R32_PTR->ECX <<= 1; break;
+                    case 0xCA:REG->R32_PTR->EDX +=REG->R32_PTR->ECX; break;
+                    case 0xCB:REG->R32_PTR->EBX +=REG->R32_PTR->ECX; break;
+                    case 0xCC:REG->R32_PTR->ESP +=REG->R32_PTR->ECX; break;
+                    case 0xCD:REG->R32_PTR->EBP +=REG->R32_PTR->ECX; break;
+                    case 0xCE:REG->R32_PTR->ESI +=REG->R32_PTR->ECX; break;
+                    case 0xCF:REG->R32_PTR->EDI +=REG->R32_PTR->ECX; break;
 
-                    case 0xD0: REGISTER::R32_PTR->EAX += REGISTER::R32_PTR->EDX; break;
-                    case 0xD1: REGISTER::R32_PTR->ECX += REGISTER::R32_PTR->EDX; break;
-                    case 0xD2: REGISTER::R32_PTR->EDX <<= 1; break;
-                    case 0xD3: REGISTER::R32_PTR->EBX += REGISTER::R32_PTR->EDX; break;
-                    case 0xD4: REGISTER::R32_PTR->ESP += REGISTER::R32_PTR->EDX; break;
-                    case 0xD5: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->EDX; break;
-                    case 0xD6: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->EDX; break;
-                    case 0xD7: REGISTER::R32_PTR->EDI += REGISTER::R32_PTR->EDX; break;
+                    case 0xD0:REG->R32_PTR->EAX +=REG->R32_PTR->EDX; break;
+                    case 0xD1:REG->R32_PTR->ECX +=REG->R32_PTR->EDX; break;
+                    case 0xD2:REG->R32_PTR->EDX <<= 1; break;
+                    case 0xD3:REG->R32_PTR->EBX +=REG->R32_PTR->EDX; break;
+                    case 0xD4:REG->R32_PTR->ESP +=REG->R32_PTR->EDX; break;
+                    case 0xD5:REG->R32_PTR->EBP +=REG->R32_PTR->EDX; break;
+                    case 0xD6:REG->R32_PTR->ESI +=REG->R32_PTR->EDX; break;
+                    case 0xD7:REG->R32_PTR->EDI +=REG->R32_PTR->EDX; break;
 
-                    case 0xD8: REGISTER::R32_PTR->EAX += REGISTER::R32_PTR->EBX ; break;
-                    case 0xD9: REGISTER::R32_PTR->ECX += REGISTER::R32_PTR->EBX ; break;
-                    case 0xDA: REGISTER::R32_PTR->EDX += REGISTER::R32_PTR->EBX ; break;
-                    case 0xDB: REGISTER::R32_PTR->EBX <<= 1; break;
-                    case 0xDC: REGISTER::R32_PTR->ESP += REGISTER::R32_PTR->EBX ; break;
-                    case 0xDD: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->EBX ; break;
-                    case 0xDE: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->EBX ; break;
-                    case 0xDF: REGISTER::R32_PTR->EDI += REGISTER::R32_PTR->EBX ; break;
+                    case 0xD8:REG->R32_PTR->EAX +=REG->R32_PTR->EBX ; break;
+                    case 0xD9:REG->R32_PTR->ECX +=REG->R32_PTR->EBX ; break;
+                    case 0xDA:REG->R32_PTR->EDX +=REG->R32_PTR->EBX ; break;
+                    case 0xDB:REG->R32_PTR->EBX <<= 1; break;
+                    case 0xDC:REG->R32_PTR->ESP +=REG->R32_PTR->EBX ; break;
+                    case 0xDD:REG->R32_PTR->EBP +=REG->R32_PTR->EBX ; break;
+                    case 0xDE:REG->R32_PTR->ESI +=REG->R32_PTR->EBX ; break;
+                    case 0xDF:REG->R32_PTR->EDI +=REG->R32_PTR->EBX ; break;
 
-                    case 0xE0: REGISTER::R32_PTR->EAX += REGISTER::R32_PTR->ESP; break;
-                    case 0xE1: REGISTER::R32_PTR->ECX += REGISTER::R32_PTR->ESP; break;
-                    case 0xE2: REGISTER::R32_PTR->EDX += REGISTER::R32_PTR->ESP; break;
-                    case 0xE3: REGISTER::R32_PTR->EBX += REGISTER::R32_PTR->ESP; break;
-                    case 0xE4: REGISTER::R32_PTR->ESP <<= 1; break;
-                    case 0xE5: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->ESP; break;
-                    case 0xE6: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->ESP; break;
-                    case 0xE7: REGISTER::R32_PTR->EDI += REGISTER::R32_PTR->ESP; break;
+                    case 0xE0:REG->R32_PTR->EAX +=REG->R32_PTR->ESP; break;
+                    case 0xE1:REG->R32_PTR->ECX +=REG->R32_PTR->ESP; break;
+                    case 0xE2:REG->R32_PTR->EDX +=REG->R32_PTR->ESP; break;
+                    case 0xE3:REG->R32_PTR->EBX +=REG->R32_PTR->ESP; break;
+                    case 0xE4:REG->R32_PTR->ESP <<= 1; break;
+                    case 0xE5:REG->R32_PTR->EBP +=REG->R32_PTR->ESP; break;
+                    case 0xE6:REG->R32_PTR->ESI +=REG->R32_PTR->ESP; break;
+                    case 0xE7:REG->R32_PTR->EDI +=REG->R32_PTR->ESP; break;
 
-                    case 0xE8: REGISTER::R32_PTR->EAX += REGISTER::R32_PTR->EBP; break;
-                    case 0xE9: REGISTER::R32_PTR->ECX += REGISTER::R32_PTR->EBP; break;
-                    case 0xEA: REGISTER::R32_PTR->EDX += REGISTER::R32_PTR->EBP; break;
-                    case 0xEB: REGISTER::R32_PTR->EBX += REGISTER::R32_PTR->EBP; break;
-                    case 0xEC: REGISTER::R32_PTR->ESP += REGISTER::R32_PTR->EBP; break;
-                    case 0xED: REGISTER::R32_PTR->EBP <<= 1; break;
-                    case 0xEE: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->EBP; break;
-                    case 0xEF: REGISTER::R32_PTR->EDI += REGISTER::R32_PTR->EBP; break;
+                    case 0xE8:REG->R32_PTR->EAX +=REG->R32_PTR->EBP; break;
+                    case 0xE9:REG->R32_PTR->ECX +=REG->R32_PTR->EBP; break;
+                    case 0xEA:REG->R32_PTR->EDX +=REG->R32_PTR->EBP; break;
+                    case 0xEB:REG->R32_PTR->EBX +=REG->R32_PTR->EBP; break;
+                    case 0xEC:REG->R32_PTR->ESP +=REG->R32_PTR->EBP; break;
+                    case 0xED:REG->R32_PTR->EBP <<= 1; break;
+                    case 0xEE:REG->R32_PTR->ESI +=REG->R32_PTR->EBP; break;
+                    case 0xEF:REG->R32_PTR->EDI +=REG->R32_PTR->EBP; break;
 
-                    case 0xF0: REGISTER::R32_PTR->EAX += REGISTER::R32_PTR->ESI; break;
-                    case 0xF1: REGISTER::R32_PTR->ECX += REGISTER::R32_PTR->ESI; break;
-                    case 0xF2: REGISTER::R32_PTR->EDX += REGISTER::R32_PTR->ESI; break;
-                    case 0xF3: REGISTER::R32_PTR->EBX += REGISTER::R32_PTR->ESI; break;
-                    case 0xF4: REGISTER::R32_PTR->ESP += REGISTER::R32_PTR->ESI; break;
-                    case 0xF5: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->ESI; break;
-                    case 0xF6: REGISTER::R32_PTR->ESI <<= 1; break;
-                    case 0xF7: REGISTER::R32_PTR->EDI += REGISTER::R32_PTR->ESI; break;
+                    case 0xF0:REG->R32_PTR->EAX +=REG->R32_PTR->ESI; break;
+                    case 0xF1:REG->R32_PTR->ECX +=REG->R32_PTR->ESI; break;
+                    case 0xF2:REG->R32_PTR->EDX +=REG->R32_PTR->ESI; break;
+                    case 0xF3:REG->R32_PTR->EBX +=REG->R32_PTR->ESI; break;
+                    case 0xF4:REG->R32_PTR->ESP +=REG->R32_PTR->ESI; break;
+                    case 0xF5:REG->R32_PTR->EBP +=REG->R32_PTR->ESI; break;
+                    case 0xF6:REG->R32_PTR->ESI <<= 1; break;
+                    case 0xF7:REG->R32_PTR->EDI +=REG->R32_PTR->ESI; break;
 
-                    case 0xF8: REGISTER::R32_PTR->EAX += REGISTER::R32_PTR->EDI; break;
-                    case 0xF9: REGISTER::R32_PTR->ECX += REGISTER::R32_PTR->EDI; break;
-                    case 0xFA: REGISTER::R32_PTR->EDX += REGISTER::R32_PTR->EDI; break;
-                    case 0xFB: REGISTER::R32_PTR->EBX += REGISTER::R32_PTR->EDI; break;
-                    case 0xFC: REGISTER::R32_PTR->ESP += REGISTER::R32_PTR->EDI; break;
-                    case 0xFD: REGISTER::R32_PTR->EBP += REGISTER::R32_PTR->EDI; break;
-                    case 0xFE: REGISTER::R32_PTR->ESI += REGISTER::R32_PTR->EDI; break;
-                    case 0xFF: REGISTER::R32_PTR->EDI <<= 1; break;
+                    case 0xF8:REG->R32_PTR->EAX +=REG->R32_PTR->EDI; break;
+                    case 0xF9:REG->R32_PTR->ECX +=REG->R32_PTR->EDI; break;
+                    case 0xFA:REG->R32_PTR->EDX +=REG->R32_PTR->EDI; break;
+                    case 0xFB:REG->R32_PTR->EBX +=REG->R32_PTR->EDI; break;
+                    case 0xFC:REG->R32_PTR->ESP +=REG->R32_PTR->EDI; break;
+                    case 0xFD:REG->R32_PTR->EBP +=REG->R32_PTR->EDI; break;
+                    case 0xFE:REG->R32_PTR->ESI +=REG->R32_PTR->EDI; break;
+                    case 0xFF:REG->R32_PTR->EDI <<= 1; break;
                     default: OUTPUT::Abort("Invalid operand");
                 }
 
@@ -244,18 +256,18 @@ namespace i8088 {
                     
             case 0x02: 
             case 0x03: break;
-            case 0x04: REGISTER::R8_PTR->AL += operand1; break; //
-            case 0x05: REGISTER::R32_PTR->EAX += operand1; break;
+            case 0x04:REG->R8_PTR->AL += operand1; break; //
+            case 0x05:REG->R32_PTR->EAX += operand1; break;
 
             case 0x80: //
                 switch (operand1) {
-                    case 0xC1: REGISTER::R8_PTR->CL += operand2; break;
-                    case 0xC2: REGISTER::R8_PTR->DL += operand2; break;
-                    case 0xC3: REGISTER::R8_PTR->BL += operand2; break;
-                    case 0xC4: REGISTER::R8_PTR->AH += operand2; break;
-                    case 0xC5: REGISTER::R8_PTR->CH += operand2; break;
-                    case 0xC6: REGISTER::R8_PTR->DH += operand2; break;
-                    case 0xC7: REGISTER::R8_PTR->BH += operand2; break;
+                    case 0xC1:REG->R8_PTR->CL += operand2; break;
+                    case 0xC2:REG->R8_PTR->DL += operand2; break;
+                    case 0xC3:REG->R8_PTR->BL += operand2; break;
+                    case 0xC4:REG->R8_PTR->AH += operand2; break;
+                    case 0xC5:REG->R8_PTR->CH += operand2; break;
+                    case 0xC6:REG->R8_PTR->DH += operand2; break;
+                    case 0xC7:REG->R8_PTR->BH += operand2; break;
                 }
                 break;
             case 0x81: break;
@@ -270,11 +282,13 @@ namespace i8088 {
      * Description: Logical AND
      * Opcode(s):   0x20...0x25, 0x80...0x81/4, 0x82...0x83/4
      */
+/*
     static inline void AND(const uint8_t &opcode, const uint8_t &operand1, const uint8_t &operand2) {
         __asm (
             ".byte 0xB8, 0x0C, 0x00, 0x00, 0x00"
         );
     }
+*/
 
 
     /*
@@ -317,60 +331,61 @@ namespace i8088 {
      * Opcode(s):   0x48...0x4F, 0xFE/1, 0xFF/1
      */
     static inline void DEC(const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
+        std::unique_ptr<REGISTER>REG(new REGISTER);
         if (prefix == 0x66) {
             switch (opcode) {
-                case 0x48: REGISTER::R16_PTR->AX--; break;
-                case 0x49: REGISTER::R16_PTR->CX--; break;
-                case 0x4A: REGISTER::R16_PTR->DX--; break;
-                case 0x4B: REGISTER::R16_PTR->BX--; break;
+                case 0x48:REG->R16_PTR->AX--; break;
+                case 0x49:REG->R16_PTR->CX--; break;
+                case 0x4A:REG->R16_PTR->DX--; break;
+                case 0x4B:REG->R16_PTR->BX--; break;
 
-                case 0x4C: REGISTER::R16_PTR->SP--; break;
-                case 0x4D: REGISTER::R16_PTR->BP--; break;
-                case 0x4E: REGISTER::R16_PTR->SI--; break;
-                case 0x4F: REGISTER::R16_PTR->DI--; break;
+                case 0x4C:REG->R16_PTR->SP--; break;
+                case 0x4D:REG->R16_PTR->BP--; break;
+                case 0x4E:REG->R16_PTR->SI--; break;
+                case 0x4F:REG->R16_PTR->DI--; break;
                 default: OUTPUT::Abort("Invalid opcode");
             }
             return;
         }
 
         switch (opcode) {
-            case 0x48: REGISTER::R32_PTR->EAX--; break;
-            case 0x49: REGISTER::R32_PTR->ECX--; break;
-            case 0x4A: REGISTER::R32_PTR->EDX--; break;
-            case 0x4B: REGISTER::R32_PTR->EBX--; break;
+            case 0x48:REG->R32_PTR->EAX--; break;
+            case 0x49:REG->R32_PTR->ECX--; break;
+            case 0x4A:REG->R32_PTR->EDX--; break;
+            case 0x4B:REG->R32_PTR->EBX--; break;
 
-            case 0x4C: REGISTER::R32_PTR->ESP--; break;
-            case 0x4D: REGISTER::R32_PTR->EBP--; break;
-            case 0x4E: REGISTER::R32_PTR->ESI--; break;
-            case 0x4F: REGISTER::R32_PTR->EDI--; break;
+            case 0x4C:REG->R32_PTR->ESP--; break;
+            case 0x4D:REG->R32_PTR->EBP--; break;
+            case 0x4E:REG->R32_PTR->ESI--; break;
+            case 0x4F:REG->R32_PTR->EDI--; break;
 
             if (opcode == 0xFF) {
                 /*
                 switch (operand1) {
-                    case 0x48: REGISTER::R32_PTR->EAX--; break;
-                    case 0x49: REGISTER::R32_PTR->ECX--; break;
-                    case 0x4A: REGISTER::R32_PTR->EDX--; break;
-                    case 0x4B: REGISTER::R32_PTR->EBX--; break;
+                    case 0x48:REG->R32_PTR->EAX--; break;
+                    case 0x49:REG->R32_PTR->ECX--; break;
+                    case 0x4A:REG->R32_PTR->EDX--; break;
+                    case 0x4B:REG->R32_PTR->EBX--; break;
 
-                    case 0x4C: REGISTER::R32_PTR->ESP--; break;
-                    case 0xCD: REGISTER::R32_PTR->EBP--; break;
-                    case 0xCE: REGISTER::R32_PTR->ESI--; break;
-                    case 0x4F: REGISTER::R32_PTR->EDI--; break;
+                    case 0x4C:REG->R32_PTR->ESP--; break;
+                    case 0xCD:REG->R32_PTR->EBP--; break;
+                    case 0xCE:REG->R32_PTR->ESI--; break;
+                    case 0x4F:REG->R32_PTR->EDI--; break;
                 }
                 */
             }
 
             case 0xFE:
                 switch (operand1) {
-                    case 0xC8: REGISTER::R8_PTR->AL--; break;
-                    case 0xC9: REGISTER::R8_PTR->CL--; break;
-                    case 0xCA: REGISTER::R8_PTR->DL--; break;
-                    case 0xCB: REGISTER::R8_PTR->BL--; break;
+                    case 0xC8:REG->R8_PTR->AL--; break;
+                    case 0xC9:REG->R8_PTR->CL--; break;
+                    case 0xCA:REG->R8_PTR->DL--; break;
+                    case 0xCB:REG->R8_PTR->BL--; break;
     
-                    case 0xCC: REGISTER::R8_PTR->AH--; break;
-                    case 0xCD: REGISTER::R8_PTR->CH--; break;
-                    case 0xCE: REGISTER::R8_PTR->DH--; break;
-                    case 0xCF: REGISTER::R8_PTR->BH--; break;
+                    case 0xCC:REG->R8_PTR->AH--; break;
+                    case 0xCD:REG->R8_PTR->CH--; break;
+                    case 0xCE:REG->R8_PTR->DH--; break;
+                    case 0xCF:REG->R8_PTR->BH--; break;
                 }
 
             default: OUTPUT::Abort("Invalid opcode");
@@ -396,41 +411,42 @@ namespace i8088 {
      * Opcode(s):   0x40...0x47, 0xFE/0, 0xFF/0
      */
     static inline void INC(const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
+        std::unique_ptr<REGISTER>REG(new REGISTER);
         if (prefix == 0x66) {
             switch (opcode) {
-                case 0x40: REGISTER::R16_PTR->AX++; break;
-                case 0x41: REGISTER::R16_PTR->CX++; break;
-                case 0x42: REGISTER::R16_PTR->DX++; break;
-                case 0x43: REGISTER::R16_PTR->BX++; break;
+                case 0x40:REG->R16_PTR->AX++; break;
+                case 0x41:REG->R16_PTR->CX++; break;
+                case 0x42:REG->R16_PTR->DX++; break;
+                case 0x43:REG->R16_PTR->BX++; break;
 
-                case 0x44: REGISTER::R16_PTR->SP++; break;
-                case 0x45: REGISTER::R16_PTR->BP++; break;
-                case 0x46: REGISTER::R16_PTR->SI++; break;
-                case 0x47: REGISTER::R16_PTR->DI++; break;
+                case 0x44:REG->R16_PTR->SP++; break;
+                case 0x45:REG->R16_PTR->BP++; break;
+                case 0x46:REG->R16_PTR->SI++; break;
+                case 0x47:REG->R16_PTR->DI++; break;
             }
             return;
         }
         
         switch (opcode) {
-            case 0x40: ++REGISTER::R32_PTR->EAX; break;
-            case 0x41: ++REGISTER::R32_PTR->ECX; break;
-            case 0x42: ++REGISTER::R32_PTR->EDX; break;
-            case 0x43: ++REGISTER::R32_PTR->EBX; break;
-            case 0x44: ++REGISTER::R32_PTR->ESP; break;
-            case 0x45: ++REGISTER::R32_PTR->EBP; break;
-            case 0x46: ++REGISTER::R32_PTR->ESI; break;
-            case 0x47: ++REGISTER::R32_PTR->EDI; break;
+            case 0x40: REG->R32_PTR->EAX; break;
+            case 0x41: REG->R32_PTR->ECX; break;
+            case 0x42: REG->R32_PTR->EDX; break;
+            case 0x43: REG->R32_PTR->EBX; break;
+            case 0x44: REG->R32_PTR->ESP; break;
+            case 0x45: REG->R32_PTR->EBP; break;
+            case 0x46: REG->R32_PTR->ESI; break;
+            case 0x47: REG->R32_PTR->EDI; break;
 
             case 0xFE: 
                 switch (operand1) {
-                    case 0xC0: ++REGISTER::R8_PTR->AL; break;
-                    case 0xC1: ++REGISTER::R8_PTR->CL; break;
-                    case 0xC2: ++REGISTER::R8_PTR->DL; break;
-                    case 0xC3: ++REGISTER::R8_PTR->BL; break;
-                    case 0xC4: ++REGISTER::R8_PTR->AH; break;
-                    case 0xC5: ++REGISTER::R8_PTR->CH; break;
-                    case 0xC6: ++REGISTER::R8_PTR->DH; break;
-                    case 0xC7: ++REGISTER::R8_PTR->BH; break;
+                    case 0xC0: REG->R8_PTR->AL; break;
+                    case 0xC1: REG->R8_PTR->CL; break;
+                    case 0xC2: REG->R8_PTR->DL; break;
+                    case 0xC3: REG->R8_PTR->BL; break;
+                    case 0xC4: REG->R8_PTR->AH; break;
+                    case 0xC5: REG->R8_PTR->CH; break;
+                    case 0xC6: REG->R8_PTR->DH; break;
+                    case 0xC7: REG->R8_PTR->BH; break;
                 }
         }
     }
@@ -454,10 +470,11 @@ namespace i8088 {
      * Opcode(s):   0x88...0x8C, 0x8E, 0xA0...0xA3, 0xB0, 0xB8, 0xC6, 0xC7
      */
     static inline void MOV(const uint8_t &opcode, uint8_t operand1, uint8_t operand2, uint8_t operand3, uint8_t operand4) {
+        std::unique_ptr<REGISTER>REG(new REGISTER);
         switch (opcode) {
             case 0xBB: 
                 const uint32_t lendian = operand4 << 24 | operand3 << 16 | operand2 << 8 | operand1;
-                REGISTER::R32_PTR->EBX = lendian;
+               REG->R32_PTR->EBX = lendian;
                 break;
         }
     }
@@ -532,12 +549,54 @@ namespace i8088 {
         const size_t &operand2,
         const size_t &operand3, 
         const size_t &operand4) {
+        std::unique_ptr<REGISTER>REG(new REGISTER);
         uint8_t hex = opcode;
         switch (hex) {
-            case 0x34: REGISTER::R8_PTR->AL ^= operand1; break;
-            case 0x35: REGISTER::R8_PTR->AH ^= operand1; break;
+            case 0x34:REG->R8_PTR->AL ^= operand1; break;
+            case 0x35:REG->R8_PTR->AH ^= operand1; break;
         }
         std::cout << opcode << operand1 << operand2 << operand3 << operand4;
 
     }
+
+        /*
+     * Instruction: TEST
+     * Description: add 1 to register AH, this is not an actual instruction just to be clear.
+     * Opcode(s):   0x0E
+     */
+    inline void TEST(uint8_t operand1 = 1, uint8_t operand2 = 1) {
+        std::unique_ptr<REGISTER>REG(new REGISTER);
+        REG->R8_PTR->AH += operand1 + operand2;
+        std::cout << "AH = " << static_cast<int>(REG->R8_PTR->AH) << std::endl;
+    }
+
+//    static void Create8088(void) {
+
+        //typedef std::tuple<std::string, std::function<void()>, uint8_t> maptup;
+        
+        std::map<size_t, std::tuple<std::string, std::function<void()>, uint8_t>> instructions;
+/*
+        instructions = {
+            0x37: std::tuple<"AAA", &AAA, 0>,
+        }
+*/
+        //instructions[0x37] = std::tuple<"AAA", &AAA, 0>;
+
+/*
+        std::map<size_t, std::pair<std::string, std::function<void()>>, uint8_t> instructions = {
+            //{ 0x37, std::make_tuple("AAA", &AAA, 0) },
+            //{ 0xD4, std::make_tuple("AAD", &AAD, 0) },
+            //{ 0xD5, std::make_tuple("AAM", &AAM, 0) },
+            //{ 0xE1, std::make_tuple("TEST", &TEST , 2) },
+            { 0xF8, std::make_tuple("CLC", &CLC, 0) },
+            { 0xFA, std::make_tuple("CLI", &CLI, 0) },
+            { 0xFC, std::make_tuple("CLD", &CLD, 0) },
+\
+            //{ 0xD50A, std::mmake_tuple("AAD", &AAD), 1 },
+        };
+*/
+        
+
+        // to call function: menu[a]();
+    //}
 }
