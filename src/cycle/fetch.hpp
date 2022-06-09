@@ -70,6 +70,27 @@ bool ASSEMBLY::CheckASM(const std::string &file) {
     return (extension == "asm" || extension == "s");
 }
 
+std::vector<std::vector<std::string>> ASSEMBLY::FetchAssembly(const std::string &location) {
+    std::fstream file{};
+    std::string line{};
+    std::vector<std::vector<std::string>> programvector{};
+
+    // Open the file
+    file.open((location), std::ios::in);
+    if (file.is_open()) [[likely]] {
+        while (std::getline(file, line)) {
+            // Prefiltering unnecessary assembly lines
+            if ((static_cast<int>line[0] == 0) { continue; }
+            if (line[0] == ';') { continue; }
+            if (!std::any_of(std::begin(line), std::end(line), ::isalpha)) { continue; }
+
+            programvector.push_back(Preprocess(line));
+        }
+        file.close();
+    }
+    return programvector;
+}
+
 void ELFHEADER::GetELFProgram(const std::vector<unsigned char> &hex, const uint64_t &offset) {
     unsigned char program[0x38];
     for (uint16_t x = offset, i = 0; x < offset + 0x38; ++x, ++i) { program[i] = hex.at(x); }

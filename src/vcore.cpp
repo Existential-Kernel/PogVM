@@ -19,16 +19,17 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 
     public:
         static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
-			std::vector<u_char> resultvector{};
-			std::vector<std::vector<u_char>> instructions{};
+			std::vector<uint8_t> resultvector{};
+			std::vector<std::vector<uint8_t>> instructions{};
 			if (UTILITY::FileExists(argv)) {
 
 				// check if file is an ELF file. Else, check if it's an assembly file
 				if (ELF::CheckELF(argv)) {
 					{
-						std::unique_ptr<FETCH>FETCH_PTR(new FETCH);
-						std::unique_ptr<DECODE>DECODE_PTR(new DECODE);
-						std::unique_ptr<EXECUTE>EXECUTE_PTR(new EXECUTE);
+						// fuck the new and delete keyword, all my homies use smart pointers
+						std::unique_ptr<FETCH>FETCH_PTR = std::make_unique<FETCH>();
+						std::unique_ptr<DECODE>DECODE_PTR = std::make_unique<DECODE>();
+						std::unique_ptr<EXECUTE>EXECUTE_PTR = std::make_unique<EXECUTE>();
 
 						if (mode) { // compiled mode
 							//std::vector<u_char> hexvector = FETCH::FetchHex(argv);
@@ -42,7 +43,7 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 					}
 
 				} else if (ASSEMBLY::CheckASM(argv)) {
-					std::vector<std::vector<std::string>> assemblyvector = FETCH::FetchAssembly(argv);
+					std::vector<std::vector<std::string>> assemblyvector = FETCH->FetchAssembly(argv);
 				} else {
 					OUTPUT::Error("Please provide an executable file or an assembly file to virtualise", 0x0C);
 				}

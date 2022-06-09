@@ -30,26 +30,7 @@ class ASSEMBLY {
         static bool CheckASM(const std::string &file);
 
         // Get the line of assembly
-        static dsvec FetchAssembly(const std::string &location) {
-            std::fstream file{};
-            std::string line{};
-            dsvec programvector;
-
-            // Open the file
-            file.open((location), std::ios::in);
-            if (file.is_open()) [[likely]] {
-                while (std::getline(file, line)) {
-                    // Prefiltering unnecessary assembly lines
-                    if ((int)line[0] == 0) { continue; }
-                    if (line[0] == ';') { continue; }
-                    if (!std::any_of(std::begin(line), std::end(line), ::isalpha)) { continue; }
-
-                    programvector.push_back(Preprocess(line));
-                }
-                file.close();
-            }
-            return programvector;
-        }
+        static dsvec FetchAssembly(const std::string &location);
 };
 
 class ELF_HEADER_STRUCT {
