@@ -25,6 +25,10 @@
 */
 
 class AUDIT {
+    public:
+        AUDIT() {};
+        ~AUDIT() {};
+
 	private:
 		// Log the initialisation process if it succeeded or failed
 		static void AuditLog(const bool &result, const std::string &message, const bool &indent) {
@@ -37,24 +41,24 @@ class AUDIT {
 		}
 
 		// Check if there's at least 4 threads in the end-user's CPU for pipelining
-        static inline bool ThreadCheck(void) {
+        [[gnu::always_inline]] [[nodiscard]] static inline bool ThreadCheck(void) {
             try {
-                return (uint8_t)std::thread::hardware_concurrency() * 2 >= 4;
+                return static_cast<uint8_t>(std::thread::hardware_concurrency() * 2 >= 4);
             } catch (...) {
                 return false;
             }
         }
 
         // Check if CPU cores are working as expected
-        static inline bool CPUCoreCheck(void) {
+        [[gnu::always_inline]] [[nodiscard]] static inline bool CPUCoreCheck(void) {
             try {
-                return (uint8_t)std::thread::hardware_concurrency() != 0; 
+                return static_cast<uint8_t>(std::thread::hardware_concurrency() != 0); 
             } catch (...) {
                 return false;
             }
         }
 
-        static bool Check8088(void) {
+        [[nodiscard]] static bool Check8088(void) {
             try {
                 i8088::STC();
                 i8088::STI();

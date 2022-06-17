@@ -10,8 +10,12 @@
 //https://www.cplusplus.com/reference/thread/thread/?kw=thread
 
 class KERNEL final : public FETCH, public DECODE, public EXECUTE {
+	public:
+		KERNEL() {};
+		~KERNEL() {};
+
 	private:
-		static void InitHardware(void) {
+		static constexpr void InitHardware(void) {
 			if (!MEMORY::Initialise()) {
 				OUTPUT::Error("Memory initialisation failed", 0x11);
 			}
@@ -19,24 +23,31 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 
     public:
         static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
-			std::vector<u_char> resultvector{};
-			std::vector<std::vector<u_char>> instructions{};
+			std::vector<uint8_t> resultvector{};
+			std::vector<std::vector<uint8_t>> instructions{};
 			if (UTILITY::FileExists(argv)) {
 
 				// check if file is an ELF file. Else, check if it's an assembly file
 				if (ELF::CheckELF(argv)) {
 					{
-						std::unique_ptr<FETCH>FETCH_PTR(new FETCH);
-						std::unique_ptr<DECODE>DECODE_PTR(new DECODE);
-						std::unique_ptr<EXECUTE>EXECUTE_PTR(new EXECUTE);
+						// fuck the new and delete keywords, all my homies use smart pointers
+						std::unique_ptr<FETCH>FETCH_PTR = std::make_unique<FETCH>();
+						std::unique_ptr<DECODE>DECODE_PTR = std::make_unique<DECODE>();
+						std::unique_ptr<EXECUTE>EXECUTE_PTR = std::make_unique<EXECUTE>();
 
-						if (mode) { // compiled mode
-							//std::vector<u_char> hexvector = FETCH::FetchHex(argv);
-							std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
-							DECODE_PTR->Decode(hexvector, instructions, bits, processor);
-							EXECUTE_PTR->Execute(instructions);
+						switch (mode) {
+							case true: // compiled mode
+								{	
+									//std::vector<uint8_t> hexvector = FETCH::FetchHex(argv);
+									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
+									DECODE_PTR->Decode(hexvector, instructions, bits, processor);
+									EXECUTE_PTR->Execute(instructions);
+								}
+								break;
 
-						} else { // threading mode
+							case false: // threading mode
+								//std::thread t1();
+								break;
 
 						}
 					}
@@ -54,4 +65,4 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 				}
 			}
 		}
-} KERNEL;
+};

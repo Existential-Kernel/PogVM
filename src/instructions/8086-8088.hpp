@@ -7,6 +7,7 @@
 
 #include "../cpu/flags.hpp"
 #include "../cpu/registers.hpp"
+#include "../cpu/stack.hpp"
 #include "../defs.hpp"
 
 #pragma once
@@ -95,7 +96,7 @@ namespace i8088 {
      * Opcode(s):   0x00...0x05, 0x80/0...0x81/0, 0x82/0...0x83/0
      */
     static void ADD(const uint8_t &opcode, const uint8_t &operand1, const uint8_t &operand2) {
-        std::unique_ptr<REGISTER>REG(new REGISTER);
+        std::unique_ptr<REGISTER>REG = std::make_unique<REGISTER>();
         switch (opcode) {
             case 0x00:
                 switch (operand1) {

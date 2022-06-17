@@ -4,7 +4,6 @@
 #include <string>
 #include <cstring>
 #include <vector>
-#include <regex>
 
 #include "audit.hpp"
 #include "cycle/fetch.cpp"
@@ -14,7 +13,6 @@
 int main(int argc, char *argv[]) {
 	#if __cplusplus < 201703L
 		OUTPUT::Error("PogVM requires C++17 or newer to run", 0x0D);
-		exit(1);
 	#endif
 
 	switch(argc) {
@@ -36,14 +34,18 @@ int main(int argc, char *argv[]) {
 				break;
 			}
 
-			if (argv[1][0] == '-') {OUTPUT::Error("Unrecognized flag option", 0x0B); }
-			else { OUTPUT::Error("The file provided is not valid or does not exist", 0x0A); }
+			if (argv[1][0] == '-') {
+				OUTPUT::Error("Unrecognized flag option", 0x0B); 
+			} else { 
+				OUTPUT::Error("The file provided is not valid or does not exist", 0x0A);
+			}
 			break;
 
 		case 3:
 			if (UTILITY::FileExists(argv[2])) {
+/*
 				{
-					std::unique_ptr<ELF>ELF_PTR(new ELF);
+					std::unique_ptr<ELF>ELF_PTR = std::make_unique<ELF>();
 					std::vector<uint8_t>hexvector = ELF_PTR->FetchHex(argv[2]);
 
 					// TODO: make this into a switch statement too
@@ -52,11 +54,18 @@ int main(int argc, char *argv[]) {
 					if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--sections")) { ELF_PTR->OutputELF(0b10, hexvector); }
 					if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--info")) { ELF_PTR->OutputELF(0b11, hexvector); }
 				}
+*/
+				std::vector<uint8_t>hexvector = ELF::FetchHex(argv[2]);
 
-				bool mode{};
+				// TODO: make this into a switch statement too
+				if (!strcmp(argv[1], "-hd") || !strcmp(argv[1], "--header")) { ELF::OutputELF(0b00, hexvector); }
+				if (!strcmp(argv[1], "-p") || !strcmp(argv[1], "--program")) { ELF::OutputELF(0b01, hexvector); }
+				if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--sections")) { ELF::OutputELF(0b10, hexvector); }
+				if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--info")) { ELF::OutputELF(0b11, hexvector); }
+
+				bool mode = true;
 				if (!strcmp(argv[1], "--interpreted")) { mode = false; }
 				else if (!strcmp(argv[1], "--compiled")) { mode = true; }
-				else { mode = true; }
 
 				uint8_t bitclass{};
 				if (!strcmp(argv[1], "--64-bit")) { bitclass = 64; }

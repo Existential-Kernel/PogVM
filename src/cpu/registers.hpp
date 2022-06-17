@@ -6,26 +6,26 @@ class REGISTER {
     public:
         // 256-bit
         struct R256_STRUCT {
-            std::bitset<256> YMM0 = 0;
-            std::bitset<256> YMM1 = 0;
-            std::bitset<256> YMM2 = 0;
-            std::bitset<256> YMM3 = 0;
-            std::bitset<256> YMM4 = 0;
-            std::bitset<256> YMM5 = 0;
-            std::bitset<256> YMM6 = 0;
-            std::bitset<256> YMM7 = 0;
+            std::bitset<256> YMM0 = 0x000000000000;
+            std::bitset<256> YMM1 = 0x000000000000;
+            std::bitset<256> YMM2 = 0x000000000000;
+            std::bitset<256> YMM3 = 0x000000000000;
+            std::bitset<256> YMM4 = 0x000000000000;
+            std::bitset<256> YMM5 = 0x000000000000;
+            std::bitset<256> YMM6 = 0x000000000000;
+            std::bitset<256> YMM7 = 0x000000000000;
         } R256;
 
         // 128-bit
         struct R128_STRUCT {
-            std::bitset<128> XMM0 = 0;
-            std::bitset<128> XMM1 = 0;
-            std::bitset<128> XMM2 = 0;
-            std::bitset<128> XMM3 = 0;
-            std::bitset<128> XMM4 = 0;
-            std::bitset<128> XMM5 = 0;
-            std::bitset<128> XMM6 = 0;
-            std::bitset<128> XMM7 = 0;
+            std::bitset<128> XMM0 = 0x0000000000;
+            std::bitset<128> XMM1 = 0x0000000000;
+            std::bitset<128> XMM2 = 0x0000000000;
+            std::bitset<128> XMM3 = 0x0000000000;
+            std::bitset<128> XMM4 = 0x0000000000;
+            std::bitset<128> XMM5 = 0x0000000000;
+            std::bitset<128> XMM6 = 0x0000000000;
+            std::bitset<128> XMM7 = 0x0000000000;
         } R128;
 
         // 80-bit
@@ -53,24 +53,24 @@ class REGISTER {
     */
         // 64-bit
         struct R64_STRUCT {
-            uint64_t RAX, RBX, RCX, RDX, RSP, RBP, RSI, RDI = 0;
+            uint64_t RAX, RBX, RCX, RDX, RSP, RBP, RSI, RDI = 0x00000000;
         } R64;
 
         // 32-bit
         struct R32_STRUCT {
-            uint32_t EAX, EBX, ECX, EDX, ESP, EBP, ESI, EDI = 0;
+            uint32_t EAX, EBX, ECX, EDX, ESP, EBP, ESI, EDI = 0x000000;
         } R32;
 
         // 16-bit
         struct R16_STRUCT {
-            uint16_t AX, BX, CX, DX, SP, BP, SI, DI = 0;
+            uint16_t AX, BX, CX, DX, SP, BP, SI, DI = 0x0000;
         } R16;
 
         // 8-bit
         struct R8_STRUCT {
-            uint8_t AH, BH, CH, DH = 0;
-            uint8_t AL, BL, CL, DL = 0;
-            uint8_t SPL, BPL, SIL, DIL = 0;
+            uint8_t AH, BH, CH, DH = 0x00;
+            uint8_t AL, BL, CL, DL = 0x00;
+            uint8_t SPL, BPL, SIL, DIL = 0x00;
         } R8;
 
         // Segment registers
@@ -87,21 +87,21 @@ class REGISTER {
 
         // Pointer registers
         struct PREG_STRUCT {
-            uint64_t RIP = 0;
-            uint32_t EIP = 0;
-            uint16_t IP = 0;
+            uint64_t RIP = 0x00000000;
+            uint32_t EIP = 0x000000;
+            uint16_t IP = 0x0000;
         } PREG;
 
         // Auxiliary registers (added for convenience)
         struct AREG_STRUCT {
-            uint16_t IR = 0; // instruction register
-            uint64_t PC = 0; // program counter
+            uint16_t IR = 0x0000; // instruction register
+            uint64_t PC = 0x00000000; // program counter
         } AREG;
 
 
         // Control registers
         struct CREG {
-            uint32_t CR0, CR1, CR2, CR3, CR4, CR5, CR6, CR7 = 0;
+            uint32_t CR0, CR1, CR2, CR3, CR4, CR5, CR6, CR7 = 0x000000;
 
     /*
             struct CR4 {

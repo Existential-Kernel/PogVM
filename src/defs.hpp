@@ -10,10 +10,10 @@ namespace INFO {
     char minor = '0';
     std::string link = "https://github.com/Existential-Kernel/PogVM";
 
-    static const std::string version = program + " version " + major + "." + minor;
+    const std::string version = program + " version " + major + "." + minor;
     const std::string information = program + " version " + major + "." + minor \
     + "\nMade by Existential-Kernel (" + link \
-    + ")\nCopyright (C) 2022 Existential-Kernel\nLicense: WTFPL";
+    + ")\nCopyright 2022 Existential-Kernel\nLicense: WTFPL";
 };
 
 namespace ANSI {
@@ -27,8 +27,7 @@ namespace ANSI {
     std::ostream &BOLD(std::ostream& log) { return log << "\033[1m"; }
 }
 
-class OUTPUT {
-    public:
+namespace OUTPUT {
 	// Output the version of the program
     [[noreturn]] static void Version(void) {
 		std::cout << INFO::version << std::endl;
@@ -44,10 +43,10 @@ class OUTPUT {
     }
 
     // Log errors
-    [[noreturn]] static void Error(const std::string &error, const uint8_t &code) {
+    [[noreturn]] static void Error(const std::string &error, const uint8_t &code, const std::string &arg = "") {
         std::cerr 
             << ANSI::RED << ANSI::BOLD << "FATAL: " << ANSI::EXIT 
-            << ANSI::BOLD << error << ANSI::EXIT << "\n"
+            << ANSI::BOLD << arg << error << ANSI::EXIT << "\n"
             << ANSI::GREY << "(Error code " << 100 + code << ")" << ANSI::EXIT << std::endl;
         std::exit(1);
     }
@@ -63,8 +62,6 @@ class OUTPUT {
 
 // For miscellaneous functions used throughout the program
 namespace UTILITY {
-    namespace fs = std::filesystem;
-
     static inline void ClearConsole(void) {
         #ifdef _WIN32 
             std::system("cls");
@@ -73,12 +70,12 @@ namespace UTILITY {
         #endif
     }
 
-    static inline bool FileExists(const fs::path &path, const fs::file_status &status = fs::file_status{}) {
-        return (fs::status_known(status) ? fs::exists(status) : fs::exists(path));
+    [[gnu::always_inline]] [[nodiscard]] static inline bool FileExists(const std::filesystem::path &path, const std::filesystem::file_status &status = std::filesystem::file_status{}) {
+        return (std::filesystem::status_known(status) ? std::filesystem::exists(status) : std::filesystem::exists(path));
     }
-
+/*
     // This is strictly used only during development for debugging purposes. (BP = breakpoint)
-    [[noreturn]] static inline void BP(const std::string &message = "BREAKPOINT") {
+    [[noreturn]] static void BP(const std::string &message = "BREAKPOINT") {
         std::cout 
             << "\n" 
             << ANSI::BLACK_BG 
@@ -91,6 +88,8 @@ namespace UTILITY {
             << "\n" << std::endl;
         std::exit(0);
     }
+*/
+
 /*
     static std::string IntToHex(const uint64_t &integer) {
         std::stringstream stream;
