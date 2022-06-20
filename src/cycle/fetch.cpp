@@ -65,7 +65,7 @@
     return codevector;
 }
 
-[[nodiscard]] std::vector<std::vector<std::string>> ASSEMBLY::FetchAssembly(const std::string &location) {
+[[gnu::cold, nodiscard]] std::vector<std::vector<std::string>> ASSEMBLY::FetchAssembly(const std::string &location) {
     std::fstream file{};
     std::string line{};
     std::vector<std::vector<std::string>> programvector{};
@@ -439,28 +439,46 @@ void ELFHEADER::GetELFHeader(const std::vector<unsigned char> &hex) noexcept {
 }
 
 [[nodiscard]] inline bool ELF::CheckELF(const std::string &filename) {
-    std::ifstream file(filename, std::ios::binary);
-    std::vector<unsigned char> magicvector;
+    std::ifstream file{filename, std::ios::binary};
+    std::vector<uint8_t> magicvector;
 
     if (file) {
         file.seekg(0, std::ios::beg);
         magicvector.resize(4);
         file.read((char*)&magicvector[0], magicvector.size());
+    } else {
+        OUTPUT::Error("This file is not open", 0x0E);
     }
     file.close();
 
-    const bool result = (
-        magicvector[0] == 0x7F &&
-        magicvector[1] == 0x45 &&
-        magicvector[2] == 0x4C &&
-        magicvector[3] == 0x46
+    return (
+        (magicvector[0] == 0x7F) &&
+        (magicvector[1] == 0x45) &&
+        (magicvector[2] == 0x4C) &&
+        (magicvector[3] == 0x46)
     );
-    return result;
 }
 
-[[nodiscard]] std::vector<uint8_t> ELF::FetchHex(const std::string &filename) {
-    std::ifstream file(filename, std::ios::binary);
-    std::vector<unsigned char> hexvector{0x00};
+
+
+/*
+    std::ifstream file{filename, std::ios::binary};
+    std::array<uint8_t, 10> arr;
+
+    file.seekg(0, std::ios::beg);
+    file.read((char*)&arr[0], arr.size());
+*/
+
+[[gnu::hot]] void ELF::FetchHex(const std::vector<uint8_t> &v, std::deque<uint8_t> &a) {
+    for (size_t i = 0; i < 10; i++) {
+        a.push_back(v[i]);
+    }
+}
+
+
+[[gnu::hot, nodiscard]] std::vector<uint8_t> ELF::MassFetchHex(const std::string &filename) {
+    std::ifstream file{filename, std::ios::binary};
+    std::vector<uint8_t> hexvector{};
     if (file) {
         file.seekg(0, std::ios::end);
         hexvector.resize(file.tellg());

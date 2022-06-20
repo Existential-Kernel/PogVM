@@ -41,18 +41,18 @@ class AUDIT {
 		}
 
 		// Check if there's at least 4 threads in the end-user's CPU for pipelining
-        [[gnu::always_inline]] [[nodiscard]] static inline bool ThreadCheck(void) {
+        [[nodiscard]] static inline bool ThreadCheck(void) {
             try {
-                return static_cast<uint8_t>(std::thread::hardware_concurrency() * 2 >= 4);
+                return (std::thread::hardware_concurrency() * 2 >= 4);
             } catch (...) {
                 return false;
             }
         }
 
         // Check if CPU cores are working as expected
-        [[gnu::always_inline]] [[nodiscard]] static inline bool CPUCoreCheck(void) {
+        [[nodiscard]] static inline bool CPUCoreCheck(void) {
             try {
-                return static_cast<uint8_t>(std::thread::hardware_concurrency() != 0); 
+                return (std::thread::hardware_concurrency() != 0); 
             } catch (...) {
                 return false;
             }

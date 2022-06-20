@@ -22,9 +22,7 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 		}
 
     public:
-        static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
-			std::vector<uint8_t> resultvector{};
-			std::vector<std::vector<uint8_t>> instructions{};
+        [[gnu::hot]] static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
 			if (UTILITY::FileExists(argv)) {
 
 				// check if file is an ELF file. Else, check if it's an assembly file
@@ -35,18 +33,29 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 						std::unique_ptr<DECODE>DECODE_PTR = std::make_unique<DECODE>();
 						std::unique_ptr<EXECUTE>EXECUTE_PTR = std::make_unique<EXECUTE>();
 
+						std::vector<uint8_t> resultvector{};
+						std::vector<std::vector<uint8_t>> instructions{};
+
 						switch (mode) {
 							case true: // compiled mode
-								{	
-									//std::vector<uint8_t> hexvector = FETCH::FetchHex(argv);
+								{
+									//std::vector<uint8_t> hexvector = FETCH::MassFetchHex(argv);
 									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
-									DECODE_PTR->Decode(hexvector, instructions, bits, processor);
-									EXECUTE_PTR->Execute(instructions);
+									DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
+									EXECUTE_PTR->MassExecute(instructions);
 								}
 								break;
 
 							case false: // threading mode
-								//std::thread t1();
+								{
+									std::vector<uint8_t> hexvector = FETCH_PTR->MassFetchHex(argv);
+									std::deque<uint8_t> queue [[maybe_unused]];
+									for (;;) {
+										//std::thread tfetch(FETCH_PTR->FetchHex, hexvector, queue);
+										//std::thread tdecode();
+										//std::thread texecute();
+									}
+								}
 								break;
 
 						}

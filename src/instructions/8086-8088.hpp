@@ -584,7 +584,7 @@ namespace i8088 {
         //instructions[0x37] = std::tuple<"AAA", &AAA, 0>;
 
 /*
-        std::map<size_t, std::pair<std::string, std::function<void()>>, uint8_t> instructions = {
+        std::map<size_t, std::pair<std::string, auto, uint8_t> instructions = {
             //{ 0x37, std::make_tuple("AAA", &AAA, 0) },
             //{ 0xD4, std::make_tuple("AAD", &AAD, 0) },
             //{ 0xD5, std::make_tuple("AAM", &AAM, 0) },

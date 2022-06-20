@@ -6,12 +6,12 @@
 
 namespace INFO {
     std::string program = "PogVM";
-    char major = '1';
-    char minor = '0';
-    std::string link = "https://github.com/Existential-Kernel/PogVM";
+    uint8_t major       = 1;
+    uint8_t minor       = 0;
+    std::string link    = "https://github.com/Existential-Kernel/PogVM";
 
-    const std::string version = program + " version " + major + "." + minor;
-    const std::string information = program + " version " + major + "." + minor \
+    const std::string version = program + " version " + static_cast<char>(major) + "." + static_cast<char>(minor);
+    const std::string information = version \
     + "\nMade by Existential-Kernel (" + link \
     + ")\nCopyright 2022 Existential-Kernel\nLicense: WTFPL";
 };
@@ -60,9 +60,8 @@ namespace OUTPUT {
     }
 };
 
-// For miscellaneous functions used throughout the program
 namespace UTILITY {
-    static inline void ClearConsole(void) {
+    [[maybe_unused]] static inline void ClearConsole(void) {
         #ifdef _WIN32 
             std::system("cls");
         #else 
@@ -70,12 +69,12 @@ namespace UTILITY {
         #endif
     }
 
-    [[gnu::always_inline]] [[nodiscard]] static inline bool FileExists(const std::filesystem::path &path, const std::filesystem::file_status &status = std::filesystem::file_status{}) {
+    [[nodiscard]] static inline bool FileExists(const std::filesystem::path &path, const std::filesystem::file_status &status = std::filesystem::file_status{}) {
         return (std::filesystem::status_known(status) ? std::filesystem::exists(status) : std::filesystem::exists(path));
     }
-/*
+
     // This is strictly used only during development for debugging purposes. (BP = breakpoint)
-    [[noreturn]] static void BP(const std::string &message = "BREAKPOINT") {
+    [[maybe_unused, noreturn]] static void BP(const std::string &message = "BREAKPOINT") {
         std::cout 
             << "\n" 
             << ANSI::BLACK_BG 
@@ -88,13 +87,13 @@ namespace UTILITY {
             << "\n" << std::endl;
         std::exit(0);
     }
-*/
 
-/*
-    static std::string IntToHex(const uint64_t &integer) {
+
+
+    [[maybe_unused]] static std::string IntToHex(const uint64_t &integer) {
         std::stringstream stream;
         stream << std::hex << integer;
         return stream.str();
     }
-*/
+
 };

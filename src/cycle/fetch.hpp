@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <ios>
 #include <iomanip>
+#include <array>
 #include <elf.h>  // https://www.man7.org/linux/man-pages/man5/elf.5.html
 
 #include "../defs.hpp"
@@ -25,10 +26,10 @@ class ASSEMBLY {
 
     public:
         // check if string ends with .asm or .s file extension
-        static bool CheckASM(const std::string &file);
+        [[nodiscard]] static bool CheckASM(const std::string &file);
 
         // Get the line of assembly
-        static std::vector<std::vector<std::string>> FetchAssembly(const std::string &location);
+        [[nodiscard]] static std::vector<std::vector<std::string>> FetchAssembly(const std::string &location);
 };
 
 class ELF_HEADER_STRUCT {
@@ -128,7 +129,10 @@ class ELF : public ELFHEADER {
         static bool CheckELF(const std::string &filename);
 
         // Get hex data of file and return as vector
-        static std::vector<uint8_t> FetchHex(const std::string &filename);
+        [[gnu::hot, nodiscard]] static std::vector<uint8_t> MassFetchHex(const std::string &filename);
+
+        //static std::array<uint8_t, 10> FetchHex(const std::string &filename);
+        [[gnu::hot]] static void FetchHex(const std::vector<uint8_t> &v, std::deque<uint8_t> &a);
 };
 
 class FETCH : public ASSEMBLY, public ELF {

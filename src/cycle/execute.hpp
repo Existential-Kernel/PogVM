@@ -20,5 +20,6 @@ class EXECUTE {
         #define sub 0x11  // subelements
 
     public:
-        static void Execute(const std::vector<std::vector<uint8_t>> &v);
+        [[gnu::hot]] static void MassExecute(const std::vector<std::vector<uint8_t>> &v);
+        [[gnu::hot]] static void Execute(const std::vector<uint8_t> &v);
 };
