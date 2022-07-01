@@ -6,6 +6,7 @@
 #include "cycle/execute.cpp"
 #include "defs.hpp"
 #include "cpu/memory.hpp"
+#include "cpu/registers.hpp"
 
 //https://www.cplusplus.com/reference/thread/thread/?kw=thread
 
@@ -22,7 +23,7 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 		}
 
     public:
-        [[gnu::hot]] static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
+       #ifdef __linux__ { [[gnu::hot]] } #endif static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
 			if (UTILITY::FileExists(argv)) {
 
 				// check if file is an ELF file. Else, check if it's an assembly file
@@ -36,13 +37,15 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 						std::vector<uint8_t> resultvector{};
 						std::vector<std::vector<uint8_t>> instructions{};
 
+						REGISTER Reg;
+
 						switch (mode) {
 							case true: // compiled mode
 								{
 									//std::vector<uint8_t> hexvector = FETCH::MassFetchHex(argv);
 									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
 									DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
-									EXECUTE_PTR->MassExecute(instructions);
+									EXECUTE_PTR->MassExecute(&Reg, instructions);
 								}
 								break;
 

@@ -1,7 +1,7 @@
 <div align="center">
   <h1>PogVM</h1>
   A minimal Virtual Machine designed to run executable files
-
+  <br>
   <br>
           ========================== <br>
   🚧 NOTE: THIS PROJECT IS UNDER CONSTRUCTION 🚧 <br>

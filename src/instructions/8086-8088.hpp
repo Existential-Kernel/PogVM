@@ -95,8 +95,7 @@ namespace i8088 {
      * Arguments:   2
      * Opcode(s):   0x00...0x05, 0x80/0...0x81/0, 0x82/0...0x83/0
      */
-    static void ADD(const uint8_t &opcode, const uint8_t &operand1, const uint8_t &operand2) {
-        std::unique_ptr<REGISTER>REG = std::make_unique<REGISTER>();
+    static void ADD(class REGISTER REG, const uint8_t &opcode, const uint8_t &operand1, const uint8_t &operand2) {
         switch (opcode) {
             case 0x00:
                 switch (operand1) {

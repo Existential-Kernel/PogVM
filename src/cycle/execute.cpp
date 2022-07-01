@@ -1,17 +1,19 @@
 #include "./execute.hpp"
+#include "../cpu/registers.hpp"
 
-[[gnu::hot]] void EXECUTE::MassExecute(const std::vector<std::vector<uint8_t>> &v) {
+[[gnu::hot]] void EXECUTE::MassExecute(class REGISTER *RegObj, const std::vector<std::vector<uint8_t>> &v) {
     bool prefix = false;
     
+    REGISTER Reg;
     for (size_t i = 0; i < v.size(); ++i) {
         uint8_t opcode = v.at(i).at(0);
         switch (opcode) {
-            case 0x00: i8088::ADD(0x05, v.at(i).at(1), 0); continue;
+            case 0x00: i8088::ADD(RegObj, 0x05, v.at(i).at(1), 0); continue;
             case 0x01: 
             case 0x02: 
             case 0x03:
-            case 0x04: i8088::ADD(0x05, v.at(i).at(1), 0); continue;
-            case 0x05: i8088::ADD(0x05, v.at(i).at(1), v.at(i).at(2)); continue;
+            case 0x04: i8088::ADD(RegObj, 0x05, v.at(i).at(1), 0); continue;
+            case 0x05: i8088::ADD(RegObj, 0x05, v.at(i).at(1), v.at(i).at(2)); continue;
             case 0x06:
             case 0x07:
             case 0x08:
@@ -273,16 +275,16 @@
     }
 }
 
-[[gnu::hot]] void EXECUTE::Execute(const std::vector<uint8_t> &v) {
+[[gnu::hot]] void EXECUTE::Execute(class REGISTER *RegObj, const std::vector<uint8_t> &v) {
     bool prefix = false;
     uint8_t opcode = v.at(0);
     switch (opcode) {
-        case 0x00: i8088::ADD(0x05, v.at(1), 0); return;
+        case 0x00: i8088::ADD(RegObj, 0x05, v.at(1), 0); return;
         case 0x01: 
         case 0x02: 
         case 0x03:
-        case 0x04: i8088::ADD(0x05, v.at(1), 0); return;
-        case 0x05: i8088::ADD(0x05, v.at(1), v.at(2)); return;
+        case 0x04: i8088::ADD(RegObj, 0x05, v.at(1), 0); return;
+        case 0x05: i8088::ADD(RegObj, 0x05, v.at(1), v.at(2)); return;
         case 0x06:
         case 0x07:
         case 0x08:
