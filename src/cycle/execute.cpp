@@ -275,7 +275,15 @@
     }
 }
 
-[[gnu::hot]] void EXECUTE::Execute(class REGISTER *RegObj, const std::vector<uint8_t> &v) {
+
+
+
+
+
+
+
+
+void EXECUTE::Execute(class REGISTER *RegObj, const std::vector<uint8_t> &v) {
     bool prefix = false;
     uint8_t opcode = v.at(0);
     switch (opcode) {

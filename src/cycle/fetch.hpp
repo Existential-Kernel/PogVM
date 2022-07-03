@@ -129,10 +129,10 @@ class ELF : public ELFHEADER {
         static bool CheckELF(const std::string &filename);
 
         // Get hex data of file and return as vector
-        [[gnu::hot, nodiscard]] static std::vector<uint8_t> MassFetchHex(const std::string &filename);
+        [[nodiscard]] static std::vector<uint8_t> MassFetchHex(const std::string &filename);
 
         //static std::array<uint8_t, 10> FetchHex(const std::string &filename);
-        [[gnu::hot]] static void FetchHex(const std::vector<uint8_t> &v, std::deque<uint8_t> &a);
+        static void FetchHex(const std::vector<uint8_t> &v, std::array<uint8_t, 10> &a);
 };
 
 class FETCH : public ASSEMBLY, public ELF {

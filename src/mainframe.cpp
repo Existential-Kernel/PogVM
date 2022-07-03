@@ -1,11 +1,5 @@
 #include <iostream>
-#include <cstdlib>
-#include <stdint.h>
-#include <string>
-#include <cstring>
 #include <vector>
-
-#include <thread>
 
 #include "audit.hpp"
 #include "cycle/fetch.cpp"
@@ -31,7 +25,7 @@ int main(int argc, char *argv[]) {
 			if (!strcmp(argv[1], "-a")) { AUDIT::AuditCheck(); }
 			if (!strcmp(argv[1], "--audit")) { AUDIT::AuditCheck(); std::exit(0); }
 
-			if (UTILITY::FileExists(argv[1])) {
+			if (UTIL::FileExists(argv[1])) {
 				KERNEL::Kernel(argv[1], true, 32, 1); // REVISION NEEDED: change default bool value if i find out which mode is more stable
 				break;
 			}
@@ -44,20 +38,7 @@ int main(int argc, char *argv[]) {
 			break;
 
 		case 3:
-			if (UTILITY::FileExists(argv[2])) {
-/*
-				{
-					std::unique_ptr<ELF>ELF_PTR = std::make_unique<ELF>();
-					std::vector<uint8_t>hexvector = ELF_PTR->FetchHex(argv[2]);
-
-					// TODO: make this into a switch statement too
-					if (!strcmp(argv[1], "-hd") || !strcmp(argv[1], "--header")) { ELF_PTR->OutputELF(0b00, hexvector); }
-					if (!strcmp(argv[1], "-p") || !strcmp(argv[1], "--program")) { ELF_PTR->OutputELF(0b01, hexvector); }
-					if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--sections")) { ELF_PTR->OutputELF(0b10, hexvector); }
-					if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--info")) { ELF_PTR->OutputELF(0b11, hexvector); }
-				}
-*/
-
+			if (UTIL::FileExists(argv[2])) {
 				{
 					std::vector<uint8_t>hexvector = ELF::MassFetchHex(argv[2]);
 

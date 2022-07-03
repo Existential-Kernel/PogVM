@@ -20,6 +20,6 @@ class EXECUTE {
         #define sub 0x11  // subelements
 
     public:
-        [[gnu::hot]] static void MassExecute(class REGISTER *Reg, const std::vector<std::vector<uint8_t>> &v);
-        [[gnu::hot]] static void Execute(class REGISTER *Reg, const std::vector<uint8_t> &v);
+        static void MassExecute(class REGISTER *Reg, const std::vector<std::vector<uint8_t>> &v);
+        static void Execute(class REGISTER *Reg, const std::vector<uint8_t> &v);
 };

@@ -23,10 +23,11 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 		}
 
     public:
-       #ifdef __linux__ { [[gnu::hot]] } #endif static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
-			if (UTILITY::FileExists(argv)) {
-
-				// check if file is an ELF file. Else, check if it's an assembly file
+       #ifdef __linux__       // use polymorphism whenever i have the time
+			[[gnu::hot]] 
+	   #endif 
+	   static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
+			if (UTIL::FileExists(argv)) {
 				if (ELF::CheckELF(argv)) {
 					{
 						// fuck the new and delete keywords, all my homies use smart pointers
@@ -52,11 +53,12 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 							case false: // threading mode
 								{
 									std::vector<uint8_t> hexvector = FETCH_PTR->MassFetchHex(argv);
-									std::deque<uint8_t> queue [[maybe_unused]];
+									std::array<uint8_t, 10> queue{};
+									std::vector<uint8_t> instructions{};
 									for (;;) {
-										//std::thread tfetch(FETCH_PTR->FetchHex, hexvector, queue);
-										//std::thread tdecode();
-										//std::thread texecute();
+										//std::thread tfetch(FETCH_PTR->FetchHex, hexvector, queue, offset);   <= done
+										//std::thread tdecode(DECODE_PTR->Decode, queue, instructions);        <= done
+										//std::thread texecute(EXECUTE_PTR->Execute, &Reg, instructions);      <= done
 									}
 								}
 								break;

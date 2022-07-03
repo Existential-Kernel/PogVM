@@ -431,7 +431,7 @@ void ELFHEADER::GetELFHeader(const std::vector<unsigned char> &hex) noexcept {
         0x0E, 0x03, 0x04,
         0x0E, 0x10, 0x10,
     };
-    
+
     const std::vector<uint8_t> code5 = {
         0x02, 0x02, 0x02,
     };
@@ -469,14 +469,14 @@ void ELFHEADER::GetELFHeader(const std::vector<unsigned char> &hex) noexcept {
     file.read((char*)&arr[0], arr.size());
 */
 
-[[gnu::hot]] void ELF::FetchHex(const std::vector<uint8_t> &v, std::deque<uint8_t> &a) {
+void ELF::FetchHex(const std::vector<uint8_t> &v, std::array<uint8_t, 10> &a) {
     for (size_t i = 0; i < 10; i++) {
-        a.push_back(v[i]);
+        a[i] = v[i];
     }
 }
 
 
-[[gnu::hot, nodiscard]] std::vector<uint8_t> ELF::MassFetchHex(const std::string &filename) {
+[[nodiscard]] std::vector<uint8_t> ELF::MassFetchHex(const std::string &filename) {
     std::ifstream file{filename, std::ios::binary};
     std::vector<uint8_t> hexvector{};
     if (file) {

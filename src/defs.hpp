@@ -21,6 +21,7 @@ namespace ANSI {
     const char *RED_BG   = "\x1B[48;2;255;0;0m";
 
     const char *RED      = "\x1B[38;2;255;0;0m";
+    const char *ORANGE   = "\x1B[38;2;255;180;5m";
     const char *GREEN    = "\x1B[38;2;0;255;0m";
     const char *GREY     = "\x1B[38;2;70;70;70m";
     const char *EXIT     = "\x1B[0m";
@@ -60,7 +61,21 @@ namespace OUTPUT {
     }
 };
 
-namespace UTILITY {
+namespace UTIL {
+    [[nodiscard]] static inline bool FileExists(const std::filesystem::path &path, const std::filesystem::file_status &status = std::filesystem::file_status{}) {
+        return (std::filesystem::status_known(status) ? std::filesystem::exists(status) : std::filesystem::exists(path));
+    }
+
+    [[nodiscard]] static inline uint64_t GetCPUClockCycles(void) {
+        uint32_t lo, hi;
+        __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
+        return (static_cast<uint64_t>(hi) << 32) | lo;
+    }
+
+}
+
+// For debugging purposes only
+namespace DEV {
     [[maybe_unused]] static inline void ClearConsole(void) {
         #ifdef _WIN32 
             std::system("cls");
@@ -69,11 +84,7 @@ namespace UTILITY {
         #endif
     }
 
-    [[nodiscard]] static inline bool FileExists(const std::filesystem::path &path, const std::filesystem::file_status &status = std::filesystem::file_status{}) {
-        return (std::filesystem::status_known(status) ? std::filesystem::exists(status) : std::filesystem::exists(path));
-    }
-
-    // This is strictly used only during development for debugging purposes. (BP = breakpoint)
+    // BP = breakpoint
     [[maybe_unused, noreturn]] static void BP(const std::string &message = "BREAKPOINT") {
         std::cout 
             << "\n" 
@@ -87,8 +98,6 @@ namespace UTILITY {
             << "\n" << std::endl;
         std::exit(0);
     }
-
-
 
     [[maybe_unused]] static std::string IntToHex(const uint64_t &integer) {
         std::stringstream stream;
