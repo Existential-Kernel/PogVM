@@ -51,8 +51,7 @@ namespace i8088 {
      * Description: ASCII adjust AX after multiplication
      * Opcode(s):   0xD4
      */
-    inline void AAM(void) {
-        std::unique_ptr<REGISTER>REG(new REGISTER);
+    inline void AAM(class REGISTER *REG) {
         REG->R8_PTR->AH = static_cast<uint8_t>(REG->R8_PTR->AL / 10);
         REG->R8_PTR->AL %= 10;
     }
@@ -330,8 +329,7 @@ namespace i8088 {
      * Arguments:   None
      * Opcode(s):   0x48...0x4F, 0xFE/1, 0xFF/1
      */
-    static inline void DEC(const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
-        std::unique_ptr<REGISTER>REG(new REGISTER);
+    static inline void DEC(class REGISTER *REG, const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
         if (prefix == 0x66) {
             switch (opcode) {
                 case 0x48:REG->R16_PTR->AX--; break;
@@ -410,8 +408,7 @@ namespace i8088 {
      * Arguments:   None, 1 if 0xFE
      * Opcode(s):   0x40...0x47, 0xFE/0, 0xFF/0
      */
-    static inline void INC(const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
-        std::unique_ptr<REGISTER>REG(new REGISTER);
+    static inline void INC(class REGISTER *REG, const uint8_t &prefix, const uint8_t &opcode, const uint8_t &operand1) {
         if (prefix == 0x66) {
             switch (opcode) {
                 case 0x40:REG->R16_PTR->AX++; break;
@@ -469,8 +466,7 @@ namespace i8088 {
      * Arguments:   
      * Opcode(s):   0x88...0x8C, 0x8E, 0xA0...0xA3, 0xB0, 0xB8, 0xC6, 0xC7
      */
-    static inline void MOV(const uint8_t &opcode, uint8_t operand1, uint8_t operand2, uint8_t operand3, uint8_t operand4) {
-        std::unique_ptr<REGISTER>REG(new REGISTER);
+    static inline void MOV(class REGISTER *REG, const uint8_t &opcode, uint8_t operand1, uint8_t operand2, uint8_t operand3, uint8_t operand4) {
         switch (opcode) {
             case 0xBB: 
                 const uint32_t lendian = operand4 << 24 | operand3 << 16 | operand2 << 8 | operand1;
@@ -544,12 +540,12 @@ namespace i8088 {
      * Opcode(s):   0x30...0x35, 0x80...0x81/6, 0x82...0x83/6
      */
     static inline void XOR(
+        class REGISTER *REG, 
         const uint8_t &opcode, 
         const size_t &operand1, 
         const size_t &operand2,
         const size_t &operand3, 
         const size_t &operand4) {
-        std::unique_ptr<REGISTER>REG(new REGISTER);
         uint8_t hex = opcode;
         switch (hex) {
             case 0x34:REG->R8_PTR->AL ^= operand1; break;

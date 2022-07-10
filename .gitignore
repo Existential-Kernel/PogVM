@@ -37,3 +37,4 @@ pogvm.out
 pogvm
 .vscode/
 Makefile
+build/

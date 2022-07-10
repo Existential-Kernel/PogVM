@@ -1,17 +1,3 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <regex>
-#include <filesystem>
-#include <stdio.h>
-#include <ios>
-#include <iomanip>
-#include <array>
-#include <elf.h>  // https://www.man7.org/linux/man-pages/man5/elf.5.html
-
-#include "../defs.hpp"
-#include "../cpu/registers.hpp"
-
 #pragma once
 
 class ASSEMBLY {
@@ -127,16 +113,18 @@ class ELF : public ELFHEADER {
     public:
         // Check if the file is an ELF file
         static bool CheckELF(const std::string &filename);
-
-        // Get hex data of file and return as vector
-        [[nodiscard]] static std::vector<uint8_t> MassFetchHex(const std::string &filename);
-
-        //static std::array<uint8_t, 10> FetchHex(const std::string &filename);
-        static void FetchHex(const std::vector<uint8_t> &v, std::array<uint8_t, 10> &a);
+        static std::vector<uint8_t> FetchHeader(const std::string &filename); 
 };
 
 class FETCH : public ASSEMBLY, public ELF {
     public:
         FETCH();
         ~FETCH();
+
+    public:
+        // Get hex data of file and return as vector
+        [[nodiscard]] static std::deque<uint8_t> MassFetch(const std::string &filename);
+
+        //static std::array<uint8_t, 10> FetchHex(const std::string &filename);
+        static void Fetch(std::deque<uint8_t> &v, std::deque<uint8_t> &d);
 };

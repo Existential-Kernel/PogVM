@@ -1,12 +1,16 @@
 #include <thread>
 #include <memory>
+#include <vector>
+
+#include "defs.hpp"
 
 #include "cycle/fetch.cpp"
 #include "cycle/decode.cpp"
 #include "cycle/execute.cpp"
-#include "defs.hpp"
+
 #include "cpu/memory.hpp"
 #include "cpu/registers.hpp"
+#include "cpu/stack.hpp"
 
 //https://www.cplusplus.com/reference/thread/thread/?kw=thread
 
@@ -23,10 +27,7 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 		}
 
     public:
-       #ifdef __linux__       // use polymorphism whenever i have the time
-			[[gnu::hot]] 
-	   #endif 
-	   static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
+	    GNU_HOT static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
 			if (UTIL::FileExists(argv)) {
 				if (ELF::CheckELF(argv)) {
 					{
@@ -38,28 +39,38 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 						std::vector<uint8_t> resultvector{};
 						std::vector<std::vector<uint8_t>> instructions{};
 
-						REGISTER Reg;
+						REGISTER Registers;
+						STACK Stack;
 
 						switch (mode) {
 							case true: // compiled mode
 								{
-									//std::vector<uint8_t> hexvector = FETCH::MassFetchHex(argv);
+									//std::vector<uint8_t> hexvector = FETCH::MassFetch(argv);
 									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
 									DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
-									EXECUTE_PTR->MassExecute(&Reg, instructions);
+									EXECUTE_PTR->MassExecute(&Registers, &Stack, instructions);
 								}
 								break;
 
 							case false: // threading mode
 								{
-									std::vector<uint8_t> hexvector = FETCH_PTR->MassFetchHex(argv);
-									std::array<uint8_t, 10> queue{};
-									std::vector<uint8_t> instructions{};
+									std::deque<uint8_t> hexvector = FETCH_PTR->MassFetch(argv);
+									std::deque<uint8_t> queue{};
+									std::vector<uint8_t> instruction{};
+
 									for (;;) {
-										//std::thread tfetch(FETCH_PTR->FetchHex, hexvector, queue, offset);   <= done
-										//std::thread tdecode(DECODE_PTR->Decode, queue, instructions);        <= done
-										//std::thread texecute(EXECUTE_PTR->Execute, &Reg, instructions);      <= done
+/*
+										std::thread tfetch(FETCH_PTR->FetchHex, hexvector, queue, offset);                   <=
+										std::thread tdecode(DECODE_PTR->Decode, queue, instruction, bits, processor);        <=
+										std::thread texecute(EXECUTE_PTR->Execute, &Reg, &Stack, instruction);               <=
+*/
+/*									
+										FETCH_PTR->Fetch(hexvector, queue);                         // <= done
+										DECODE_PTR->Decode(queue, instruction, bits, processor);    // <=
+										EXECUTE_PTR->Execute(&Registers, &Stack, instruction);      // <=
+*/
 									}
+
 								}
 								break;
 

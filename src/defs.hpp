@@ -4,6 +4,24 @@
 
 #pragma once
 
+#if __cpp_attributes 
+    #if __has_cpp_attribute(gnu::hot)
+        #define GNU_HOT [[gnu::hot]]
+    #else
+        #define GNU_HOT
+    #endif
+
+    #if __has_cpp_attribute(gnu::always_inline)
+        #define GNU_INLINE [[gnu::always_inline]]
+    #else
+        #define GNU_INLINE
+    #endif
+#else
+	#define GNU_HOT
+    #define GNU_INLINE
+#endif
+
+
 namespace INFO {
     std::string program = "PogVM";
     uint8_t major       = 1;
@@ -71,10 +89,9 @@ namespace UTIL {
         __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
         return (static_cast<uint64_t>(hi) << 32) | lo;
     }
-
 }
 
-// For debugging purposes only
+// For debugging/development purposes only
 namespace DEV {
     [[maybe_unused]] static inline void ClearConsole(void) {
         #ifdef _WIN32 

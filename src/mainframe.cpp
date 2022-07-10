@@ -1,8 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <string.h>
 
 #include "audit.hpp"
-#include "cycle/fetch.cpp"
+#include "cycle/fetch.hpp"
 #include "vcore.cpp"
 #include "defs.hpp"
 
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
 		case 3:
 			if (UTIL::FileExists(argv[2])) {
 				{
-					std::vector<uint8_t>hexvector = ELF::MassFetchHex(argv[2]);
+					std::vector<uint8_t>hexvector = ELF::FetchHeader(argv[2]);
 
 					// TODO: make this into a switch statement too
 					if (!strcmp(argv[1], "-hd") || !strcmp(argv[1], "--header")) { ELF::OutputELF(0b00, hexvector); }

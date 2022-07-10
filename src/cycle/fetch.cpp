@@ -1,6 +1,16 @@
-#include "./fetch.hpp"
+//#include <string>
 
-#pragma once
+
+#include "../defs.hpp"
+
+#include <vector>
+#include <regex>
+//#include <filesystem>
+//#include <ios>
+//#include <iomanip>
+
+#include "fetch.hpp"
+#include "../cpu/registers.hpp"
 
 // Filter for things like comments and commas for simplicity
 [[nodiscard]] std::string ASSEMBLY::Filter(const std::string &string) {
@@ -65,7 +75,7 @@
     return codevector;
 }
 
-[[gnu::cold, nodiscard]] std::vector<std::vector<std::string>> ASSEMBLY::FetchAssembly(const std::string &location) {
+[[nodiscard]] std::vector<std::vector<std::string>> ASSEMBLY::FetchAssembly(const std::string &location) {
     std::fstream file{};
     std::string line{};
     std::vector<std::vector<std::string>> programvector{};
@@ -184,7 +194,7 @@ void ELFHEADER::OutputELFProgram(const std::vector<unsigned char> &header) noexc
     << "\n";
 }
 
-void ELFHEADER::GetELFHeader(const std::vector<unsigned char> &hex) noexcept {
+void ELFHEADER::GetELFHeader(const std::vector<uint8_t> &hex) noexcept {
     // Get the ELF file's first 16 bytes
     unsigned char header[0x40];
     for (size_t x = 0; x < 0x40; ++x) { 
@@ -211,15 +221,15 @@ void ELFHEADER::GetELFHeader(const std::vector<unsigned char> &hex) noexcept {
         [[likely]]   case 0x00: ELF_HEADER.OSABI = "System V"; break;
         [[unlikely]] case 0x01: ELF_HEADER.OSABI = "HP-UX"; break;
         [[unlikely]] case 0x02: ELF_HEADER.OSABI = "NetBSD"; break;
-                        case 0x03: ELF_HEADER.OSABI = "Linux"; break;
+                     case 0x03: ELF_HEADER.OSABI = "Linux"; break;
         [[unlikely]] case 0x04: ELF_HEADER.OSABI = "GNU Hurd"; break;
-                        case 0x06: ELF_HEADER.OSABI = "Sun Solaris"; break;
+                     case 0x06: ELF_HEADER.OSABI = "Sun Solaris"; break;
         [[unlikely]] case 0x07: ELF_HEADER.OSABI = "AIX"; break;
         [[unlikely]] case 0x08: ELF_HEADER.OSABI = "IRIX"; break;
         [[unlikely]] case 0x09: ELF_HEADER.OSABI = "FreeBSD"; break;
         [[unlikely]] case 0x0A: ELF_HEADER.OSABI = "Compaq TRU64 UNIX"; break;
         [[unlikely]] case 0x0B: ELF_HEADER.OSABI = "Novell Modesto"; break;
-                        case 0x0C: ELF_HEADER.OSABI = "OpenBSD"; break;
+                     case 0x0C: ELF_HEADER.OSABI = "OpenBSD"; break;
         [[unlikely]] case 0x0D: ELF_HEADER.OSABI = "OpenVMS"; break;
         [[unlikely]] case 0x0E: ELF_HEADER.OSABI = "HP NonStop Kernel"; break;
         [[unlikely]] case 0x0F: ELF_HEADER.OSABI = "AROS"; break;
@@ -469,24 +479,43 @@ void ELFHEADER::GetELFHeader(const std::vector<unsigned char> &hex) noexcept {
     file.read((char*)&arr[0], arr.size());
 */
 
-void ELF::FetchHex(const std::vector<uint8_t> &v, std::array<uint8_t, 10> &a) {
-    for (size_t i = 0; i < 10; i++) {
-        a[i] = v[i];
+[[nodiscard]] std::vector<uint8_t> ELF::FetchHeader(const std::string &filename) {
+    std::ifstream file{filename, std::ios::binary};
+    std::vector<uint8_t> hexvector;
+
+    if (file) {
+        file.seekg(0, std::ios::beg);
+        hexvector.resize(500);
+        file.read((char*)&hexvector[0], hexvector.size());
+    } else {
+        OUTPUT::Error("This file is not open", 0x0E);
+    }
+    file.close();
+    return hexvector;
+}
+
+
+
+
+void FETCH::Fetch(std::deque<uint8_t> &v, std::deque<uint8_t> &result) {
+    for (;result.size() != 10;) {
+        result.push_back(v[0]);
+        v.pop_front();
     }
 }
 
 
-[[nodiscard]] std::vector<uint8_t> ELF::MassFetchHex(const std::string &filename) {
+[[nodiscard]] std::deque<uint8_t> FETCH::MassFetch(const std::string &filename) {
     std::ifstream file{filename, std::ios::binary};
-    std::vector<uint8_t> hexvector{};
+    std::deque<uint8_t> hexdeque{};
     if (file) {
         file.seekg(0, std::ios::end);
-        hexvector.resize(file.tellg());
+        hexdeque.resize(file.tellg());
         file.seekg(0, std::ios::beg);
-        file.read((char*)&hexvector[0], hexvector.size());
+        file.read((char*)&hexdeque[0], hexdeque.size());
     }
     file.close();
-    return hexvector;
+    return hexdeque;
 }
 
 FETCH::FETCH() 

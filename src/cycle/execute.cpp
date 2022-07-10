@@ -1,7 +1,16 @@
-#include "./execute.hpp"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <vector>
+
+#include "execute.hpp"
+#include "../instructions/8086-8088.hpp"
+#include "../instructions/testing.hpp"
 #include "../cpu/registers.hpp"
 
-[[gnu::hot]] void EXECUTE::MassExecute(class REGISTER *RegObj, const std::vector<std::vector<uint8_t>> &v) {
+GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj, const std::vector<std::vector<uint8_t>> &v) {
     bool prefix = false;
     
     REGISTER Reg;
@@ -77,13 +86,13 @@
             case 0x42:
             case 0x43:
             case 0x44:
-                prefix ? i8088::INC(0x66, opcode, v.at(i).at(1)) : i8088::INC(0, opcode, v.at(i).at(1));
+                prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(i).at(1)) : i8088::INC(RegObj, 0, opcode, v.at(i).at(1));
                 prefix = false;
                 continue;
             case 0x45: // fallthrough
             case 0x46:
             case 0x47:
-                prefix ? i8088::INC(0x66, opcode, v.at(i).at(1)) : i8088::INC(0, opcode, v.at(i).at(1));
+                prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(i).at(1)) : i8088::INC(RegObj, 0, opcode, v.at(i).at(1));
                 prefix = false;
                 continue;
             case 0x48:
@@ -201,7 +210,7 @@
             case 0xB8:
             case 0xB9:
             case 0xBA:
-            case 0xBB: i8088::MOV(0xBB, v.at(i).at(1), v.at(i).at(2), v.at(i).at(3), v.at(i).at(4)); break;
+            case 0xBB: i8088::MOV(RegObj, 0xBB, v.at(i).at(1), v.at(i).at(2), v.at(i).at(3), v.at(i).at(4)); break;
             case 0xBC:
             case 0xBD:
             case 0xBE:
@@ -283,7 +292,7 @@
 
 
 
-void EXECUTE::Execute(class REGISTER *RegObj, const std::vector<uint8_t> &v) {
+void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::vector<uint8_t> &v) {
     bool prefix = false;
     uint8_t opcode = v.at(0);
     switch (opcode) {
@@ -356,13 +365,13 @@ void EXECUTE::Execute(class REGISTER *RegObj, const std::vector<uint8_t> &v) {
         case 0x42:
         case 0x43:
         case 0x44:
-            prefix ? i8088::INC(0x66, opcode, v.at(1)) : i8088::INC(0, opcode, v.at(1));
+            prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(1)) : i8088::INC(RegObj, 0, opcode, v.at(1));
             prefix = false;
             return;
         case 0x45: // fallthrough
         case 0x46:
         case 0x47:
-            prefix ? i8088::INC(0x66, opcode, v.at(1)) : i8088::INC(0, opcode, v.at(1));
+            prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(1)) : i8088::INC(RegObj, 0, opcode, v.at(1));
             prefix = false;
             return;
         case 0x48:
@@ -480,7 +489,7 @@ void EXECUTE::Execute(class REGISTER *RegObj, const std::vector<uint8_t> &v) {
         case 0xB8:
         case 0xB9:
         case 0xBA:
-        case 0xBB: i8088::MOV(0xBB, v.at(1), v.at(2), v.at(3), v.at(4)); break;
+        case 0xBB: i8088::MOV(RegObj, 0xBB, v.at(1), v.at(2), v.at(3), v.at(4)); break;
         case 0xBC:
         case 0xBD:
         case 0xBE:

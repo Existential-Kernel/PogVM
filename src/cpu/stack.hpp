@@ -7,5 +7,9 @@
 
 class STACK {
     public:
+        STACK() {};
+        ~STACK() {};
+
+    public:
         std::stack<std::variant<__uint8_t, __uint16_t, __uint32_t, __uint64_t /*, __uint128_t*/, size_t>> stack; 
 };
