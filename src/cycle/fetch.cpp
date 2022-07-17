@@ -434,6 +434,9 @@ void ELFHEADER::GetELFHeader(const std::vector<uint8_t> &hex) noexcept {
         0xF8,  // clc
         0xFA,  // cli
         0xFC,  // cld
+        0xF9,
+        0xFB,
+        0xFD
     };
 
     const std::vector<uint8_t> code4 = {
@@ -497,10 +500,10 @@ void ELFHEADER::GetELFHeader(const std::vector<uint8_t> &hex) noexcept {
 
 
 
-void FETCH::Fetch(std::deque<uint8_t> &v, std::deque<uint8_t> &result) {
-    for (;result.size() != 10;) {
-        result.push_back(v[0]);
-        v.pop_front();
+void FETCH::Fetch(std::deque<uint8_t> &hexqueue, std::deque<uint8_t> &buffer) {
+    for (;buffer.size() != 10;) {
+        buffer.push_back(hexqueue[0]);
+        hexqueue.pop_front();
     }
 }
 

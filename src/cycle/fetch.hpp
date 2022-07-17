@@ -126,5 +126,5 @@ class FETCH : public ASSEMBLY, public ELF {
         [[nodiscard]] static std::deque<uint8_t> MassFetch(const std::string &filename);
 
         //static std::array<uint8_t, 10> FetchHex(const std::string &filename);
-        static void Fetch(std::deque<uint8_t> &v, std::deque<uint8_t> &d);
+        static void Fetch(std::deque<uint8_t> &hexqueue, std::deque<uint8_t> &buffer);
 };

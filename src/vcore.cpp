@@ -54,23 +54,31 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 
 							case false: // threading mode
 								{
-									std::deque<uint8_t> hexvector = FETCH_PTR->MassFetch(argv);
-									std::deque<uint8_t> queue{};
+									//std::deque<uint8_t> hexvector = FETCH_PTR->MassFetch(argv);
+									
+									std::vector<uint8_t> tempvec = FETCH_PTR->GetCode();
+									std::deque<uint8_t> hexvector;
+									for (int i = 0; i < tempvec.size(); i++) {
+										hexvector.push_back(tempvec.at(i));
+									}
+									std::deque<uint8_t> buffer{};
 									std::vector<uint8_t> instruction{};
 
-									for (;;) {
+									int count = 0;
+
+									FETCH_PTR->Fetch(hexvector, buffer);
+
+									do {
 /*
 										std::thread tfetch(FETCH_PTR->FetchHex, hexvector, queue, offset);                   <=
 										std::thread tdecode(DECODE_PTR->Decode, queue, instruction, bits, processor);        <=
 										std::thread texecute(EXECUTE_PTR->Execute, &Reg, &Stack, instruction);               <=
 */
-/*									
-										FETCH_PTR->Fetch(hexvector, queue);                         // <= done
-										DECODE_PTR->Decode(queue, instruction, bits, processor);    // <=
-										EXECUTE_PTR->Execute(&Registers, &Stack, instruction);      // <=
-*/
-									}
+										DECODE_PTR->Decode(buffer, instruction, bits, processor);
+										EXECUTE_PTR->Execute(&Registers, &Stack, instruction);
+										FETCH_PTR->Fetch(hexvector, buffer);
 
+									} while (buffer.at(0) != 0);
 								}
 								break;
 

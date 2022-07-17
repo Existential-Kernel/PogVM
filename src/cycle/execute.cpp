@@ -31,7 +31,7 @@ GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj,
             case 0x0B:
             case 0x0C:
             case 0x0D:
-            case 0x0E: iTesting::TEST(v.at(i).at(1), v.at(i).at(2)); continue;
+            case 0x0E: iTesting::TEST(RegObj, v.at(i).at(1), v.at(i).at(2)); continue;
             case 0x0F:
             case 0x10:
             case 0x11: break;
@@ -294,7 +294,7 @@ GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj,
 
 void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::vector<uint8_t> &v) {
     bool prefix = false;
-    uint8_t opcode = v.at(0);
+    uint8_t opcode = v.front();
     switch (opcode) {
         case 0x00: i8088::ADD(RegObj, 0x05, v.at(1), 0); return;
         case 0x01: 
@@ -310,7 +310,7 @@ void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::
         case 0x0B:
         case 0x0C:
         case 0x0D:
-        case 0x0E: iTesting::TEST(v.at(1), v.at(2)); return;
+        case 0x0E: iTesting::TEST(RegObj, v.at(1), v.at(2)); return;
         case 0x0F:
         case 0x10:
         case 0x11: break;

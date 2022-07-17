@@ -2,7 +2,7 @@ CC=g++
 OUT=pogvm
 MAIN=src/mainframe
 AUXFILES=fetch.o decode.o execute.o
-CPPFLAGS=-std=c++20 -w -Wall -Wextra -Werror -Wshadow -Wpedantic -pedantic -pedantic-errors
+CPPFLAGS=-std=c++20 -O3 -w -Wall -Wextra -Werror -Wshadow -Wpedantic -pedantic -pedantic-errors
 EXTRACPPFLAGS=-time -B ./src -pthread -ffunction-sections -fdata-sections -Ofast -ftree-vectorize -flto
 FILE=./src/tests/elf/helloworld
 VMFLAG=--compiled
@@ -47,7 +47,8 @@ exec: debug
 release:
 	@$(CC) $(CPPFLAGS) $(EXTRACPPFLAGS) $(MAIN).cpp -o $(OUT)
 
-debug: clear
+debug:
+	@#src/cycle/fetch.cpp src/cycle/decode.cpp src/cycle/execute.cpp 
 	@$(CC) $(CPPFLAGS) $(MAIN).cpp -o $(OUT)
 
 run: clear compile

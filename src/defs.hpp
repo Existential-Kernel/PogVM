@@ -2,6 +2,10 @@
 #include <fstream>
 #include <filesystem>
 
+#include <stdio.h>
+#include <stdint.h>
+#include <time.h>
+
 #pragma once
 
 #if __cpp_attributes 
@@ -21,14 +25,13 @@
     #define GNU_INLINE
 #endif
 
-
 namespace INFO {
     std::string program = "PogVM";
-    uint8_t major       = 1;
-    uint8_t minor       = 0;
+    char major       = 1;
+    char minor       = 0;
     std::string link    = "https://github.com/Existential-Kernel/PogVM";
 
-    const std::string version = program + " version " + static_cast<char>(major) + "." + static_cast<char>(minor);
+    const std::string version = program + " version " + major + "." + minor;
     const std::string information = version \
     + "\nMade by Existential-Kernel (" + link \
     + ")\nCopyright 2022 Existential-Kernel\nLicense: WTFPL";
@@ -49,13 +52,14 @@ namespace ANSI {
 namespace OUTPUT {
 	// Output the version of the program
     [[noreturn]] static void Version(void) {
-		std::cout << INFO::version << std::endl;
+		std::cout << INFO::version;
 		std::exit(0);
     }
 
     // Display the help menu
     [[noreturn]] static void HelpMenu(void) {
-        std::cout << INFO::information << "\n" << ANSI::BOLD << "Usage: " << ANSI::EXIT << 
+        std::cout << INFO::information;
+        std::cout << "\n" << ANSI::BOLD << "Usage: " << ANSI::EXIT << 
 "pogvm [flags] [file location]\n \
   Example: pogvm --info ./test\n";
         std::exit(0);
@@ -84,14 +88,58 @@ namespace UTIL {
         return (std::filesystem::status_known(status) ? std::filesystem::exists(status) : std::filesystem::exists(path));
     }
 
-    [[nodiscard]] static inline uint64_t GetCPUClockCycles(void) {
-        uint32_t lo, hi;
-        __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
-        return (static_cast<uint64_t>(hi) << 32) | lo;
+    [[nodiscard]] static inline uint64_t getCycles(void) {
+        #if defined(__ARM_ARCH_7A__)
+            uint32_t r;
+            __asm__ __volatile__("mrc p15, 0, %0, c9, c13, 0\t\n" : "=r" (r)); /* Read PMCCNTR       */
+            return (static_cast<uint64_t>(r)) << 6;                                 /* 1 tick = 64 clocks */
+        #elif defined(__x86_64__)
+            unsigned a, d;
+            __asm__ __volatile__("rdtsc" : "=a" (a), "=d" (d));
+            return (static_cast<uint64_t>(a)) | ((static_cast<uint64_t>(d)) << 32);
+        #elif defined(__i386__)
+            uint64_t ret;
+            __asm__ __volatile__("rdtsc": "=A" (ret));
+            return ret;
+        #else
+            OUTPUT::Error("Unknown architecture detected", 0x12)
+        #endif
+    }
+
+    [[nodiscard]] static inline uint32_t getMillisecondCounter(void) {
+        struct timespec t;
+        clock_gettime (CLOCK_MONOTONIC, &t);
+
+        return static_cast<uint32_t>(t.tv_sec * 1000 + t.tv_nsec / 1000000);
+    }
+
+    // clock speed in kilohertz
+    [[nodiscard]] volatile static inline uint64_t getClockSpeed(void) {
+        const uint64_t cycles = getCycles();
+        const uint32_t millis = getMillisecondCounter();
+        int lastResult = 0;
+
+        for (;;) {
+            volatile int n = 1000000;
+            while (--n > 0) {}
+
+            const uint32_t millisElapsed = getMillisecondCounter() - millis;
+            const uint64_t cyclesNow = getCycles();
+
+            if (millisElapsed > 80) {
+                const int newResult = static_cast<int>((cyclesNow - cycles) / millisElapsed);
+
+                if (millisElapsed > 500 || (lastResult == newResult && newResult > 100)) {
+                    return newResult;
+                }
+
+                lastResult = newResult;
+            }
+        }
     }
 }
 
-// For debugging/development purposes only
+// For debugging or development purposes only
 namespace DEV {
     [[maybe_unused]] static inline void ClearConsole(void) {
         #ifdef _WIN32 

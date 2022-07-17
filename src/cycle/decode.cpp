@@ -6,25 +6,26 @@
 #include "decode.hpp"
 
 
-GNU_INLINE inline void DECODE::SinglePush(std::vector<uint8_t> &v, const uint8_t &s, std::vector<std::vector<uint8_t>> &instructions) noexcept {
-    v.push_back(s);
-    instructions.push_back(v);
-}
-
 GNU_INLINE inline void DECODE::Push(std::vector<uint8_t> &v, const uint8_t &s, uint8_t &arg, const uint8_t &count) noexcept {
     v.push_back(s);
     arg = count;
 }
 
-GNU_INLINE inline void DECODE::SingleDirectPush(std::vector<uint8_t> &v, const uint8_t &opcode) noexcept {
-    v.push_back(opcode);
+GNU_INLINE inline void DECODE::SinglePush(std::vector<uint8_t> &v, const uint8_t &s, std::vector<std::vector<uint8_t>> &instructions) noexcept {
+    v.push_back(s);
+    instructions.push_back(v);
 }
 
-GNU_INLINE inline void DECODE::DirectPush(std::deque<uint8_t> &v, std::vector<uint8_t> &result, const int8_t &count) noexcept {
-    for (size_t i = 0; i < count; i++) {
-        result[i] = v[i];
-
+GNU_INLINE inline void DECODE::DirectPush(std::deque<uint8_t> &buffer, std::vector<uint8_t> &instruction, const int8_t &count) noexcept {
+    for (size_t i = 0; i <= count; i++) {
+        instruction.push_back(buffer.at(0));
+        buffer.pop_front();
     }
+}
+
+GNU_INLINE inline void DECODE::SingleDirectPush(std::deque<uint8_t> &buffer, std::vector<uint8_t> &instruction, const uint8_t &opcode) noexcept {
+    instruction.push_back(opcode);
+    buffer.pop_front();
 }
 
 void DECODE::CheckBits(const uint8_t &acceptablebits, const uint8_t &kernelbits, const uint8_t &hex) noexcept {
@@ -343,21 +344,20 @@ void DECODE::MassDecode(const std::vector<uint8_t> &hexvector, std::vector<std::
     }
 }
 
-
 void DECODE::Decode(
-        std::deque<uint8_t> &hexvector,
+        std::deque<uint8_t> &buffer,
         std::vector<uint8_t> &instruction,
         const uint8_t &bits, 
         const uint8_t &processor
     ) {
-
-    switch (hexvector.at(0)) { //threading mode
-        case 0x00: DirectPush(hexvector, instruction, 1); return;
+    instruction.clear();
+    switch (buffer.front()) { //threading mode
+        case 0x00: DirectPush(buffer, instruction, 1); return;
         case 0x01: // fallthrough (for now)
         case 0x02:
         case 0x03:
-        case 0x04: DirectPush(hexvector, instruction, 1); return;
-        case 0x05: DirectPush(hexvector, instruction, 2); return;
+        case 0x04: DirectPush(buffer, instruction, 1); return;
+        case 0x05: DirectPush(buffer, instruction, 2); return;
         case 0x06: 
         case 0x07:
         case 0x08:
@@ -366,7 +366,7 @@ void DECODE::Decode(
         case 0x0B:
         case 0x0C:
         case 0x0D:
-        case 0x0E: DirectPush(hexvector, instruction, 2); return;
+        case 0x0E: DirectPush(buffer, instruction, 2); return;
         case 0x0F:
         case 0x10:
         case 0x11: break;
@@ -416,14 +416,14 @@ void DECODE::Decode(
         case 0x3D:
         case 0x3E:
         case 0x3F: break;
-        case 0x40: SingleDirectPush(instruction, 0x40); return;
+        case 0x40: SingleDirectPush(buffer, instruction, 0x40); return;
         case 0x41: // fallthrough
         case 0x42:
         case 0x43:
-        case 0x44: SingleDirectPush(instruction, 0x44); return;
+        case 0x44: SingleDirectPush(buffer, instruction, 0x44); return;
         case 0x45: // fallthrough
         case 0x46:
-        case 0x47: SingleDirectPush(instruction, 0x47); return;
+        case 0x47: SingleDirectPush(buffer, instruction, 0x47); return;
         case 0x48:
         case 0x49:
         case 0x4A:
@@ -488,13 +488,13 @@ void DECODE::Decode(
         case 0x85:
         case 0x86:
         case 0x87: break;
-        case 0x88: DirectPush(hexvector, instruction, 2); return;
+        case 0x88: DirectPush(buffer, instruction, 2); return;
         case 0x89: 
         case 0x8A: 
         case 0x8B: break;
-        case 0x8C: DirectPush(hexvector, instruction, 2); return;
+        case 0x8C: DirectPush(buffer, instruction, 2); return;
         case 0x8D: break;
-        case 0x8E: DirectPush(hexvector, instruction, 2); return;
+        case 0x8E: DirectPush(buffer, instruction, 2); return;
         case 0x8F:
         case 0x90:
         case 0x91:
@@ -515,7 +515,7 @@ void DECODE::Decode(
         case 0xA0: 
         case 0xA1: 
         case 0xA2: 
-        case 0xA3: DirectPush(hexvector, instruction, 2); return;
+        case 0xA3: DirectPush(buffer, instruction, 2); return;
         case 0xA4:
         case 0xA5:
         case 0xA6:
@@ -528,7 +528,7 @@ void DECODE::Decode(
         case 0xAD:
         case 0xAE:
         case 0xAF:
-        case 0xB0: DirectPush(hexvector, instruction, 2); return;
+        case 0xB0: DirectPush(buffer, instruction, 2); return;
         case 0xB1:
         case 0xB2:
         case 0xB3:
@@ -536,10 +536,10 @@ void DECODE::Decode(
         case 0xB5:
         case 0xB6:
         case 0xB7: break;
-        case 0xB8: DirectPush(hexvector, instruction, 4); return;
+        case 0xB8: DirectPush(buffer, instruction, 4); return;
         case 0xB9:
         case 0xBA: break;
-        case 0xBB: DirectPush(hexvector, instruction, 4); return;
+        case 0xBB: DirectPush(buffer, instruction, 4); return;
         case 0xBC:
         case 0xBD:
         case 0xBE:
@@ -551,23 +551,23 @@ void DECODE::Decode(
         case 0xC4:
         case 0xC5: break;
         case 0xC6: 
-        case 0xC7: DirectPush(hexvector, instruction, 2); return;
+        case 0xC7: DirectPush(buffer, instruction, 2); return;
         case 0xC8:
         case 0xC9:
         case 0xCA:
         case 0xCB: break;
-        case 0xCC: SingleDirectPush(instruction, 0xCC); return;
-        case 0xCD: DirectPush(hexvector, instruction, 1); return;
-        case 0xCE: SingleDirectPush(instruction, 0xCE); return;
-        case 0xCF: SingleDirectPush(instruction, 0xCF); return;
+        case 0xCC: SingleDirectPush(buffer, instruction, 0xCC); return;
+        case 0xCD: DirectPush(buffer, instruction, 1); return;
+        case 0xCE: SingleDirectPush(buffer, instruction, 0xCE); return;
+        case 0xCF: SingleDirectPush(buffer, instruction, 0xCF); return;
         case 0xD0:
         case 0xD1:
         case 0xD2:
         case 0xD3: break;
         case 0xD4: 
             CheckBits(32, bits, 0xD4);
-            if (hexvector.at(1) == 0x0A) {
-                DirectPush(hexvector, instruction, 1);
+            if (buffer.at(1) == 0x0A) {
+                DirectPush(buffer, instruction, 1);
                 return;
             }
             return;
@@ -599,19 +599,19 @@ void DECODE::Decode(
         case 0xEE: break;
         case 0xEF:
         case 0xF0:
-        case 0xF1: SingleDirectPush(instruction, 0xF1); return;
+        case 0xF1: SingleDirectPush(buffer, instruction, 0xF1); return;
         case 0xF2:
         case 0xF3: break;
-        case 0xF4: SingleDirectPush(instruction, 0xF4); return;
+        case 0xF4: SingleDirectPush(buffer, instruction, 0xF4); return;
         case 0xF5:
         case 0xF6:
         case 0xF7: break;
-        case 0xF8: SingleDirectPush(instruction, 0xF8); return;
-        case 0xF9: SingleDirectPush(instruction, 0xF9); return;
-        case 0xFA: SingleDirectPush(instruction, 0xFA); return;
-        case 0xFB: SingleDirectPush(instruction, 0xFB); return;
-        case 0xFC: SingleDirectPush(instruction, 0xFC); return;
-        case 0xFD: SingleDirectPush(instruction, 0xFD); return;
+        case 0xF8: SingleDirectPush(buffer, instruction, 0xF8); return;
+        case 0xF9: SingleDirectPush(buffer, instruction, 0xF9); return;
+        case 0xFA: SingleDirectPush(buffer, instruction, 0xFA); return;
+        case 0xFB: SingleDirectPush(buffer, instruction, 0xFB); return;
+        case 0xFC: SingleDirectPush(buffer, instruction, 0xFC); return;
+        case 0xFD: SingleDirectPush(buffer, instruction, 0xFD); return;
         case 0xFE:
         case 0xFF: break;
     }

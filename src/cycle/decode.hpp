@@ -10,7 +10,7 @@ class DECODE {
     private:
         static inline void SinglePush(std::vector<uint8_t> &v, const uint8_t &s, std::vector<std::vector<uint8_t>> &instructions) noexcept;
         static inline void Push(std::vector<uint8_t> &v, const uint8_t &s, uint8_t &arg, const uint8_t &count) noexcept;
-        static inline void SingleDirectPush(std::vector<uint8_t> &v, const uint8_t &opcode) noexcept;
+        static inline void SingleDirectPush(std::deque<uint8_t> &q , std::vector<uint8_t> &v, const uint8_t &opcode) noexcept;
         static inline void DirectPush(std::deque<uint8_t> &v, std::vector<uint8_t> &result, const int8_t &count) noexcept;
         static void CheckBits(const uint8_t &acceptablebits, const uint8_t &kernelbits, const uint8_t &hex) noexcept;
         static void CheckProc(const uint8_t &acceptableproc, const uint8_t &kernelproc) noexcept;

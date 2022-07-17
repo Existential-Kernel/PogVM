@@ -8,7 +8,6 @@
 #include "../cpu/flags.hpp"
 #include "../cpu/registers.hpp"
 #include "../cpu/stack.hpp"
-#include "../defs.hpp"
 
 #pragma once
 
@@ -28,8 +27,13 @@ namespace i8088 {
      * Description: ASCII adjust AL after addition
      * Opcode(s):   0x37
      */
-    static inline void AAA(void) {
-
+    static inline void AAA(class REGISTER *REG) {
+/*
+        __asm__ __volatile__("aaa  %%ebx,%%eax"
+            :"=a"(foo)
+            :"a"(foo), "b"(bar)
+        );
+*/ 
     }
 
 
@@ -273,6 +277,12 @@ namespace i8088 {
             default: OUTPUT::Abort("Invalid opcode");
 
         }
+/*
+        __asm__ __volatile__("add %%ebx,%%eax"
+            :"=a"(foo)
+            :"a"(foo), "b"(bar)
+        );
+*/
     }
  
 
