@@ -13,7 +13,9 @@ class DECODE {
         static inline void SingleDirectPush(std::deque<uint8_t> &q , std::vector<uint8_t> &v, const uint8_t &opcode) noexcept;
         static inline void DirectPush(std::deque<uint8_t> &v, std::vector<uint8_t> &result, const int8_t &count) noexcept;
         static void CheckBits(const uint8_t &acceptablebits, const uint8_t &kernelbits, const uint8_t &hex) noexcept;
-        static void CheckProc(const uint8_t &acceptableproc, const uint8_t &kernelproc) noexcept;
+        static void CheckProc(const uint8_t &opcode, const uint8_t &kernelproc) noexcept;
+        static void MassCheckProc(const std::vector<std::vector<uint8_t>> &instructions, const uint8_t &kernelproc) noexcept;
+        static void CheckProcError(const uint8_t &opcode, const uint8_t &kernelproc) noexcept;
 
     public:
         static void MassDecode(const std::vector<uint8_t> &hexvector, std::vector<std::vector<uint8_t>> &resultvector, const uint8_t &bits, const uint8_t &processor);

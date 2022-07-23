@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <deque>
 #include <string.h>
 
 #include "audit.hpp"
@@ -7,8 +8,10 @@
 #include "vcore.cpp"
 #include "defs.hpp"
 
+#include "instructions/8086-8088.hpp"
+
 int main(int argc, char *argv[]) {
-	#if __cplusplus < 201703L
+	#if __cplusplus <= 201703L
 		OUTPUT::Error("PogVM requires C++17 or newer to run", 0x0D);
 	#endif
 
@@ -39,7 +42,7 @@ int main(int argc, char *argv[]) {
 			break;
 
 		case 3:
-			if (UTIL::FileExists(argv[2])) {
+			if (UTIL::FileExists(argv[2])) {							
 				{
 					std::vector<uint8_t>hexvector = ELF::FetchHeader(argv[2]);
 
@@ -49,6 +52,7 @@ int main(int argc, char *argv[]) {
 					if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--sections")) { ELF::OutputELF(0b10, hexvector); }
 					if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--info")) { ELF::OutputELF(0b11, hexvector); }
 				}
+
 				bool mode = true;
 				if (!strcmp(argv[1], "--interpreted")) { mode = false; }
 				else if (!strcmp(argv[1], "--compiled")) { mode = true; }
@@ -56,7 +60,7 @@ int main(int argc, char *argv[]) {
 				uint8_t bitclass{};
 				if (!strcmp(argv[1], "--64-bit")) { bitclass = 64; }
 				else if (!strcmp(argv[1], "--32-bit")) { bitclass = 32; }
-				else { bitclass = 32; }   
+				else { bitclass = 32; }
 
 				uint8_t processorID{};
 				if (!strcmp(argv[1], "--8086") || !strcmp(argv[1], "--8088")) { processorID = 1; }
@@ -93,5 +97,5 @@ int main(int argc, char *argv[]) {
 		case 4:
 			break;
 	}
-    return 0;
+	return 0;
 }

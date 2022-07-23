@@ -36,31 +36,103 @@ void DECODE::CheckBits(const uint8_t &acceptablebits, const uint8_t &kernelbits,
     }
 }
 
-[[maybe_unused]] void DECODE::CheckProc(const uint8_t &acceptableproc, const uint8_t &kernelproc) noexcept {
-    if (acceptableproc > kernelproc) {
-        std::stringstream error{};
-        std::string proc{};
-        switch (kernelproc) {
-            case 1: proc  = "8086/8088"; break;
-            case 2: proc  = "80186/80188"; break;
-            case 3: proc  = "NEC-V"; break;
-            case 4: proc  = "80286"; break;
-            case 5: proc  = "80386"; break;
-            case 6: proc  = "80486"; break;
-            case 7: proc  = "Pentium"; break;
-            case 8: proc  = "Pentium-MMX"; break;
-            case 9: proc  = "AMD-K6"; break;
-            case 10: proc = "Pentium-Pro"; break;
-            case 11: proc = "Pentium-II"; break;
-            case 12: proc = "Intel-Itanium"; break;
-            case 13: proc = "Cyrix-Geode"; break;
+void DECODE::MassCheckProc(const std::vector<std::vector<uint8_t>> &instructions, const uint8_t &kernelproc) noexcept {
+    for (size_t i = 0; i <= instructions.size(); i++) {
+        if (i8086::forbidden_8086_opcodes.find(instructions.at(i).at(0)) != i8086::forbidden_8086_opcodes.end()) {
+            CheckProcError(instructions.at(i).at(0), kernelproc);
         }
-        error << "This instruction is not supported by the " << proc << " processor";
-        OUTPUT::Abort(error.str());
     }
 }
 
-void DECODE::MassDecode(const std::vector<uint8_t> &hexvector, std::vector<std::vector<uint8_t>> &resultvector, const uint8_t &bits, const uint8_t &processor [[maybe_unused]]) {
+void DECODE::CheckProc(const uint8_t &opcode, const uint8_t &kernelproc) noexcept {
+    switch (kernelproc) {
+        case 1:
+            if (i8086::forbidden_8086_opcodes.find(opcode) != i8086::forbidden_8086_opcodes.end()) {
+                CheckProcError(opcode, kernelproc);
+            }
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+            break;
+
+    }
+
+/*
+    #if (kernelproc == 1)
+        if (i8086::forbidden_8086_opcodes.find(opcode) != i8086::forbidden_8086_opcodes.end()) {
+            CheckProcError(opcode, kernelproc);
+        }
+    #endif
+*/
+}
+
+void DECODE::CheckProcError(const uint8_t &opcode, const uint8_t &kernelproc) noexcept {
+    std::stringstream error{};
+    const std::string proc = [&kernelproc](){
+        switch (kernelproc) {
+            case 1: return "8086/8088";
+            case 2: return "80186/80188";
+            case 3: return "NEC-V";
+            case 4: return "80286";
+            case 5: return "80386"; 
+            case 6: return "80486";
+            case 7: return "Pentium";
+            case 8: return "Pentium-MMX";
+            case 9: return "AMD-K6"; 
+            case 10: return "Pentium-Pro";
+            case 11: return "Pentium-II";
+            case 12: return "Intel-Itanium";
+            case 13: return "Cyrix-Geode";
+        }
+    }();
+
+    error << "Hex " << opcode << " is not supported by the " << proc << " processor";
+    OUTPUT::Abort(error.str());
+}
+
+
+
+
+		// Check if the opcodes are valid in the specified processor that's going to run the instructions
+		[[maybe_unused]] static constexpr bool CheckProcValidOpcode(const std::vector<std::vector<uint8_t>> &instructions, const uint8_t &processor_id = 1) {
+			switch (processor_id) {
+				case 1:
+					for (size_t i = 0; i <= instructions.size(); i++) {
+					//for (std::vector<std::vector<uint8_t>>::const_iterator itr = instructions.begin(); itr != instructions.end(); ++itr)
+						if (i8086::forbidden_8086_opcodes.find(instructions.at(i).at(0)) != i8086::forbidden_8086_opcodes.end()) {
+							return false;
+						}
+					}
+					return true;
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+					return true;
+			}
+		}
+
+
+
+void DECODE::MassDecode(const std::vector<uint8_t> &hexvector, std::vector<std::vector<uint8_t>> &resultvector, const uint8_t &bits, const uint8_t &processor) {
     std::vector<uint8_t> temp{};
     uint8_t argcount = 0;
 
@@ -77,6 +149,7 @@ void DECODE::MassDecode(const std::vector<uint8_t> &hexvector, std::vector<std::
         temp.clear();
 
         uint8_t hex = hexvector.at(i);
+        CheckProc(hex, processor);
         switch (hex) {
             case 0x00: Push(temp, hex, argcount, 1); continue;
             case 0x01: // fallthrough (for now)
@@ -351,6 +424,7 @@ void DECODE::Decode(
         const uint8_t &processor
     ) {
     instruction.clear();
+    
     switch (buffer.front()) { //threading mode
         case 0x00: DirectPush(buffer, instruction, 1); return;
         case 0x01: // fallthrough (for now)

@@ -1,6 +1,6 @@
 #include <iostream>
-#include <thread>
 #include <immintrin.h>
+#include <future>
 
 #include "cpu/registers.hpp"
 #include "cpu/memory.hpp"
@@ -9,39 +9,23 @@
 
 #pragma once
 
-// TODO: Fix the ResetAll() function
-/*
-    // Reset all registers to 0
-    bool ResetAll(void) {
-        try {
-            memset(&R64, 0, sizeof R64);
-            memset(&SREG, 0, sizeof SREG);
-            memset(&PREG, 0, sizeof PREG);
-
-            return true;
-        } catch (...) {
-            return false;
-        }
-    }
-*/
-
 class AUDIT {
     public:
         AUDIT() {};
         ~AUDIT() {};
 
-	private:
-		// Log the initialisation process if it succeeded or failed
-		constexpr static void AuditLog(const uint8_t &result, const std::string &message, const std::string &warnmessage = "") {
-			switch (result) {
+    private:
+        // Log the initialisation process if it succeeded or failed
+        static constexpr void AuditLog(const uint8_t &result, const std::string &message, const std::string &warnmessage = "") {
+            switch (result) {
                 case 1: std::cout << "[" << ANSI::BLACK_BG << ANSI::GREEN << "SUCCESS" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::EXIT << std::endl; break;
                 case 2: std::cout << "┌─[" << ANSI::BLACK_BG << ANSI::ORANGE << "WARNING" << ANSI::EXIT << "] " << ANSI::BOLD << message << ANSI::EXIT << std::endl;
                         std::cout << "└───>" << ANSI::BOLD << warnmessage << ANSI::EXIT << std::endl;
                 case 0: std::cout << "[" << ANSI::BLACK_BG << ANSI::RED << "FAILED" << ANSI::EXIT << "]  " << ANSI::BOLD << message << ANSI::EXIT << std::endl; std::exit(1); break;
             }
-		}
+        }
 
-        [[nodiscard]] constexpr static inline bool ArchCheck(void) {
+        [[nodiscard]] static constexpr inline bool ArchCheck(void) {
             bool knownArch = false;
             #if defined(__ARM_ARCH_7A__)
                 knownArch = true;
@@ -53,8 +37,8 @@ class AUDIT {
             return knownArch;
         }
 
-		// Check if there's at least 4 threads in the end-user's CPU for pipelining
-        [[nodiscard]] static inline bool ThreadCheck(void) {
+        // Check if there's at least 4 threads in the end-user's CPU for pipelining
+        [[nodiscard]] static inline bool CPUThreadCheck(void) {
             try {
                 return (std::thread::hardware_concurrency() * 2 >= 4);
             } catch (...) {
@@ -79,14 +63,17 @@ class AUDIT {
             }
         }
 
-	public:
-		// Checks all the necessary processes and data needed to run the machine
-		static void AuditCheck(void) {
-			AuditLog(MEMORY::Initialise(), "Allocating 2^16 bits of memory space...");
+    public:
+        // Checks all the necessary processes and data needed to run the machine
+        static void AuditCheck(void) {
+
+            // The CPUClockSpeedCheck function takes a long time to process so I'm executing it first on a different thread
+            std::future<bool> asyncClockSpeed = std::async(std::launch::async, AUDIT::CPUClockSpeedCheck);
+            
+            AuditLog(MEMORY::Initialise(), "Allocating 2^16 bits of memory space...");
             AuditLog(AUDIT::ArchCheck(), "Checking for architecture compatibility...");
-			//AuditLog(REGISTER::ResetAll(), "All registers have been reset", false);
-			AuditLog(AUDIT::CPUCoreCheck(), "Checking CPU compatibility...");
-			AuditLog(AUDIT::ThreadCheck(), "Checking threading compatibility...");
-            AuditLog(AUDIT::CPUClockSpeedCheck(), "Checking CPU clock speed compatibility...");
-		}
+            AuditLog(AUDIT::CPUCoreCheck(), "Checking CPU compatibility...");
+            AuditLog(AUDIT::CPUThreadCheck(), "Checking threading compatibility...");
+            AuditLog(asyncClockSpeed.get(), "Checking CPU clock speed compatibility...");
+        }
 };

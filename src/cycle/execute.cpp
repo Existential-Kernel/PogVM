@@ -17,12 +17,12 @@ GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj,
     for (size_t i = 0; i < v.size(); ++i) {
         uint8_t opcode = v.at(i).at(0);
         switch (opcode) {
-            case 0x00: i8088::ADD(RegObj, 0x05, v.at(i).at(1), 0); continue;
+            case 0x00: i8086::ADD(RegObj, 0x05, v.at(i).at(1), 0); continue;
             case 0x01: 
             case 0x02: 
             case 0x03:
-            case 0x04: i8088::ADD(RegObj, 0x05, v.at(i).at(1), 0); continue;
-            case 0x05: i8088::ADD(RegObj, 0x05, v.at(i).at(1), v.at(i).at(2)); continue;
+            case 0x04: i8086::ADD(RegObj, 0x05, v.at(i).at(1), 0); continue;
+            case 0x05: i8086::ADD(RegObj, 0x05, v.at(i).at(1), v.at(i).at(2)); continue;
             case 0x06:
             case 0x07:
             case 0x08:
@@ -86,13 +86,13 @@ GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj,
             case 0x42:
             case 0x43:
             case 0x44:
-                prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(i).at(1)) : i8088::INC(RegObj, 0, opcode, v.at(i).at(1));
+                prefix ? i8086::INC(RegObj, 0x66, opcode, v.at(i).at(1)) : i8086::INC(RegObj, 0, opcode, v.at(i).at(1));
                 prefix = false;
                 continue;
             case 0x45: // fallthrough
             case 0x46:
             case 0x47:
-                prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(i).at(1)) : i8088::INC(RegObj, 0, opcode, v.at(i).at(1));
+                prefix ? i8086::INC(RegObj, 0x66, opcode, v.at(i).at(1)) : i8086::INC(RegObj, 0, opcode, v.at(i).at(1));
                 prefix = false;
                 continue;
             case 0x48:
@@ -210,7 +210,7 @@ GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj,
             case 0xB8:
             case 0xB9:
             case 0xBA:
-            case 0xBB: i8088::MOV(RegObj, 0xBB, v.at(i).at(1), v.at(i).at(2), v.at(i).at(3), v.at(i).at(4)); break;
+            case 0xBB: i8086::MOV(RegObj, 0xBB, v.at(i).at(1), v.at(i).at(2), v.at(i).at(3), v.at(i).at(4)); break;
             case 0xBC:
             case 0xBD:
             case 0xBE:
@@ -227,9 +227,9 @@ GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj,
             case 0xC9:
             case 0xCA:
             case 0xCB:
-            case 0xCC: i8088::INT(0xCC); continue;
-            case 0xCD: i8088::INT(0xCD, v.at(i).at(1)); continue;
-            case 0xCE: i8088::INT(0xCE); continue;
+            case 0xCC: i8086::INT(0xCC); continue;
+            case 0xCD: i8086::INT(0xCD, v.at(i).at(1)); continue;
+            case 0xCE: i8086::INT(0xCE); continue;
             case 0xCF:
             case 0xD0:
             case 0xD1:
@@ -264,19 +264,19 @@ GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj,
             case 0xEE: break;
             case 0xEF:
             case 0xF0:
-            case 0xF1: i8088::INT(0xF1); continue;
+            case 0xF1: i8086::INT(0xF1); continue;
             case 0xF2:
             case 0xF3:
-            case 0xF4: i8088::HLT(); continue;
+            case 0xF4: i8086::HLT(); continue;
             case 0xF5:
             case 0xF6:
             case 0xF7:
-            case 0xF8: i8088::CLC(); continue;
-            case 0xF9: i8088::STC(); continue;
-            case 0xFA: i8088::CLI(); continue;
-            case 0xFB: i8088::STI(); continue;
-            case 0xFC: i8088::CLD(); continue;
-            case 0xFD: i8088::STD(); continue;
+            case 0xF8: i8086::CLC(); continue;
+            case 0xF9: i8086::STC(); continue;
+            case 0xFA: i8086::CLI(); continue;
+            case 0xFB: i8086::STI(); continue;
+            case 0xFC: i8086::CLD(); continue;
+            case 0xFD: i8086::STD(); continue;
             case 0xFE:
             case 0xFF: break;
             default: OUTPUT::Error("Unknown opcode", 0x10); break;
@@ -296,12 +296,12 @@ void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::
     bool prefix = false;
     uint8_t opcode = v.front();
     switch (opcode) {
-        case 0x00: i8088::ADD(RegObj, 0x05, v.at(1), 0); return;
+        case 0x00: i8086::ADD(RegObj, 0x05, v.at(1), 0); return;
         case 0x01: 
         case 0x02: 
         case 0x03:
-        case 0x04: i8088::ADD(RegObj, 0x05, v.at(1), 0); return;
-        case 0x05: i8088::ADD(RegObj, 0x05, v.at(1), v.at(2)); return;
+        case 0x04: i8086::ADD(RegObj, 0x05, v.at(1), 0); return;
+        case 0x05: i8086::ADD(RegObj, 0x05, v.at(1), v.at(2)); return;
         case 0x06:
         case 0x07:
         case 0x08:
@@ -365,13 +365,13 @@ void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::
         case 0x42:
         case 0x43:
         case 0x44:
-            prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(1)) : i8088::INC(RegObj, 0, opcode, v.at(1));
+            prefix ? i8086::INC(RegObj, 0x66, opcode, v.at(1)) : i8086::INC(RegObj, 0, opcode, v.at(1));
             prefix = false;
             return;
         case 0x45: // fallthrough
         case 0x46:
         case 0x47:
-            prefix ? i8088::INC(RegObj, 0x66, opcode, v.at(1)) : i8088::INC(RegObj, 0, opcode, v.at(1));
+            prefix ? i8086::INC(RegObj, 0x66, opcode, v.at(1)) : i8086::INC(RegObj, 0, opcode, v.at(1));
             prefix = false;
             return;
         case 0x48:
@@ -489,7 +489,7 @@ void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::
         case 0xB8:
         case 0xB9:
         case 0xBA:
-        case 0xBB: i8088::MOV(RegObj, 0xBB, v.at(1), v.at(2), v.at(3), v.at(4)); break;
+        case 0xBB: i8086::MOV(RegObj, 0xBB, v.at(1), v.at(2), v.at(3), v.at(4)); break;
         case 0xBC:
         case 0xBD:
         case 0xBE:
@@ -506,9 +506,9 @@ void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::
         case 0xC9:
         case 0xCA:
         case 0xCB:
-        case 0xCC: i8088::INT(0xCC); return;
-        case 0xCD: i8088::INT(0xCD, v.at(1)); return;
-        case 0xCE: i8088::INT(0xCE); return;
+        case 0xCC: i8086::INT(0xCC); return;
+        case 0xCD: i8086::INT(0xCD, v.at(1)); return;
+        case 0xCE: i8086::INT(0xCE); return;
         case 0xCF:
         case 0xD0:
         case 0xD1:
@@ -543,19 +543,19 @@ void EXECUTE::Execute(class REGISTER *RegObj, class STACK *StackObj, const std::
         case 0xEE: break;
         case 0xEF:
         case 0xF0:
-        case 0xF1: i8088::INT(0xF1); return;
+        case 0xF1: i8086::INT(0xF1); return;
         case 0xF2:
         case 0xF3:
-        case 0xF4: i8088::HLT(); return;
+        case 0xF4: i8086::HLT(); return;
         case 0xF5:
         case 0xF6:
         case 0xF7:
-        case 0xF8: i8088::CLC(); return;
-        case 0xF9: i8088::STC(); return;
-        case 0xFA: i8088::CLI(); return;
-        case 0xFB: i8088::STI(); return;
-        case 0xFC: i8088::CLD(); return;
-        case 0xFD: i8088::STD(); return;
+        case 0xF8: i8086::CLC(); return;
+        case 0xF9: i8086::STC(); return;
+        case 0xFA: i8086::CLI(); return;
+        case 0xFB: i8086::STI(); return;
+        case 0xFC: i8086::CLD(); return;
+        case 0xFD: i8086::STD(); return;
         case 0xFE:
         case 0xFF: break;
         default: OUTPUT::Error("Unknown opcode", 0x10); break;

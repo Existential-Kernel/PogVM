@@ -1,8 +1,10 @@
-#include <thread>
+//#include <future>
 #include <memory>
 #include <vector>
+#include <set>
+#include <iterator>
 
-#include "defs.hpp"
+//#include "defs.hpp"
 
 #include "cycle/fetch.cpp"
 #include "cycle/decode.cpp"
@@ -26,10 +28,20 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 			}
 		}
 
+		static bool CheckIfBufferIsEmpty(const std::deque<uint8_t> &buffer) {
+			for (std::deque<uint8_t>::const_iterator ptr = buffer.begin(); ptr != buffer.end(); ptr++) {
+				if (*ptr == 0) {
+					return false;
+				}
+			}
+			return true;
+		}
+
     public:
-	    GNU_HOT static void Kernel(const std::string &argv, const uint8_t &bits, const bool &mode, const uint8_t &processor) {
+	    GNU_HOT static void Kernel(const std::string &argv, const uint8_t &bits, const uint8_t &mode, const uint8_t &processor) {
 			if (UTIL::FileExists(argv)) {
 				if (ELF::CheckELF(argv)) {
+
 					{
 						// fuck the new and delete keywords, all my homies use smart pointers
 						std::unique_ptr<FETCH>FETCH_PTR = std::make_unique<FETCH>();
@@ -43,7 +55,16 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 						STACK Stack;
 
 						switch (mode) {
-							case true: // compiled mode
+							case 2: // direct mode (emulation)
+								{
+									//std::vector<uint8_t> hexvector = FETCH::MassFetch(argv);
+									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
+									DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
+									//std::system()
+								}
+								break;
+	
+							case 1: // compiled mode (virtualisation)
 								{
 									//std::vector<uint8_t> hexvector = FETCH::MassFetch(argv);
 									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
@@ -52,33 +73,32 @@ class KERNEL final : public FETCH, public DECODE, public EXECUTE {
 								}
 								break;
 
-							case false: // threading mode
+							case 0: // threading mode (virtualisation)
 								{
 									//std::deque<uint8_t> hexvector = FETCH_PTR->MassFetch(argv);
 									
 									std::vector<uint8_t> tempvec = FETCH_PTR->GetCode();
-									std::deque<uint8_t> hexvector;
-									for (int i = 0; i < tempvec.size(); i++) {
-										hexvector.push_back(tempvec.at(i));
+									std::deque<uint8_t> hexqueue;
+									for (size_t i = 0; i < tempvec.size(); i++) {
+										hexqueue.push_back(tempvec.at(i));
 									}
 									std::deque<uint8_t> buffer{};
 									std::vector<uint8_t> instruction{};
 
-									int count = 0;
-
-									FETCH_PTR->Fetch(hexvector, buffer);
+									FETCH_PTR->Fetch(hexqueue, buffer);
 
 									do {
-/*
-										std::thread tfetch(FETCH_PTR->FetchHex, hexvector, queue, offset);                   <=
-										std::thread tdecode(DECODE_PTR->Decode, queue, instruction, bits, processor);        <=
-										std::thread texecute(EXECUTE_PTR->Execute, &Reg, &Stack, instruction);               <=
-*/
+
+/*										multithreading in C++ makes me want to kill myself
+
+										std::thread tfetch(FETCH_PTR->Fetch, hexqueue, buffer);
+										std::thread tdecode(DECODE_PTR->Decode, buffer, instruction, bits, processor);
+										std::thread texecute(EXECUTE_PTR->Execute, &Registers, &Stack, instruction);
+*/										
+										FETCH_PTR->Fetch(hexqueue, buffer);
 										DECODE_PTR->Decode(buffer, instruction, bits, processor);
 										EXECUTE_PTR->Execute(&Registers, &Stack, instruction);
-										FETCH_PTR->Fetch(hexvector, buffer);
-
-									} while (buffer.at(0) != 0);
+									} while (CheckIfBufferIsEmpty(buffer));
 								}
 								break;
 

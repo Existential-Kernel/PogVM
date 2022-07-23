@@ -1,6 +1,6 @@
 <div align="center">
   <h1>PogVM</h1>
-  A minimal Virtual Machine designed to run executable files
+ A library for emulating modern and legacy x86 processors
   <br>
   <br>
           ========================== <br>

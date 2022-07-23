@@ -1,9 +1,7 @@
 #include <iostream>
 #include <map>
-#include <tuple>
-#include <unordered_map>
-#include <functional>
 #include <memory>
+#include <set>
 
 #include "../cpu/flags.hpp"
 #include "../cpu/registers.hpp"
@@ -20,7 +18,7 @@ Examples:
     mov edx, [esi+4*ebx]     	; Move the 4 bytes of data at address ESI+4*EBX into EDX
 */
 
-namespace i8088 {
+namespace i8086 {
     //https://stackoverflow.com/questions/24092600/how-do-ascii-adjust-and-decimal-adjust-instructions-work
     /*
      * Instruction: AAA
@@ -579,7 +577,7 @@ namespace i8088 {
 
         //typedef std::tuple<std::string, std::function<void()>, uint8_t> maptup;
         
-        std::map<size_t, std::tuple<std::string, std::function<void()>, uint8_t>> instructions;
+        //std::map<size_t, std::tuple<std::string, std::function<void()>, uint8_t>> instructions;
 /*
         instructions = {
             0x37: std::tuple<"AAA", &AAA, 0>,
@@ -604,4 +602,49 @@ namespace i8088 {
 
         // to call function: menu[a]();
     //}
+
+
+
+
+    // http://www.mlsite.net/8086/
+    //std::set<uint8_t, bool>
+    std::set<uint8_t, std::greater<uint8_t>> forbidden_8086_opcodes = {
+        0x0F,
+
+        0x60,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        0x65,
+        0x66,
+        0x67,
+        0x68,
+        0x69,
+        0x6A,
+        0x6B,
+        0x6C,
+        0x6D,
+        0x6E,
+        0x6F,
+
+        0xC0,
+        0xC1,
+
+        0xC8,
+        0xC9,
+
+        0xD6,
+        0xD8,
+        0xD9,
+        0xDA,
+        0xDB,
+        0xDC,
+        0xDD,
+        0xDE,
+        0xDF,
+
+        0xF1
+    };
+
 }

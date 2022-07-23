@@ -4,4 +4,4 @@
  - http://www.c-jump.com/CIS77/CPU/x86/lecture.html 
  - http://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=add+eax%2C+30&arch=x86-32&as_format=inline#assembly
  - https://www.sandpile.org/
- - https://pastraiser.com/cpu/i8088/i8088_opcodes.html
+ - https://pastraiser.com/cpu/i8086/i8086_opcodes.html

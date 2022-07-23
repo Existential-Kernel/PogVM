@@ -1,3 +1,4 @@
+#include <deque>
 #pragma once
 
 class ASSEMBLY {

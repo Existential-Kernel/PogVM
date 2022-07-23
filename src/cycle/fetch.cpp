@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <regex>
+#include <deque>
 //#include <filesystem>
 //#include <ios>
 //#include <iomanip>
@@ -484,7 +485,7 @@ void ELFHEADER::GetELFHeader(const std::vector<uint8_t> &hex) noexcept {
 
 [[nodiscard]] std::vector<uint8_t> ELF::FetchHeader(const std::string &filename) {
     std::ifstream file{filename, std::ios::binary};
-    std::vector<uint8_t> hexvector;
+    std::vector<uint8_t> hexvector{};
 
     if (file) {
         file.seekg(0, std::ios::beg);
@@ -497,16 +498,12 @@ void ELFHEADER::GetELFHeader(const std::vector<uint8_t> &hex) noexcept {
     return hexvector;
 }
 
-
-
-
 void FETCH::Fetch(std::deque<uint8_t> &hexqueue, std::deque<uint8_t> &buffer) {
     for (;buffer.size() != 10;) {
         buffer.push_back(hexqueue[0]);
         hexqueue.pop_front();
     }
 }
-
 
 [[nodiscard]] std::deque<uint8_t> FETCH::MassFetch(const std::string &filename) {
     std::ifstream file{filename, std::ios::binary};
