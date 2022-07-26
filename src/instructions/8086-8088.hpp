@@ -7,6 +7,8 @@
 #include "../cpu/registers.hpp"
 #include "../cpu/stack.hpp"
 
+#include "../defs.hpp"
+
 #pragma once
 
 /*

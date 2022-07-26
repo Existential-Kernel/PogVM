@@ -5,15 +5,15 @@
 
 #include "audit.hpp"
 #include "cycle/fetch.hpp"
-#include "vcore.cpp"
+#include "vcore.hpp"
 #include "defs.hpp"
-
-#include "instructions/8086-8088.hpp"
 
 int main(int argc, char *argv[]) {
 	#if __cplusplus <= 201703L
 		OUTPUT::Error("PogVM requires C++17 or newer to run", 0x0D);
 	#endif
+
+	UTIL::PogVM_Preprocess();
 
 	switch(argc) {
 		case 1:

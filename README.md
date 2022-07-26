@@ -17,8 +17,14 @@
 - Executable file analyser
 - No external libraries used, just raw C++
 
+
 ## PREREQUESITES
 - You must have at least 2 cores in the CPU you're using
+
+
+## FaQ
+- (finish this part when i have time)
+
 
 ## INSTALL
   ```
@@ -26,6 +32,7 @@
   cd build
   cmake ..
   ```
+
 
 ## OPTIONS
   Command pattern: `pogvm [option(s)] [executable file]`
@@ -52,6 +59,7 @@
 - https://wiki.osdev.org/CPU_Registers_x86
 - https://blog.yossarian.net/2020/11/30/How-many-registers-does-an-x86-64-cpu-have
 - https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+
 
 ## SCREENSHOTS
 (add a few here when I'm done)

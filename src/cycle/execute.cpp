@@ -5,15 +5,14 @@
 #include <cstring>
 #include <vector>
 
-#include "execute.hpp"
 #include "../instructions/8086-8088.hpp"
 #include "../instructions/testing.hpp"
 #include "../cpu/registers.hpp"
 
-GNU_HOT void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj, const std::vector<std::vector<uint8_t>> &v) {
+#include "execute.hpp"
+
+void EXECUTE::MassExecute(class REGISTER *RegObj, class STACK *StackObj, const std::vector<std::vector<uint8_t>> &v) {
     bool prefix = false;
-    
-    REGISTER Reg;
     for (size_t i = 0; i < v.size(); ++i) {
         uint8_t opcode = v.at(i).at(0);
         switch (opcode) {

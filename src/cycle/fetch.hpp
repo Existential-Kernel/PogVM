@@ -1,4 +1,4 @@
-#include <deque>
+
 #pragma once
 
 class ASSEMBLY {
@@ -6,22 +6,19 @@ class ASSEMBLY {
         // Macros
         #define WHITESPACE " \n\r\t\f\v"
 
-        static std::string Filter(const std::string &string);
+        static std::string Filter(const std::string &string); 
         static std::string Trim(const std::string &string);
         static std::vector<std::string> Split(const std::string &string);
         static std::vector<std::string> Preprocess(std::string &line);
 
     public:
-        // check if string ends with .asm or .s file extension
-        [[nodiscard]] static bool CheckASM(const std::string &file);
-
         // Get the line of assembly
         [[nodiscard]] static std::vector<std::vector<std::string>> FetchAssembly(const std::string &location);
 };
 
 class ELF_HEADER_STRUCT {
     public:
-        unsigned char e_ident[16];
+        uint8_t e_ident[16];
         bool bits; // true = 64-bit, false = 32-bit
         std::string data;
         std::string type;
@@ -126,6 +123,5 @@ class FETCH : public ASSEMBLY, public ELF {
         // Get hex data of file and return as vector
         [[nodiscard]] static std::deque<uint8_t> MassFetch(const std::string &filename);
 
-        //static std::array<uint8_t, 10> FetchHex(const std::string &filename);
         static void Fetch(std::deque<uint8_t> &hexqueue, std::deque<uint8_t> &buffer);
 };

@@ -3,6 +3,8 @@
 #include <deque>
 
 #include "../defs.hpp"
+#include "../instructions/8086-8088.hpp"
+
 #include "decode.hpp"
 
 
@@ -36,7 +38,8 @@ void DECODE::CheckBits(const uint8_t &acceptablebits, const uint8_t &kernelbits,
     }
 }
 
-void DECODE::MassCheckProc(const std::vector<std::vector<uint8_t>> &instructions, const uint8_t &kernelproc) noexcept {
+
+[[maybe_unused, deprecated]] void DECODE::MassCheckProc(const std::vector<std::vector<uint8_t>> &instructions, const uint8_t &kernelproc) noexcept {
     for (size_t i = 0; i <= instructions.size(); i++) {
         if (i8086::forbidden_8086_opcodes.find(instructions.at(i).at(0)) != i8086::forbidden_8086_opcodes.end()) {
             CheckProcError(instructions.at(i).at(0), kernelproc);
@@ -99,38 +102,6 @@ void DECODE::CheckProcError(const uint8_t &opcode, const uint8_t &kernelproc) no
     error << "Hex " << opcode << " is not supported by the " << proc << " processor";
     OUTPUT::Abort(error.str());
 }
-
-
-
-
-		// Check if the opcodes are valid in the specified processor that's going to run the instructions
-		[[maybe_unused]] static constexpr bool CheckProcValidOpcode(const std::vector<std::vector<uint8_t>> &instructions, const uint8_t &processor_id = 1) {
-			switch (processor_id) {
-				case 1:
-					for (size_t i = 0; i <= instructions.size(); i++) {
-					//for (std::vector<std::vector<uint8_t>>::const_iterator itr = instructions.begin(); itr != instructions.end(); ++itr)
-						if (i8086::forbidden_8086_opcodes.find(instructions.at(i).at(0)) != i8086::forbidden_8086_opcodes.end()) {
-							return false;
-						}
-					}
-					return true;
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-				case 8:
-				case 9:
-				case 10:
-				case 11:
-				case 12:
-				case 13:
-					return true;
-			}
-		}
-
-
 
 void DECODE::MassDecode(const std::vector<uint8_t> &hexvector, std::vector<std::vector<uint8_t>> &resultvector, const uint8_t &bits, const uint8_t &processor) {
     std::vector<uint8_t> temp{};

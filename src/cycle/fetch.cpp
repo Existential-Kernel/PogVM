@@ -1,17 +1,15 @@
-//#include <string>
-
-
-#include "../defs.hpp"
-
 #include <vector>
 #include <regex>
 #include <deque>
-//#include <filesystem>
-//#include <ios>
-//#include <iomanip>
+#include <iostream>
+#include <array>
+#include <fstream>
+
+#include "../defs.hpp"
+#include "../cpu/registers.hpp"
+#include "../ansi.hpp"
 
 #include "fetch.hpp"
-#include "../cpu/registers.hpp"
 
 // Filter for things like comments and commas for simplicity
 [[nodiscard]] std::string ASSEMBLY::Filter(const std::string &string) {
@@ -86,7 +84,7 @@
     if (file.is_open()) [[likely]] {
         while (std::getline(file, line)) {
             // Prefiltering unnecessary assembly lines
-            if (static_cast<uint>(line[0]) == 0) { continue; }
+            if (static_cast<uint8_t>(line[0]) == 0) { continue; }
             if (line[0] == ';') { continue; }
             if (!std::any_of(std::begin(line), std::end(line), ::isalpha)) { continue; }
 
@@ -95,11 +93,6 @@
         file.close();
     }
     return programvector;
-}
-
-[[nodiscard]] bool ASSEMBLY::CheckASM(const std::string &file) {
-    std::string extension = file.substr(file.find_last_of(".") + 1);
-    return (extension == "asm" || extension == "s");
 }
 
 void ELFHEADER::GetELFProgram(const std::vector<unsigned char> &hex, const uint64_t &offset) {

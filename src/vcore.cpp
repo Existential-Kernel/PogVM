@@ -1,121 +1,126 @@
-//#include <future>
 #include <memory>
 #include <vector>
-#include <set>
 #include <iterator>
+#include <deque>
 
-//#include "defs.hpp"
-
-#include "cycle/fetch.cpp"
-#include "cycle/decode.cpp"
-#include "cycle/execute.cpp"
+#include "cycle/fetch.hpp"
+#include "cycle/decode.hpp"
+#include "cycle/execute.hpp"
 
 #include "cpu/memory.hpp"
 #include "cpu/registers.hpp"
 #include "cpu/stack.hpp"
 
+#include "vcore.hpp"
+
 //https://www.cplusplus.com/reference/thread/thread/?kw=thread
 
-class KERNEL final : public FETCH, public DECODE, public EXECUTE {
-	public:
-		KERNEL() {};
-		~KERNEL() {};
 
-	private:
-		static constexpr void InitHardware(void) {
-			if (!MEMORY::Initialise()) {
-				OUTPUT::Error("Memory initialisation failed", 0x11);
-			}
-		}
+constexpr void KERNEL::InitHardware(void) {
+	if (!MEMORY::Initialise()) {
+		OUTPUT::Error("Memory initialisation failed", 0x11);
+	}
+}
 
-		static bool CheckIfBufferIsEmpty(const std::deque<uint8_t> &buffer) {
-			for (std::deque<uint8_t>::const_iterator ptr = buffer.begin(); ptr != buffer.end(); ptr++) {
-				if (*ptr == 0) {
-					return false;
-				}
-			}
-			return true;
-		}
+bool KERNEL::CheckIfBufferIsEmpty(const std::deque<uint8_t> &buffer) {
+	for (std::deque<uint8_t>::const_iterator ptr = buffer.begin(); ptr != buffer.end(); ptr++) {
+		if (*ptr == 0) { return false; }
+	}
+	return true;
+}
 
-    public:
-	    GNU_HOT static void Kernel(const std::string &argv, const uint8_t &bits, const uint8_t &mode, const uint8_t &processor) {
-			if (UTIL::FileExists(argv)) {
-				if (ELF::CheckELF(argv)) {
+void KERNEL::Kernel(const std::string &argv, const uint8_t &bits, const uint8_t &mode, const uint8_t &processor) {
+	if (UTIL::FileExists(argv, std::filesystem::file_status{})) {
+		if (ELF::CheckELF(argv)) {
 
-					{
-						// fuck the new and delete keywords, all my homies use smart pointers
-						std::unique_ptr<FETCH>FETCH_PTR = std::make_unique<FETCH>();
-						std::unique_ptr<DECODE>DECODE_PTR = std::make_unique<DECODE>();
-						std::unique_ptr<EXECUTE>EXECUTE_PTR = std::make_unique<EXECUTE>();
+			// NOTE: This is really bad code, improve it or write my own ELF to BIN converter when I have time
+			std::string ELF_file = "objcopy -O binary ";
+			ELF_file += argv;
+			ELF_file += " ./src/bin/thingy.bin";
+			std::system(ELF_file.c_str());
 
-						std::vector<uint8_t> resultvector{};
-						std::vector<std::vector<uint8_t>> instructions{};
+			{
+				// fuck the new and delete keywords, all my homies use smart pointers
+				std::unique_ptr<FETCH>FETCH_PTR     = std::make_unique<FETCH>();
+				std::unique_ptr<DECODE>DECODE_PTR   = std::make_unique<DECODE>();
+				std::unique_ptr<EXECUTE>EXECUTE_PTR = std::make_unique<EXECUTE>();
 
-						REGISTER Registers;
-						STACK Stack;
+				std::vector<uint8_t> resultvector{};
+				std::vector<std::vector<uint8_t>> instructions{};
 
-						switch (mode) {
-							case 2: // direct mode (emulation)
-								{
-									//std::vector<uint8_t> hexvector = FETCH::MassFetch(argv);
-									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
-									DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
-									//std::system()
-								}
-								break;
-	
-							case 1: // compiled mode (virtualisation)
-								{
-									//std::vector<uint8_t> hexvector = FETCH::MassFetch(argv);
-									std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
-									DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
-									EXECUTE_PTR->MassExecute(&Registers, &Stack, instructions);
-								}
-								break;
+				REGISTER Registers;
+				STACK Stack;
 
-							case 0: // threading mode (virtualisation)
-								{
-									//std::deque<uint8_t> hexvector = FETCH_PTR->MassFetch(argv);
-									
-									std::vector<uint8_t> tempvec = FETCH_PTR->GetCode();
-									std::deque<uint8_t> hexqueue;
-									for (size_t i = 0; i < tempvec.size(); i++) {
-										hexqueue.push_back(tempvec.at(i));
-									}
-									std::deque<uint8_t> buffer{};
-									std::vector<uint8_t> instruction{};
-
-									FETCH_PTR->Fetch(hexqueue, buffer);
-
-									do {
-
-/*										multithreading in C++ makes me want to kill myself
-
-										std::thread tfetch(FETCH_PTR->Fetch, hexqueue, buffer);
-										std::thread tdecode(DECODE_PTR->Decode, buffer, instruction, bits, processor);
-										std::thread texecute(EXECUTE_PTR->Execute, &Registers, &Stack, instruction);
-*/										
-										FETCH_PTR->Fetch(hexqueue, buffer);
-										DECODE_PTR->Decode(buffer, instruction, bits, processor);
-										EXECUTE_PTR->Execute(&Registers, &Stack, instruction);
-									} while (CheckIfBufferIsEmpty(buffer));
-								}
-								break;
-
+				switch (mode) {
+					case 2: // direct mode (emulation)
+						{
+							//std::vector<uint8_t> hexvector = FETCH::MassFetch(argv);
+							std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
+							DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
+							//std::system()
 						}
-					}
+						break;
 
-				} else if (ASSEMBLY::CheckASM(argv)) {
-					std::vector<std::vector<std::string>> assemblyvector = FETCH::FetchAssembly(argv);
-				} else {
-					OUTPUT::Error("Please provide an executable file or an assembly file to virtualise", 0x0C);
-				}
-			} else {
-				if (argv[0] == '-') {
-					OUTPUT::Error("Unrecognized flag option", 0x0B);
-				} else {
-					OUTPUT::Error("The file provided is not valid or does not exist", 0x0A);
+					case 1: // compiled mode (virtualisation)
+						{
+							//std::vector<uint8_t> hexvector = FETCH::MassFetch(argv);
+							std::vector<uint8_t> hexvector = FETCH_PTR->GetCode();
+							DECODE_PTR->MassDecode(hexvector, instructions, bits, processor);
+							EXECUTE_PTR->MassExecute(&Registers, &Stack, instructions);
+						}
+						break;
+
+					case 0: // threading mode (virtualisation)
+						{
+							//std::deque<uint8_t> hexvector = FETCH_PTR->MassFetch(argv);
+							
+							std::vector<uint8_t> tempvec = FETCH_PTR->GetCode();
+							std::deque<uint8_t> hexqueue;
+							for (size_t i = 0; i < tempvec.size(); i++) {
+								hexqueue.push_back(tempvec.at(i));
+							}
+							std::deque<uint8_t> buffer{};
+							std::vector<uint8_t> instruction{};
+
+							FETCH_PTR->Fetch(hexqueue, buffer);
+
+							do {
+
+/*							    multithreading in C++ makes me want to kill myself
+
+								std::thread tfetch(FETCH_PTR->Fetch, hexqueue, buffer);
+								std::thread tdecode(DECODE_PTR->Decode, buffer, instruction, bits, processor);
+								std::thread texecute(EXECUTE_PTR->Execute, &Registers, &Stack, instruction);
+*/										
+								FETCH_PTR->Fetch(hexqueue, buffer);
+								DECODE_PTR->Decode(buffer, instruction, bits, processor);
+								EXECUTE_PTR->Execute(&Registers, &Stack, instruction);
+							} while (CheckIfBufferIsEmpty(buffer));
+						}
+						break;
+
 				}
 			}
+
+		} else if (UTIL::CheckExtension(argv, "asm") || UTIL::CheckExtension(argv, "s")) {
+			std::vector<std::vector<std::string>> assemblyvector = FETCH::FetchAssembly(argv);
+		} else {
+			OUTPUT::Error("Please provide an executable file or an assembly file to virtualise", 0x0C);
 		}
+	} else {
+		if (argv[0] == '-') {
+			OUTPUT::Error("Unrecognized flag option", 0x0B);
+		} else {
+			OUTPUT::Error("The file provided is not valid or does not exist", 0x0A);
+		}
+	}
+}
+
+KERNEL::KERNEL()
+{
+};
+
+KERNEL::~KERNEL()
+{
+	// TODO: delete the binaries in ./bin/
 };

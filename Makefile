@@ -41,6 +41,9 @@ obj: mainframe.o fetch.o decode.o execute.o clear
 
 
 
+
+
+
 exec: debug 
 	./$(OUT) $(FILE)
 
@@ -49,7 +52,7 @@ release:
 
 debug:
 	@#src/cycle/fetch.cpp src/cycle/decode.cpp src/cycle/execute.cpp 
-	@$(CC) $(CPPFLAGS) $(MAIN).cpp -o $(OUT)
+	@$(CC) $(CPPFLAGS) $(MAIN).cpp src/vcore.cpp src/cycle/fetch.cpp src/cycle/decode.cpp src/cycle/execute.cpp src/audit.cpp src/defs.cpp -o $(OUT)
 
 run: clear compile
 	./$(OUT)

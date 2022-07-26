@@ -1,0 +1,1 @@
+this directory serves as a temporary storage component for all the produced bin files for PogVM's processes, kinda like `/tmp/`

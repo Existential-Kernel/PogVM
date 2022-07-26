@@ -7,6 +7,8 @@
 #   - ld
 #   - g++
 
+# std::system("git clone git://sourceware.org/git/binutils-gdb.git");
+
 
 # USEFUL LINKS:
 # https://cmake.org/cmake/help/latest/module/ProcessorCount.html
