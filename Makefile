@@ -52,7 +52,7 @@ release:
 
 debug:
 	@#src/cycle/fetch.cpp src/cycle/decode.cpp src/cycle/execute.cpp 
-	@$(CC) $(CPPFLAGS) $(MAIN).cpp src/vcore.cpp src/cycle/fetch.cpp src/cycle/decode.cpp src/cycle/execute.cpp src/audit.cpp src/defs.cpp -o $(OUT)
+	@$(CC) $(CPPFLAGS) $(MAIN).cpp -o $(OUT)
 
 run: clear compile
 	./$(OUT)

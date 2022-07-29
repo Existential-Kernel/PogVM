@@ -4,14 +4,10 @@
 
 class VM {
     int vm86(unsigned long fn, struct vm86plus_struct *v86);
-/*
-	Check if CPU virtualisation support is enabled
-	__asm__ {
-		mov eax, 1
-		cpuid
-		bt ecx,5
-		jc VMX_Supported
-		jmp VMX_NotSupported   
-	}
-*/
 };
+
+
+
+
+
+//https://zserge.com/posts/kvm/

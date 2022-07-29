@@ -13,8 +13,6 @@ int main(int argc, char *argv[]) {
 		OUTPUT::Error("PogVM requires C++17 or newer to run", 0x0D);
 	#endif
 
-	UTIL::PogVM_Preprocess();
-
 	switch(argc) {
 		case 1:
 			OUTPUT::HelpMenu();
@@ -30,7 +28,7 @@ int main(int argc, char *argv[]) {
 			if (!strcmp(argv[1], "--audit")) { AUDIT::AuditCheck(); std::exit(0); }
 
 			if (UTIL::FileExists(argv[1])) {
-				KERNEL::Kernel(argv[1], true, 32, 1); // REVISION NEEDED: change default bool value if i find out which mode is more stable
+				KERNEL::Kernel(argv[1], 32, false, 1); // REVISION NEEDED: change default bool value if i find out which mode is more stable
 				break;
 			}
 
